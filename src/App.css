@@ -28,7 +28,7 @@
 }
 
 .welcome-wrapper {
-  height: 244px;
+  height: 344px;
 }
 
 .welcome-box {
@@ -37,11 +37,10 @@
 }
 
 .banner {
-  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-    url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
+  background:  url("./images/bannerImg.png");
   background-size: cover;
   background-position: center;
-  height: 300px;
+  height: 400px;
 }
 
 .banner h1 {
