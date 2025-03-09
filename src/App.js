@@ -13,6 +13,8 @@ import setAuthToken from "./utils/setAuthToken";
 
 import "./App.css";
 import Dashboard from "./components/parenPortal/dashboard";
+import Cart from "./components/parenPortal/checkoutSummary/Cart";
+import CheckoutSummary from "./components/parenPortal/checkoutSummary/CheckoutSummary";
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
@@ -26,14 +28,13 @@ const App = () => {
   return (
     <Provider store={store}>
       <Router>
-        {/* <Fragment> */}
-         {/* <Navbar /> */}
-          <Routes>
-            <Route exact path="/dashboard" element={<Dashboard />} />
-            {/* <Route exact path="/register" element={<Register />} />
+        {/* <Navbar /> */}
+        <Routes>
+          <Route exact path="/dashboard" element={<Dashboard />} />
+          {/* <Route exact path="/register" element={<Register />} />
             <Route exact path="/login" element={<Login />} /> */}
-          </Routes>
-        {/* </Fragment> */}
+        </Routes>
+        <CheckoutSummary />
       </Router>
     </Provider>
   );
