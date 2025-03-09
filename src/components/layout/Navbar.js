@@ -1,65 +1,43 @@
-import React, { Fragment } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { connect } from "react-redux";
+import { connect } from "react-redux"
+import { BarChart3, Menu } from "lucide-react";
 import PropTypes from "prop-types";
-import { logout } from "../../actions/auth";
 
-const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
-  const authLinks = (
-    <ul>
-      <li>
-        <Link to="/profiles">Developers</Link>
-      </li>
-      <li>
-        <Link to="/posts">Posts</Link>
-      </li>
-      <li>
-        <Link to="/dashboard">
-          <i className="fas fa-user"></i>
-          <span className="hide-sm">Dashboard</span>
-        </Link>
-      </li>
-      <li>
-        <a onClick={logout} href="#!">
-          <i className="fas fa-sign-out-alt"></i>{" "}
-          <span className="hide-sm">Logout</span>
-        </a>
-      </li>
-    </ul>
-  );
+const Navbar = () => {
 
-  const guestLinks = (
-    <ul>
-      <li>
-        <Link to="/register">Register</Link>
-      </li>
-      <li>
-        <Link to="/login">Login</Link>
-      </li>
-    </ul>
-  );
 
   return (
-    <nav className="navbar bg-dark">
-      <h1>
-        <Link to="/">
-          <i className="fas fa-code"></i> DevConnector
-        </Link>
-      </h1>
-      {!loading && (
-        <Fragment>{isAuthenticated ? authLinks : guestLinks}</Fragment>
-      )}
-    </nav>
+    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div className="container">
+      <Link className="navbar-brand d-flex align-items-center" to="/">
+        <BarChart3 className="me-2" />
+        Dashboard
+      </Link>
+      <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <Menu />
+      </button>
+      <div className="collapse navbar-collapse" id="navbarNav">
+        <ul className="navbar-nav ms-auto">
+          <li className="nav-item">
+            <Link className="nav-link active" to="/">Home</Link>
+          </li>
+          <li className="nav-item">
+            <Link className="nav-link" to="/analytics">Analytics</Link>
+          </li>
+          <li className="nav-item">
+            <Link className="nav-link" to="/reports">Reports</Link>
+          </li>
+          <li className="nav-item">
+            <Link className="nav-link" to="/settings">Settings</Link>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
   );
 };
 
-Navbar.propTypes = {
-  logout: PropTypes.func.isRequired,
-  auth: PropTypes.object.isRequired,
-};
 
-const mapStateToProps = (state) => ({
-  auth: state.auth,
-});
 
-export default connect(mapStateToProps, { logout })(Navbar);
+export default Navbar;

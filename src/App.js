@@ -12,6 +12,7 @@ import { loadUser } from "./actions/auth";
 import setAuthToken from "./utils/setAuthToken";
 
 import "./App.css";
+import Dashboard from "./components/parenPortal/dashboard";
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
@@ -25,14 +26,14 @@ const App = () => {
   return (
     <Provider store={store}>
       <Router>
-        <Fragment>
-          <Navbar />
+        {/* <Fragment> */}
+         {/* <Navbar /> */}
           <Routes>
-            <Route exact path="/" element={<Landing />} />
-            <Route exact path="/register" element={<Register />} />
-            <Route exact path="/login" element={<Login />} />
+            <Route exact path="/dashboard" element={<Dashboard />} />
+            {/* <Route exact path="/register" element={<Register />} />
+            <Route exact path="/login" element={<Login />} /> */}
           </Routes>
-        </Fragment>
+        {/* </Fragment> */}
       </Router>
     </Provider>
   );
