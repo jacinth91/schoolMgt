@@ -9,6 +9,14 @@
 .navbar-brand {
   font-size: 1.25rem;
   font-weight: bold;
+  
+}
+.navbar{
+  opacity: 1;
+  background-color: rgba(0, 50, 164, 0.8);
+  position: absolute;
+  width: 100%;
+  top: 0;
 }
 
 /* Dashboard */
