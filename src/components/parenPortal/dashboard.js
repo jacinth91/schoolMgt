@@ -6,16 +6,11 @@ import Footer from "../layout/footer";
 const Dashboard = () => {
   return (
     <div className="min-vh-100 d-flex flex-column">
-      {/* Navbar */}
-      <Navbar/>
+      
+      
 
       {/* Banner */}
-      <div className="banner d-flex align-items-center justify-content-center text-white">
-        <div className="text-center">
-          <h1 className="display-4 fw-bold">Welcome to Your Dashboard</h1>
-          <p className="lead">Monitor your business metrics in real-time</p>
-        </div>
-      </div>
+    
 
       {/* Dashboard Content */}
       <div className="container">
@@ -49,8 +44,8 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Footer */}
-      <Footer />
+      
+      
     </div>
   );
 };
