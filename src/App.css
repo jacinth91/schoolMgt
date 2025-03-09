@@ -27,16 +27,21 @@
   padding: 1.5rem;
 }
 
+.welcome-wrapper {
+  height: 244px;
+}
+
+.welcome-box {
+  background: #0c0c0c;
+  opacity: 70%;
+}
+
 .banner {
   background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
     url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
   background-size: cover;
   background-position: center;
   height: 300px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
 }
 
 .banner h1 {

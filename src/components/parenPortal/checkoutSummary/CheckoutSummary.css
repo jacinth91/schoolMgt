@@ -1,0 +1,40 @@
+.stepper-header {
+    background: #2D62DA;
+    color: #FFFFFF;
+}
+
+.search-box {
+    position: relative;
+    width: 300px;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 10px 40px 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    outline: none;
+    background: transparent;
+    color: white;
+}
+::placeholder {
+    color: white;
+}
+
+.search-box .icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.stepper-label {
+    color: #2D62DA;
+    font-size: 20px;
+    font-weight: 600;
+    
+}

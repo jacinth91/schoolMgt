@@ -34,7 +34,7 @@ const CustomStepIcon = ({ step, active, completed }) => {
 
 export default function CheckoutStepper({ activeStep }) {
   return (
-    <div style={{ padding: 20, maxWidth: 800, margin: "auto" }}>
+    <div style={{ padding: 20, margin: "auto" }}>
       <Stepper alternativeLabel activeStep={activeStep}>
         {steps.map((label, index) => (
           <Step key={label}>

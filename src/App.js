@@ -17,6 +17,8 @@ import "./App.css";
 import Dashboard from "./components/parenPortal/dashboard";
 import Footer from "./components/layout/footer";
 import CheckoutSummary from "./components/parenPortal/checkoutSummary/CheckoutSummary";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);

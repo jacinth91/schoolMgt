@@ -4,11 +4,7 @@ import { BarChart3, Menu } from "lucide-react";
 
 const Navbar = () => {
   return (
-    <div className="banner d-flex align-items-center justify-content-center text-white">
-      <div className="text-center">
-        <h1 className="display-4 fw-bold">Welcome to Your Dashboard</h1>
-        <p className="lead">Monitor your business metrics in real-time</p>
-      </div>
+    <div className="banner align-items-center justify-content-center text-white">
       <nav className="navbar z-10 absolute top-0 w-full navbar-expand-lg">
         <div className="container">
           <Link className="navbar-brand d-flex align-items-center" to="/">
@@ -49,6 +45,17 @@ const Navbar = () => {
           </div>
         </div>
       </nav>
+      <div className="welcome-wrapper align-content-end">
+        <div className="px-4 py-3 w-50 welcome-box">
+          <div className="ps-5 ms-3">
+            <h3>Why Parents Choose Our Software</h3>
+            <p>
+              We believe every business should be able to manage their work
+              processes with innovative, custom-built software.
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
