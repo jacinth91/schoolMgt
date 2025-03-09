@@ -1,5 +1,10 @@
-import React, { Fragment, useEffect } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import React, { useEffect } from "react";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
 import Navbar from "./components/layout/Navbar";
 
 // Redux
@@ -17,7 +22,18 @@ if (localStorage.token) {
   setAuthToken(localStorage.token);
 }
 
+const CheckoutWrapper = () => {
+  const location = useLocation();
+  const checkoutPaths = ["/cart", "/shipping", "/payment", "/checkout"];
+
+  return checkoutPaths.includes(location.pathname) ? (
+    <CheckoutSummary stepPaths={checkoutPaths} />
+  ) : null;
+};
+
 const App = () => {
+  // const location = useLocation();
+
   useEffect(() => {
     store.dispatch(loadUser());
   }, []);
@@ -33,7 +49,10 @@ const App = () => {
           {/* <Route exact path="/register" element={<Register />} />
             <Route exact path="/login" element={<Login />} /> */}
         </Routes>
-        <CheckoutSummary />
+        {/* {checkoutPaths.includes(location.pathname) && (
+          <CheckoutSummary stepPath={checkoutPaths} />
+        )} */}
+        <CheckoutWrapper />
         {/* </Fragment> */}
         <Footer />
       </Router>

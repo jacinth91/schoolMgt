@@ -8,21 +8,20 @@ import PaymentMode from "./PaymentMode";
 import Shipping from "./Shipping";
 
 const steps = ["cart", "shipping", "payment", "place-order"];
-const stepPaths = ["/cart", "/shipping", "/payment", "/checkout"];
-const CheckoutSummary = () => {
+const CheckoutSummary = (props) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const activeStep = stepPaths.indexOf(location.pathname); // Determine active step index
+  const activeStep = props.stepPaths.indexOf(location.pathname); // Determine active step index
 
   const handleNext = () => {
     if (activeStep < steps.length - 1) {
-      navigate(stepPaths[activeStep + 1]); // Move to next step
+      navigate(props.stepPaths[activeStep + 1]); // Move to next step
     }
   };
 
   const handleBack = () => {
     if (activeStep > 0) {
-      navigate(stepPaths[activeStep - 1]); // Move to previous step
+      navigate(props.stepPaths[activeStep - 1]); // Move to previous step
     }
   };
 
@@ -35,10 +34,10 @@ const CheckoutSummary = () => {
 
       {/* Render Step Components Based on URL */}
       <Routes>
-        <Route path="cart" element={<Cart />} />
-        <Route path="/shipping" element={<Shipping />} />
-        <Route path="/payment" element={<PaymentMode />} />
-        <Route path="/checkout" element={<PlacedOrder />} />
+        <Route exact path="cart" element={<Cart />} />
+        <Route exact path="/shipping" element={<Shipping />} />
+        <Route exact path="/payment" element={<PaymentMode />} />
+        <Route exact path="/checkout" element={<PlacedOrder />} />
       </Routes>
 
       {/* Navigation Buttons */}
