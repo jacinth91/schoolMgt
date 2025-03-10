@@ -82,8 +82,38 @@
   text-decoration: underline;
 }
 
-@media (max-width: 768px) {
+.add-child-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #22c55e; /* Green-500 */
+  color: white;
+  padding: 8px 16px;
+  border-radius: 9999px; /* Fully rounded */
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.add-child-button:hover {
+  background-color: #16a34a; /* Green-600 */
+  transform: scale(1.05); /* Slight zoom on hover */
+}
+
+.add-child-button:active {
+  transform: scale(0.95); /* Slight shrink when clicked */
+}
+
+.button-icon {
+  width: 20px;
+  height: 20px;
+}
+
+
+/* @media (max-width: 768px) {
   .dashboard-grid {
     grid-template-columns: 1fr;
   }
-}
+} */
