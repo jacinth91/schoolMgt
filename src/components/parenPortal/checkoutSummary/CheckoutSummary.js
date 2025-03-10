@@ -7,7 +7,6 @@ import PaymentMode from "./PaymentMode";
 import Shipping from "./Shipping";
 import "./CheckoutSummary.css";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import SearchIcon from "@mui/icons-material/Search";
 
 const stepLabel = [
   "SHOPPING CART",
@@ -27,14 +26,6 @@ const CheckoutSummary = (props) => {
             <div className="col-md-4">
               <div className="h-100 align-content-around">
                 <ArrowBackIcon /> Continue Shopping
-              </div>
-            </div>
-            <div className="col-md-8">
-              <div class="search-box w-50">
-                <input type="text" placeholder="Search Products" />
-                <span class="icon">
-                  <SearchIcon />
-                </span>
               </div>
             </div>
           </div>

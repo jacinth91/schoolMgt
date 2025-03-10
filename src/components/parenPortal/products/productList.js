@@ -4,7 +4,7 @@ import { useState } from "react";
 import "../styles/productList.css";
 import ProductSlider from "./productListSlider";
 
-const ProductList = ({ products, categories }) => {
+const ProductList = ({ products, categories, showSearch }) => {
   const [searchQuery, setSearchQuery] = useState("");
 
   // Filter products based on search query
@@ -15,26 +15,34 @@ const ProductList = ({ products, categories }) => {
   return (
     <main className="product-container">
       {/* Search Bar */}
-      <div className="search-container">
-        <Search className="search-icon" />
-        <input
-          type="text"
-          placeholder="Search products..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-      </div>
+      {showSearch && (
+        <div className="search-container">
+          <Search className="search-icon" />
+          <input
+            type="text"
+            placeholder="Search products..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+      )}
 
       {/* Category Sliders */}
       <div className="category-section">
         {categories.map((category) => (
-          <ProductSlider key={category.id} category={category} products={products} />
+          <ProductSlider
+            key={category.id}
+            category={category}
+            products={products}
+          />
         ))}
       </div>
 
       {/* No Products Found */}
       {filteredProducts.length === 0 && (
-        <div className="no-products">No products found matching your search.</div>
+        <div className="no-products">
+          No products found matching your search.
+        </div>
       )}
     </main>
   );

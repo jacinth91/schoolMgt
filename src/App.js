@@ -19,6 +19,7 @@ import Footer from "./components/layout/footer";
 import CheckoutSummary from "./components/parenPortal/checkoutSummary/CheckoutSummary";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import Products from "./components/parenPortal/Products";
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
@@ -48,6 +49,8 @@ const App = () => {
         <Navbar />
         <Routes>
           <Route exact path="/dashboard" element={<Dashboard />} />
+          <Route exact path="/products" element={<Products />} />
+
           {/* <Route exact path="/register" element={<Register />} />
             <Route exact path="/login" element={<Login />} /> */}
         </Routes>
