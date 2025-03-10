@@ -1,6 +1,6 @@
 import React from "react";
 import CheckoutStepper from "../checkoutStepper/checkoutStepper";
-import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import Cart from "./Cart";
 import PlacedOrder from "./PlacedOrder";
 import PaymentMode from "./PaymentMode";
@@ -9,7 +9,6 @@ import "./CheckoutSummary.css";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import SearchIcon from "@mui/icons-material/Search";
 
-const steps = ["cart", "shipping", "payment", "place-order"];
 const stepLabel = [
   "SHOPPING CART",
   "SHIPPING",
