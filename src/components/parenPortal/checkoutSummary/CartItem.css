@@ -1,0 +1,11 @@
+/* Full height card */
+.cart-item {
+  border-radius: 10px;
+}
+
+/* Vertical Line */
+.vertical-line {
+  width: 2px;
+  background-color: #ccc;
+  height: 100%;
+}
