@@ -20,6 +20,9 @@ import CheckoutSummary from "./components/parenPortal/checkoutSummary/CheckoutSu
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import Products from "./components/parenPortal/Products";
+import ProductDetail from "./components/parenPortal/products/ProductDetail";
+import ProfilePage from "./components/parenPortal/ProfilePage";
+import ChildrenDetails from "./components/parenPortal/children/ChildrenDetails";
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
@@ -50,6 +53,9 @@ const App = () => {
         <Routes>
           <Route exact path="/dashboard" element={<Dashboard />} />
           <Route exact path="/products" element={<Products />} />
+          <Route exact path="/product/:productId" element={<ProductDetail />} />
+          <Route exact path="/profile/:userId" element={<ProfilePage />} />
+          <Route path="/children/:userId" element={<ChildrenDetails />} />
 
           {/* <Route exact path="/register" element={<Register />} />
             <Route exact path="/login" element={<Login />} /> */}
