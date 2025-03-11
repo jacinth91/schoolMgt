@@ -153,7 +153,7 @@ const Dashboard = () => {
         <div>
           <div className="row">
             <div className="col-md-12">
-              <div className="">
+              <div className="mt-4">
                 <div className="search-child-box w-50 mx-auto">
                   <p className="mb-2">Enrollment No. / Admission Number:</p>
                   <input type="text" placeholder="Student enrollment no." />

@@ -4,16 +4,10 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import Cart from "./Cart";
 import PlacedOrder from "./PlacedOrder";
 import PaymentMode from "./PaymentMode";
-import Shipping from "./Shipping";
 import "./CheckoutSummary.css";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
-const stepLabel = [
-  "SHOPPING CART",
-  "SHIPPING",
-  "PAYMENT",
-  "ORDER CONFIRMATION",
-];
+const stepLabel = ["SHOPPING CART", "PAYMENT", "ORDER CONFIRMATION"];
 const CheckoutSummary = (props) => {
   const location = useLocation();
   const activeStep = props.stepPaths.indexOf(location.pathname); // Determine active step index
@@ -41,7 +35,6 @@ const CheckoutSummary = (props) => {
       {/* Render Step Components Based on URL */}
       <Routes>
         <Route exact path="cart" element={<Cart />} />
-        <Route exact path="/shipping" element={<Shipping />} />
         <Route exact path="/payment" element={<PaymentMode />} />
         <Route exact path="/checkout" element={<PlacedOrder />} />
       </Routes>

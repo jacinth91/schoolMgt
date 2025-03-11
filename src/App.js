@@ -23,6 +23,7 @@ import Products from "./components/parenPortal/Products";
 import ProductDetail from "./components/parenPortal/products/ProductDetail";
 import ProfilePage from "./components/parenPortal/ProfilePage";
 import ChildrenDetails from "./components/parenPortal/children/ChildrenDetails";
+import OrderHistory from "./components/parenPortal/orders/OrderHistory";
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
@@ -56,6 +57,7 @@ const App = () => {
           <Route exact path="/product/:productId" element={<ProductDetail />} />
           <Route exact path="/profile/:userId" element={<ProfilePage />} />
           <Route path="/children/:userId" element={<ChildrenDetails />} />
+          <Route path="/order/:userId" element={<OrderHistory />} />
 
           {/* <Route exact path="/register" element={<Register />} />
             <Route exact path="/login" element={<Login />} /> */}
