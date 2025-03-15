@@ -2,7 +2,39 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { BarChart3, Menu ,UserPlus} from "lucide-react";
 
-const Navbar = () => {
+const Navbar = ({userRole}) => {
+  const getNavItems = () => {
+    //add props to get user role
+    switch ('parent') {
+      case "parent":
+        return [
+          { path: "/", label: "Home" },
+          { path: "/analytics", label: "Analytics" },
+          { path: "/users", label: "Manage Users" },
+          { path: "/reports", label: "Reports" },
+          { path: "/settings", label: "Settings" },
+        ];
+      case "admin":
+        return [
+          { path: "/", label: "Home" },
+          { path: "/profile", label: "Member Managment" },
+          { path: "/children", label: "Student Management" },
+          { path: "/products", label: "Bundle Management" },
+          { path: "/cart", label: "order" },
+          { path: "/support", label: "Product Management" },
+        ];
+      case "vendor":
+        return [
+          { path: "/", label: "Home" },
+          { path: "/products", label: "Profile" },
+          { path: "/orders", label: "Memeber Managemnt" },
+          { path: "/settings", label: "Order Mangement" },
+          
+        ];
+      default:
+        return [{ path: "/", label: "Home" }];
+    }
+  };
   return (
     <div className="banner align-items-center justify-content-center text-white">
       <nav className="navbar z-10 absolute top-0 w-full navbar-expand-lg">
@@ -21,42 +53,21 @@ const Navbar = () => {
           </button>
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav ms-auto">
-              <li className="nav-item">
-                <Link className="nav-link active" to="/">
-                  Home
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/analytics">
-                  Profile
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/reports">
-                  Children
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/settings">
-                  Products
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/settings">
-                  My cart
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/settings">
-                  Support
-                </Link>
-              </li>
-              <li>
-              <button className="add-child-button">
-      <UserPlus className="button-icon" />
-      <span>Add Child</span>
-    </button>
-              </li>
+            {getNavItems().map((item, index) => (
+                <li className="nav-item" key={index}>
+                  <Link className="nav-link" to={item.path}>
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+               {userRole === "parent" && (
+                <li>
+                  <button className="add-child-button">
+                    <UserPlus className="button-icon" />
+                    <span>Add Child</span>
+                  </button>
+                </li>
+              )}
             </ul>
           </div>
         </div>
