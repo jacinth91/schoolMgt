@@ -29,6 +29,8 @@ import ProductManagement from "./components/admin/ProductManagement";
 import ParentLogin from "./components/auth/ParentLogin";
 import StudentManagement from "./components/admin/StudentManagement";
 import OrderManagement from "./components/admin/OrderManagement";
+import ThankYouPage from "./components/parenPortal/checkoutSummary/ThankyouPage";
+import BundleManagement from "./components/admin/BundleManagement";
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
@@ -66,6 +68,8 @@ const App = () => {
           <Route path="/admin/products" element={<ProductManagement />} />
           <Route path="/admin/students" element={<StudentManagement />} />
           <Route path="/admin/orders" element={<OrderManagement />} />
+          <Route path="/thankyou" element={<ThankYouPage />} />
+          <Route path="/admin/bundle" element={<BundleManagement />} />
 
           {/* <Route exact path="/register" element={<Register />} />
             <Route exact path="/login" element={<Login />} /> */}
