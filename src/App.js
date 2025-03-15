@@ -31,6 +31,7 @@ import StudentManagement from "./components/admin/StudentManagement";
 import OrderManagement from "./components/admin/OrderManagement";
 import ThankYouPage from "./components/parenPortal/checkoutSummary/ThankyouPage";
 import BundleManagement from "./components/admin/BundleManagement";
+import Support from "./components/parenPortal/Support";
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
@@ -70,6 +71,7 @@ const App = () => {
           <Route path="/admin/orders" element={<OrderManagement />} />
           <Route path="/thankyou" element={<ThankYouPage />} />
           <Route path="/admin/bundle" element={<BundleManagement />} />
+          <Route path="/support" element={<Support />} />
 
           {/* <Route exact path="/register" element={<Register />} />
             <Route exact path="/login" element={<Login />} /> */}

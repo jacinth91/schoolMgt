@@ -1,150 +1,20 @@
-// import { Users, DollarSign, TrendingUp } from "lucide-react";
-// import Navbar from "../layout/Navbar";
-// import Footer from "../layout/footer";
-import {
-  Notebook,
-  Pencil,
-  Calculator,
-  Book,
-  Backpack,
-  Ruler,
-  Palette,
-} from "lucide-react";
-import SearchIcon from "@mui/icons-material/Search";
-
-import ProductList from "./products/productList";
-import "./dashboard.css";
+import React, { useState } from "react";
 import TopSellingProducts from "./TopSellingProduct";
-const products = [
-  {
-    id: 1,
-    name: "Premium Notebook",
-    price: 12.99,
-    icon: Notebook,
-    category: 1,
-    description: "High-quality spiral notebook with 200 pages",
-    image:
-      "https://images.unsplash.com/photo-1531346878377-a5be20888e57?auto=format&fit=crop&q=80&w=500&h=400",
-  },
-  {
-    id: 2,
-    name: "Mechanical Pencil Set",
-    price: 8.99,
-    icon: Pencil,
-    category: 2,
-    description: "5-pack of 0.7mm mechanical pencils",
-    image:
-      "https://images.unsplash.com/photo-1596558450268-9c27524ba856?auto=format&fit=crop&q=80&w=500&h=400",
-  },
-  {
-    id: 3,
-    name: "Scientific Calculator",
-    price: 29.99,
-    icon: Calculator,
-    category: 3,
-    description: "Advanced scientific calculator for math and science",
-    image:
-      "https://images.unsplash.com/photo-1574607383476-f517f260d30b?auto=format&fit=crop&q=80&w=500&h=400",
-  },
-  {
-    id: 1,
-    name: "Premium Notebook",
-    price: 12.99,
-    icon: Notebook,
-    category: 1,
-    description: "High-quality spiral notebook with 200 pages",
-    image:
-      "https://images.unsplash.com/photo-1531346878377-a5be20888e57?auto=format&fit=crop&q=80&w=500&h=400",
-  },
-  {
-    id: 2,
-    name: "Mechanical Pencil Set",
-    price: 8.99,
-    icon: Pencil,
-    category: 2,
-    description: "5-pack of 0.7mm mechanical pencils",
-    image:
-      "https://images.unsplash.com/photo-1596558450268-9c27524ba856?auto=format&fit=crop&q=80&w=500&h=400",
-  },
-  {
-    id: 3,
-    name: "Scientific Calculator",
-    price: 29.99,
-    icon: Calculator,
-    category: 3,
-    description: "Advanced scientific calculator for math and science",
-    image:
-      "https://images.unsplash.com/photo-1574607383476-f517f260d30b?auto=format&fit=crop&q=80&w=500&h=400",
-  },
-  {
-    id: 1,
-    name: "Premium Notebook",
-    price: 12.99,
-    icon: Notebook,
-    category: 1,
-    description: "High-quality spiral notebook with 200 pages",
-    image:
-      "https://images.unsplash.com/photo-1531346878377-a5be20888e57?auto=format&fit=crop&q=80&w=500&h=400",
-  },
-  {
-    id: 2,
-    name: "Mechanical Pencil Set",
-    price: 8.99,
-    icon: Pencil,
-    category: 2,
-    description: "5-pack of 0.7mm mechanical pencils",
-    image:
-      "https://images.unsplash.com/photo-1596558450268-9c27524ba856?auto=format&fit=crop&q=80&w=500&h=400",
-  },
-  {
-    id: 3,
-    name: "Scientific Calculator",
-    price: 29.99,
-    icon: Calculator,
-    category: 3,
-    description: "Advanced scientific calculator for math and science",
-    image:
-      "https://images.unsplash.com/photo-1574607383476-f517f260d30b?auto=format&fit=crop&q=80&w=500&h=400",
-  },
-  {
-    id: 1,
-    name: "Premium Notebook",
-    price: 12.99,
-    icon: Notebook,
-    category: 1,
-    description: "High-quality spiral notebook with 200 pages",
-    image:
-      "https://images.unsplash.com/photo-1531346878377-a5be20888e57?auto=format&fit=crop&q=80&w=500&h=400",
-  },
-  {
-    id: 2,
-    name: "Mechanical Pencil Set",
-    price: 8.99,
-    icon: Pencil,
-    category: 2,
-    description: "5-pack of 0.7mm mechanical pencils",
-    image:
-      "https://images.unsplash.com/photo-1596558450268-9c27524ba856?auto=format&fit=crop&q=80&w=500&h=400",
-  },
-  {
-    id: 3,
-    name: "Scientific Calculator",
-    price: 29.99,
-    icon: Calculator,
-    category: 3,
-    description: "Advanced scientific calculator for math and science",
-    image:
-      "https://images.unsplash.com/photo-1574607383476-f517f260d30b?auto=format&fit=crop&q=80&w=500&h=400",
-  },
-];
-
-const categories = [
-  { id: 1, name: "Notebooks", icon: Notebook },
-  { id: 2, name: "Pencils & Pens", icon: Pencil },
-  { id: 3, name: "Backpacks", icon: Backpack },
-];
+import "./dashboard.css";
 
 const Dashboard = () => {
+  const [stuId, setStuId] = useState();
+  const [showStuDetail, setShowStuDetail] = useState(false);
+
+  const onStudentSearch = () => {
+    setShowStuDetail(true);
+  };
+
+  const addStudentToParent = () => {
+    setShowStuDetail(false);
+    setStuId("");
+  };
+
   return (
     <div className="min-vh-100 d-flex flex-column">
       {/* Banner */}
@@ -157,10 +27,49 @@ const Dashboard = () => {
               <div className="mt-4">
                 <div className="search-child-box w-50 mx-auto">
                   <p className="mb-2">Enrollment No. / Admission Number:</p>
-                  <input type="text" placeholder="Student enrollment no." />
-                  <span class="icon">
-                    <SearchIcon />
-                  </span>
+                  <div className="row">
+                    <div className="col-md-9">
+                      <input
+                        type="text"
+                        placeholder="Student enrollment no."
+                        value={stuId}
+                        onChange={(e) => setStuId(e.target.value)}
+                      />
+                    </div>
+                    <div className="col-md-3">
+                      <button
+                        className="btn btn-primary mt-1"
+                        onClick={() => onStudentSearch()}
+                      >
+                        Search <em className="bi-search ps-2"></em>
+                      </button>
+                    </div>
+                  </div>
+                  {showStuDetail && (
+                    <div>
+                      <span>Enrollment ID: SCD123</span>
+                      <div>
+                        <strong>John Smith</strong>
+                      </div>
+                      <div>
+                        <strong>1st Grade</strong>
+                      </div>
+                      <div>
+                        <strong>A Section</strong>
+                      </div>
+                      <div>
+                        <strong>House Red</strong>
+                      </div>
+                      <div className="text-center">
+                        <button
+                          className="btn btn-success mt-5 mx-auto"
+                          onClick={() => addStudentToParent()}
+                        >
+                          Add Child<em className="bi-plus ps-2"></em>
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

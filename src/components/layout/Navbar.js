@@ -1,35 +1,35 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { BarChart3, Menu ,UserPlus} from "lucide-react";
+import { BarChart3, Menu, UserPlus } from "lucide-react";
 
-const Navbar = ({userRole}) => {
+const Navbar = ({ userRole }) => {
   const getNavItems = () => {
     //add props to get user role
-    switch ('parent') {
+    switch ("parent") {
       case "parent":
         return [
-          { path: "/", label: "Home" },
-          { path: "/analytics", label: "Analytics" },
-          { path: "/users", label: "Manage Users" },
-          { path: "/reports", label: "Reports" },
-          { path: "/settings", label: "Settings" },
+          { path: "/dashboard", label: "Home" },
+          { path: "/profile/id", label: "Profile" },
+          { path: "/children/id", label: "Children" },
+          { path: "/products", label: "Products" },
+          { path: "/cart", label: "Cart" },
+          { path: "/support", label: "Support" },
         ];
       case "admin":
         return [
-          { path: "/", label: "Home" },
+          { path: "/dashboard", label: "Home" },
           { path: "/profile", label: "Member Managment" },
           { path: "/children", label: "Student Management" },
           { path: "/products", label: "Bundle Management" },
-          { path: "/cart", label: "order" },
+          { path: "/cart", label: "Orders" },
           { path: "/support", label: "Product Management" },
         ];
       case "vendor":
         return [
-          { path: "/", label: "Home" },
+          { path: "/dashboard", label: "Home" },
           { path: "/products", label: "Profile" },
           { path: "/orders", label: "Memeber Managemnt" },
           { path: "/settings", label: "Order Mangement" },
-          
         ];
       default:
         return [{ path: "/", label: "Home" }];
@@ -53,14 +53,14 @@ const Navbar = ({userRole}) => {
           </button>
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav ms-auto">
-            {getNavItems().map((item, index) => (
+              {getNavItems().map((item, index) => (
                 <li className="nav-item" key={index}>
                   <Link className="nav-link" to={item.path}>
                     {item.label}
                   </Link>
                 </li>
               ))}
-               {userRole === "parent" && (
+              {userRole === "parent" && (
                 <li>
                   <button className="add-child-button">
                     <UserPlus className="button-icon" />
