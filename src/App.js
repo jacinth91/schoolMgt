@@ -4,6 +4,7 @@ import {
   Route,
   Routes,
   useLocation,
+  Navigate,
 } from "react-router-dom";
 import Navbar from "./components/layout/Navbar";
 
@@ -23,6 +24,13 @@ import Products from "./components/parenPortal/Products";
 import ProductDetail from "./components/parenPortal/products/ProductDetail";
 import ProfilePage from "./components/parenPortal/ProfilePage";
 import ChildrenDetails from "./components/parenPortal/children/ChildrenDetails";
+import OrderHistory from "./components/parenPortal/orders/OrderHistory";
+import ProductManagement from "./components/admin/ProductManagement";
+import ParentLogin from "./components/auth/ParentLogin";
+import StudentManagement from "./components/admin/StudentManagement";
+import OrderManagement from "./components/admin/OrderManagement";
+import ThankYouPage from "./components/parenPortal/checkoutSummary/ThankyouPage";
+import BundleManagement from "./components/admin/BundleManagement";
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
@@ -30,7 +38,7 @@ if (localStorage.token) {
 
 const CheckoutWrapper = () => {
   const location = useLocation();
-  const checkoutPaths = ["/cart", "/shipping", "/payment", "/checkout"];
+  const checkoutPaths = ["/cart", "/payment", "/checkout"];
 
   return checkoutPaths.includes(location.pathname) ? (
     <CheckoutSummary stepPaths={checkoutPaths} />
@@ -38,8 +46,6 @@ const CheckoutWrapper = () => {
 };
 
 const App = () => {
-  // const location = useLocation();
-
   useEffect(() => {
     store.dispatch(loadUser());
   }, []);
@@ -51,11 +57,19 @@ const App = () => {
         {/* <Navbar /> */}
         <Navbar />
         <Routes>
+          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="/login" element={<ParentLogin />} />
           <Route exact path="/dashboard" element={<Dashboard />} />
           <Route exact path="/products" element={<Products />} />
           <Route exact path="/product/:productId" element={<ProductDetail />} />
           <Route exact path="/profile/:userId" element={<ProfilePage />} />
           <Route path="/children/:userId" element={<ChildrenDetails />} />
+          <Route path="/order/:userId" element={<OrderHistory />} />
+          <Route path="/admin/products" element={<ProductManagement />} />
+          <Route path="/admin/students" element={<StudentManagement />} />
+          <Route path="/admin/orders" element={<OrderManagement />} />
+          <Route path="/thankyou" element={<ThankYouPage />} />
+          <Route path="/admin/bundle" element={<BundleManagement />} />
 
           {/* <Route exact path="/register" element={<Register />} />
             <Route exact path="/login" element={<Login />} /> */}

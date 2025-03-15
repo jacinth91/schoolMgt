@@ -14,6 +14,7 @@ import SearchIcon from "@mui/icons-material/Search";
 
 import ProductList from "./products/productList";
 import "./dashboard.css";
+import TopSellingProducts from "./TopSellingProduct";
 const products = [
   {
     id: 1,
@@ -153,7 +154,7 @@ const Dashboard = () => {
         <div>
           <div className="row">
             <div className="col-md-12">
-              <div className="">
+              <div className="mt-4">
                 <div className="search-child-box w-50 mx-auto">
                   <p className="mb-2">Enrollment No. / Admission Number:</p>
                   <input type="text" placeholder="Student enrollment no." />
@@ -164,12 +165,21 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
-          <div className="row mt-4">
-            <ProductList
-              products={products}
-              categories={categories}
-              showSearch={false}
-            />
+          <div className="mt-4 pt-4">
+            <div className="row">
+              <div className="col-md-6">
+                <TopSellingProducts category={"Regular Uniform"} />
+              </div>
+              <div className="col-md-6">
+                <TopSellingProducts category={"Sports Uniform"} />
+              </div>
+              <div className="col-md-6">
+                <TopSellingProducts category={"Accessories"} />
+              </div>
+              <div className="col-md-6">
+                <TopSellingProducts category={"Sportopia"} />
+              </div>
+            </div>
           </div>
         </div>
       </div>

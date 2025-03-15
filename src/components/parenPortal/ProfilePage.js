@@ -9,11 +9,21 @@ import {
   GeoAltFill,
 } from "react-bootstrap-icons";
 import profileImg from "../../images/profile.png";
+import PopupDialog from "../layout/PopupDialog";
 
 const ProfilePage = () => {
+  const dummyData = [
+    { label: "Name", value: "John Doe", editable: true },
+    { label: "Email", value: "john.doe@example.com", editable: true },
+    { label: "Phone", value: "+1234567890", editable: false },
+    { label: "Address", value: "123 Street, City", editable: true },
+  ];
+
   const { userId } = useParams(); // Get userId from URL
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showPopup, setShowPopup] = useState(false);
+  const [formData, setFormData] = useState(dummyData);
 
   useEffect(() => {
     // Commenting out API call for now
@@ -46,6 +56,12 @@ const ProfilePage = () => {
       setLoading(false);
     }, 1000); // Simulate API delay
   }, [userId]);
+
+  const handleSave = (updatedData) => {
+    console.log("Updated Data:", updatedData);
+    setFormData(updatedData);
+    setShowPopup(false);
+  };
 
   if (loading) return <div className="text-center mt-5">Loading...</div>;
   if (!user)
@@ -83,8 +99,18 @@ const ProfilePage = () => {
       </div>
 
       <div className="text-center mt-4">
-        <button className="btn update-btn">Update & Save</button>
+        <button className="btn update-btn" onClick={() => setShowPopup(true)}>
+          Update
+        </button>
       </div>
+      {showPopup && (
+        <PopupDialog
+          data={formData}
+          onSave={handleSave}
+          onCancel={() => setShowPopup(false)}
+          header={"Edit Profile"}
+        />
+      )}
     </div>
   );
 };
