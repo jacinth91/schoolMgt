@@ -31,6 +31,7 @@ import StudentManagement from "./components/admin/StudentManagement";
 import OrderManagement from "./components/admin/OrderManagement";
 import ThankYouPage from "./components/parenPortal/checkoutSummary/ThankyouPage";
 import BundleManagement from "./components/admin/BundleManagement";
+import LoginPage from "./pages/auth/LoginPage";
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
@@ -58,7 +59,7 @@ const App = () => {
         <Navbar />
         <Routes>
           <Route path="/" element={<Navigate to="/login" replace />} />
-          <Route path="/login" element={<ParentLogin />} />
+          <Route path="/login" element={<LoginPage />} />
           <Route exact path="/dashboard" element={<Dashboard />} />
           <Route exact path="/products" element={<Products />} />
           <Route exact path="/product/:productId" element={<ProductDetail />} />
