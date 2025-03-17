@@ -26,12 +26,12 @@ import ProfilePage from "./components/parenPortal/ProfilePage";
 import ChildrenDetails from "./components/parenPortal/children/ChildrenDetails";
 import OrderHistory from "./components/parenPortal/orders/OrderHistory";
 import ProductManagement from "./components/admin/ProductManagement";
+import ParentLogin from "./components/auth/ParentLogin";
 import StudentManagement from "./components/admin/StudentManagement";
 import OrderManagement from "./components/admin/OrderManagement";
 import ThankYouPage from "./components/parenPortal/checkoutSummary/ThankyouPage";
 import BundleManagement from "./components/admin/BundleManagement";
 import Support from "./components/parenPortal/Support";
-import LoginPage from "./pages/auth/LoginPage";
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
@@ -46,6 +46,21 @@ const CheckoutWrapper = () => {
   ) : null;
 };
 
+const Layout = ({ children }) => {
+  const location = useLocation(); // Now correctly used inside <Router>
+  const hideNavbarRoutes = ["/login"];
+
+  return (
+    <>
+      {/* Show Navbar only if not on login page */}
+      {!hideNavbarRoutes.includes(location.pathname) && <Navbar />}
+      {children}
+      <CheckoutWrapper />
+      <Footer />
+    </>
+  );
+};
+
 const App = () => {
   useEffect(() => {
     store.dispatch(loadUser());
@@ -56,10 +71,10 @@ const App = () => {
       <Router>
         {/* <Fragment> */}
         {/* <Navbar /> */}
-        <Navbar />
+        <Layout>
         <Routes>
           <Route path="/" element={<Navigate to="/login" replace />} />
-          <Route path="/login" element={<LoginPage />} />
+          <Route path="/login" element={<ParentLogin />} />
           <Route exact path="/dashboard" element={<Dashboard />} />
           <Route exact path="/products" element={<Products />} />
           <Route exact path="/product/:productId" element={<ProductDetail />} />
@@ -79,9 +94,10 @@ const App = () => {
         {/* {checkoutPaths.includes(location.pathname) && (
           <CheckoutSummary stepPath={checkoutPaths} />
         )} */}
-        <CheckoutWrapper />
+        {/* <CheckoutWrapper /> */}
         {/* </Fragment> */}
-        <Footer />
+        {/* <Footer /> */}
+        </Layout>
       </Router>
     </Provider>
   );
