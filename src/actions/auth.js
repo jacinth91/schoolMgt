@@ -13,16 +13,12 @@ import { get, post } from "../services/api";
 
 //Load user
 export const loadUser = () => async (dispatch) => {
-  if (localStorage.token) {
-    setAuthToken(localStorage.token);
-  }
-
   try {
-    // const res = await get("/api/auth");
+    const res = await get("/parents/me");
 
     dispatch({
       type: USER_LOADED,
-      payload: {},
+      payload: res.data,
     });
   } catch (err) {
     dispatch({
@@ -57,43 +53,6 @@ export const register =
     }
   };
 
-// export const login =
-//   ({ username, password }) =>
-//   async (dispatch) => {
-//     const config = {
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//     };
-
-//     const body = JSON.stringify({ username, password });
-//     try {
-//       const res = await axios.post("/api/auth", body, config);
-
-//       // const res = await post("/auth/login", {
-//       //   usid: username,
-//       //   password: password,
-//       // });
-
-//       dispatch({
-//         type: LOGIN_SUCCESS,
-//         payload: res.data,
-//       });
-
-//       dispatch(loadUser()); // Uncomment this if you want to load user data after login
-//     } catch (err) {
-//       console.error("Login Error:", err); // ✅ Log error for debugging
-
-//       // ✅ Check if `err.response` exists to prevent crashes
-//       const errors = err.response?.data?.errors || "Something went wrong";
-
-//       dispatch({
-//         type: LOGIN_FAIL,
-//         payload: errors,
-//       });
-//     }
-//   };
-
 export const login =
   ({ username, password }) =>
   async (dispatch) => {
@@ -102,9 +61,8 @@ export const login =
         usid: username,
         password: password,
       });
-
       dispatch({
-        type: "LOGIN_SUCCESS",
+        type: LOGIN_SUCCESS,
         payload: res.data,
       });
 

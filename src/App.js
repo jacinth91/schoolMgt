@@ -9,7 +9,7 @@ import {
 import Navbar from "./components/layout/Navbar";
 
 // Redux
-import { Provider } from "react-redux";
+import { Provider, useSelector } from "react-redux";
 import store from "./store";
 import { loadUser } from "./actions/auth";
 import setAuthToken from "./utils/setAuthToken";
@@ -50,16 +50,14 @@ const CheckoutWrapper = () => {
 };
 
 const Layout = ({ children }) => {
-  const location = useLocation(); // Now correctly used inside <Router>
-  const hideNavbarRoutes = ["/login"];
-
+  const { isAuthenticated, loading } = useSelector((state) => state.auth);
   return (
     <>
       {/* Show Navbar only if not on login page */}
-      {!hideNavbarRoutes.includes(location.pathname) && <Navbar />}
+      {isAuthenticated && !loading && <Navbar />}
       {children}
       <CheckoutWrapper />
-      {!hideNavbarRoutes.includes(location.pathname) && <Footer />}
+      {isAuthenticated && !loading && <Footer />}
     </>
   );
 };
@@ -80,7 +78,7 @@ const App = () => {
             <Route path="/login" element={<ParentLogin />} />
 
             {/* Private Routes for Authenticated Users */}
-            <Route element={<PrivateRoute allowedRoles={[ROLES.ALL]} />}>
+            <Route element={<PrivateRoute />}>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/profile/:userId" element={<ProfilePage />} />
             </Route>
@@ -94,7 +92,7 @@ const App = () => {
               <Route path="/support" element={<Support />} />
             </Route>
 
-            <Route element={<PrivateRoute allowedRoles={[ROLES.ADMIN]} />}>
+            <Route element={<PrivateRoute />}>
               <Route path="/admin/products" element={<ProductManagement />} />
               <Route path="/admin/students" element={<StudentManagement />} />
               <Route path="/admin/orders" element={<OrderManagement />} />
