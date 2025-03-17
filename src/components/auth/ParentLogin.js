@@ -2,11 +2,14 @@ import React, { useState } from "react";
 import { KeyRound, UserRound, ArrowRight, Lock, ArrowLeft } from "lucide-react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./style/auth.css"; // Ensure CSS is imported properly
-
+import { login } from "../../actions/auth";
+import { useDispatch } from "react-redux";
 
 const ParentLogin = () => {
+  const dispatch = useDispatch();
+
   const [userId, setUserId] = useState("");
-  const [authMethod, setAuthMethod] = useState('select');
+  const [authMethod, setAuthMethod] = useState("select");
   const [password, setPassword] = useState("");
   const [otp, setOtp] = useState("");
   //const [generatedOtp, setGeneratedOtp] = useState("");
@@ -19,12 +22,12 @@ const ParentLogin = () => {
   };
 
   const handlePasswordSubmit = (e) => {
-    // e.preventDefault();
-    // if (password === 'demo123') {
-    //   alert('Login successful!');
-    // } else {
-    //   alert('Invalid password. Please try again.');
-    // }
+    e.preventDefault();
+    if (password.length) {
+      dispatch(login({ username: userId, password: password }));
+    } else {
+      alert("Invalid password. Please try again.");
+    }
   };
 
   const handleOtpSubmit = (e) => {
@@ -74,7 +77,7 @@ const ParentLogin = () => {
                     disabled={!userId}
                   >
                     <Lock size={20} />
-                    <span>Use Password</span>
+                    <span>Password</span>
                   </button>
 
                   <button
@@ -89,7 +92,7 @@ const ParentLogin = () => {
                     disabled={!userId}
                   >
                     <KeyRound size={20} />
-                    <span>Use OTP</span>
+                    <span>OTP</span>
                   </button>
                 </div>
               </div>

@@ -32,6 +32,9 @@ import OrderManagement from "./components/admin/OrderManagement";
 import ThankYouPage from "./components/parenPortal/checkoutSummary/ThankyouPage";
 import BundleManagement from "./components/admin/BundleManagement";
 import Support from "./components/parenPortal/Support";
+import PrivateRoute from "./components/routing/PrivateRoute";
+import { ROLES } from "./utils/constants";
+import AuthRedirect from "./components/layout/AuthRedirect";
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
@@ -56,7 +59,7 @@ const Layout = ({ children }) => {
       {!hideNavbarRoutes.includes(location.pathname) && <Navbar />}
       {children}
       <CheckoutWrapper />
-      <Footer />
+      {!hideNavbarRoutes.includes(location.pathname) && <Footer />}
     </>
   );
 };
@@ -72,31 +75,32 @@ const App = () => {
         {/* <Fragment> */}
         {/* <Navbar /> */}
         <Layout>
-        <Routes>
-          <Route path="/" element={<Navigate to="/login" replace />} />
-          <Route path="/login" element={<ParentLogin />} />
-          <Route exact path="/dashboard" element={<Dashboard />} />
-          <Route exact path="/products" element={<Products />} />
-          <Route exact path="/product/:productId" element={<ProductDetail />} />
-          <Route exact path="/profile/:userId" element={<ProfilePage />} />
-          <Route path="/children/:userId" element={<ChildrenDetails />} />
-          <Route path="/order/:userId" element={<OrderHistory />} />
-          <Route path="/admin/products" element={<ProductManagement />} />
-          <Route path="/admin/students" element={<StudentManagement />} />
-          <Route path="/admin/orders" element={<OrderManagement />} />
-          <Route path="/thankyou" element={<ThankYouPage />} />
-          <Route path="/admin/bundle" element={<BundleManagement />} />
-          <Route path="/support" element={<Support />} />
+          <Routes>
+            <Route path="/" element={<AuthRedirect />} />
+            <Route path="/login" element={<ParentLogin />} />
 
-          {/* <Route exact path="/register" element={<Register />} />
-            <Route exact path="/login" element={<Login />} /> */}
-        </Routes>
-        {/* {checkoutPaths.includes(location.pathname) && (
-          <CheckoutSummary stepPath={checkoutPaths} />
-        )} */}
-        {/* <CheckoutWrapper /> */}
-        {/* </Fragment> */}
-        {/* <Footer /> */}
+            {/* Private Routes for Authenticated Users */}
+            <Route element={<PrivateRoute allowedRoles={[ROLES.ALL]} />}>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/profile/:userId" element={<ProfilePage />} />
+            </Route>
+
+            <Route element={<PrivateRoute allowedRoles={[ROLES.PARENT]} />}>
+              <Route path="/products" element={<Products />} />
+              <Route path="/product/:productId" element={<ProductDetail />} />
+              <Route path="/children/:userId" element={<ChildrenDetails />} />
+              <Route path="/order/:userId" element={<OrderHistory />} />
+              <Route path="/thankyou" element={<ThankYouPage />} />
+              <Route path="/support" element={<Support />} />
+            </Route>
+
+            <Route element={<PrivateRoute allowedRoles={[ROLES.ADMIN]} />}>
+              <Route path="/admin/products" element={<ProductManagement />} />
+              <Route path="/admin/students" element={<StudentManagement />} />
+              <Route path="/admin/orders" element={<OrderManagement />} />
+              <Route path="/admin/bundle" element={<BundleManagement />} />
+            </Route>
+          </Routes>
         </Layout>
       </Router>
     </Provider>
