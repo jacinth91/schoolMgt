@@ -12,7 +12,6 @@ import Navbar from "./components/layout/Navbar";
 import { Provider, useSelector } from "react-redux";
 import store from "./store";
 import { loadUser } from "./actions/auth";
-import setAuthToken from "./utils/setAuthToken";
 
 import "./App.css";
 import Dashboard from "./components/parenPortal/dashboard";
@@ -36,10 +35,15 @@ import PrivateRoute from "./components/routing/PrivateRoute";
 import { ROLES } from "./utils/constants";
 import AuthRedirect from "./components/layout/AuthRedirect";
 import FullPageSpinner from "./components/layout/FullPageSpinner";
+import SupportQueries from "./components/admin/SupportQueries";
 
 const CheckoutWrapper = ({ isAuthenticated }) => {
   const location = useLocation();
   const checkoutPaths = ["/cart", "/payment", "/checkout"];
+
+  if (checkoutPaths.includes(location.pathname) && !isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
 
   return checkoutPaths.includes(location.pathname) && isAuthenticated ? (
     <CheckoutSummary stepPaths={checkoutPaths} />
@@ -95,6 +99,7 @@ const App = () => {
               <Route path="/admin/students" element={<StudentManagement />} />
               <Route path="/admin/orders" element={<OrderManagement />} />
               <Route path="/admin/bundle" element={<BundleManagement />} />
+              <Route path="/admin/support" element={<SupportQueries />} />
             </Route>
           </Routes>
         </Layout>

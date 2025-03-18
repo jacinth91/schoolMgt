@@ -5,7 +5,7 @@ import { loadStudentDetail } from "../../actions/student";
 import FullPageSpinner from "../layout/FullPageSpinner";
 
 const Dashboard = () => {
-  const [stuId, setStuId] = useState();
+  const [stuId, setStuId] = useState("");
   const [showDetail, setShowDetail] = useState(false);
   const [student, setStudent] = useState({});
   const [loading, setLoading] = useState(false);

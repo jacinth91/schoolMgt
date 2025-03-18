@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { KeyRound, UserRound, ArrowRight, Lock, ArrowLeft } from "lucide-react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./style/auth.css"; // Ensure CSS is imported properly
@@ -7,7 +7,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 
 const ParentLogin = () => {
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
   const dispatch = useDispatch();
+  const inputRef = useRef(null);
 
   const [userId, setUserId] = useState("");
   const [authMethod, setAuthMethod] = useState("select");
@@ -67,6 +71,7 @@ const ParentLogin = () => {
                       onChange={(e) => setUserId(e.target.value)}
                       className="form-control input-with-icon"
                       placeholder="Enter User ID"
+                      ref={inputRef}
                       required
                     />
                   </div>

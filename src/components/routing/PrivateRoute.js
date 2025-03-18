@@ -1,10 +1,11 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useSelector } from "react-redux";
+import FullPageSpinner from "../layout/FullPageSpinner";
 
 const PrivateRoute = ({ allowedRoles }) => {
   const { isAuthenticated, loading, user } = useSelector((state) => state.auth);
 
-  if (loading) return null; // Prevent redirection while authentication state is loading
+  if (loading) return <FullPageSpinner loading={loading} />; // Prevent redirection while authentication state is loading
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;

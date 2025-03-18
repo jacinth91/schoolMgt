@@ -1,26 +1,25 @@
 import React, { useState } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
+import { useSelector } from "react-redux";
+import { submitSupportQuery } from "../../actions/support";
 
 const SupportForm = () => {
+  const { user } = useSelector((state) => state.auth);
   const [formData, setFormData] = useState({
     parentName: "",
     studentId: "",
     queryType: "",
     description: "",
-    file: null,
   });
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleFileChange = (e) => {
-    setFormData({ ...formData, file: e.target.files[0] });
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form Data Submitted", formData);
+    console.log("Form Data Submitted", formData, user);
+    const response = submitSupportQuery(formData, user);
+    console.log(response);
 
     // API call can be made here
     // fetch("/api/submit-query", {
@@ -74,14 +73,6 @@ const SupportForm = () => {
             <option value="Billing">Billing</option>
             <option value="Delivery">Delivery</option>
           </select>
-        </div>
-        <div className="mb-3">
-          <label className="form-label">Attach Support Document</label>
-          <input
-            type="file"
-            className="form-control"
-            onChange={handleFileChange}
-          />
         </div>
         <div className="mb-3">
           <label className="form-label">Description</label>

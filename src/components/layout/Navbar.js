@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { BarChart3, Menu, User } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,6 +8,23 @@ const Navbar = () => {
   const { parentName, role } = useSelector((state) => state.auth.user);
   const [showProfile, setShowProfile] = useState(false);
   const dispacth = useDispatch();
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowProfile(false); // Close the dropdown if clicked outside
+      }
+    };
+
+    if (showProfile) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showProfile]); // Runs when showProfile changes
 
   const logoutClick = () => {
     dispacth(logout());
@@ -82,6 +99,7 @@ const Navbar = () => {
                   <div
                     className="profile-dropdown position-absolute bg-white shadow-lg rounded p-3 mt-2 end-0"
                     style={{ minWidth: "200px", zIndex: 1000 }}
+                    ref={dropdownRef}
                   >
                     <p className="mb-2 fw-bold text-center text-dark">
                       {parentName}
