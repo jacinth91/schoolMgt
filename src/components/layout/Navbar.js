@@ -1,15 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { BarChart3, Menu, UserPlus } from "lucide-react";
+import { BarChart3, Menu, User } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../actions/auth";
 
-const Navbar = ({ userRole }) => {
+const Navbar = () => {
+  const { parentName, role } = useSelector((state) => state.auth.user);
+  const [showProfile, setShowProfile] = useState(false);
+  const dispacth = useDispatch();
+
+  const logoutClick = () => {
+    dispacth(logout());
+  };
+
   const getNavItems = () => {
-    //add props to get user role
-    switch ("parent") {
+    switch (role) {
       case "parent":
         return [
           { path: "/dashboard", label: "Home" },
-          { path: "/profile/id", label: "Profile" },
+          { path: "/profile", label: "Profile" },
           { path: "/children/id", label: "Children" },
           { path: "/products", label: "Products" },
           { path: "/cart", label: "Cart" },
@@ -18,7 +27,7 @@ const Navbar = ({ userRole }) => {
       case "admin":
         return [
           { path: "/dashboard", label: "Home" },
-          { path: "/profile", label: "Member Managment" },
+          { path: "/profile", label: "Member Management" },
           { path: "/children", label: "Student Management" },
           { path: "/products", label: "Bundle Management" },
           { path: "/cart", label: "Orders" },
@@ -28,13 +37,14 @@ const Navbar = ({ userRole }) => {
         return [
           { path: "/dashboard", label: "Home" },
           { path: "/products", label: "Profile" },
-          { path: "/orders", label: "Memeber Managemnt" },
-          { path: "/settings", label: "Order Mangement" },
+          { path: "/orders", label: "Member Management" },
+          { path: "/settings", label: "Order Management" },
         ];
       default:
         return [{ path: "/", label: "Home" }];
     }
   };
+
   return (
     <div className="banner align-items-center justify-content-center text-white">
       <nav className="navbar z-10 absolute top-0 w-full navbar-expand-lg">
@@ -60,29 +70,36 @@ const Navbar = ({ userRole }) => {
                   </Link>
                 </li>
               ))}
-              {userRole === "parent" && (
-                <li>
-                  <button className="add-child-button">
-                    <UserPlus className="button-icon" />
-                    <span>Add Child</span>
-                  </button>
-                </li>
-              )}
+              {/* Profile Dropdown */}
+              <li className="nav-item position-relative ps-3 pt-2">
+                <button
+                  className="profile-button d-flex align-items-center justify-content-center border-0 bg-transparent"
+                  onClick={() => setShowProfile(!showProfile)}
+                >
+                  <User size={24} className="text-white" />
+                </button>
+                {showProfile && (
+                  <div
+                    className="profile-dropdown position-absolute bg-white shadow-lg rounded p-3 mt-2 end-0"
+                    style={{ minWidth: "200px", zIndex: 1000 }}
+                  >
+                    <p className="mb-2 fw-bold text-center text-dark">
+                      {parentName}
+                    </p>
+                    <hr className="m-2" />
+                    <button
+                      className="btn btn-danger w-100 text-center"
+                      onClick={logoutClick}
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </li>
             </ul>
           </div>
         </div>
       </nav>
-      {/* <div className="welcome-wrapper align-content-end">
-        <div className="px-4 py-3 w-50 welcome-box">
-          <div className="ps-5 ms-3">
-            <h3>Why Parents Choose Our Software</h3>
-            <p>
-              We believe every business should be able to manage their work
-              processes with innovative, custom-built software.
-            </p>
-          </div>
-        </div>
-      </div> */}
     </div>
   );
 };

@@ -3,7 +3,8 @@ import { KeyRound, UserRound, ArrowRight, Lock, ArrowLeft } from "lucide-react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./style/auth.css"; // Ensure CSS is imported properly
 import { login } from "../../actions/auth";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
 
 const ParentLogin = () => {
   const dispatch = useDispatch();
@@ -12,6 +13,8 @@ const ParentLogin = () => {
   const [authMethod, setAuthMethod] = useState("select");
   const [password, setPassword] = useState("");
   const [otp, setOtp] = useState("");
+  const { isAuthenticated } = useSelector((state) => state.auth);
+
   //const [generatedOtp, setGeneratedOtp] = useState("");
 
   const handleUserIdSubmit = (e) => {
@@ -39,7 +42,9 @@ const ParentLogin = () => {
     // }
   };
 
-  return (
+  return isAuthenticated ? (
+    <Navigate to="/dashboard" />
+  ) : (
     <div className="auth-container d-flex align-items-center justify-content-center">
       <div className="container">
         <div className="row justify-content-center">

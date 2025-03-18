@@ -35,16 +35,13 @@ import Support from "./components/parenPortal/Support";
 import PrivateRoute from "./components/routing/PrivateRoute";
 import { ROLES } from "./utils/constants";
 import AuthRedirect from "./components/layout/AuthRedirect";
+import FullPageSpinner from "./components/layout/FullPageSpinner";
 
-if (localStorage.token) {
-  setAuthToken(localStorage.token);
-}
-
-const CheckoutWrapper = () => {
+const CheckoutWrapper = ({ isAuthenticated }) => {
   const location = useLocation();
   const checkoutPaths = ["/cart", "/payment", "/checkout"];
 
-  return checkoutPaths.includes(location.pathname) ? (
+  return checkoutPaths.includes(location.pathname) && isAuthenticated ? (
     <CheckoutSummary stepPaths={checkoutPaths} />
   ) : null;
 };
@@ -53,10 +50,11 @@ const Layout = ({ children }) => {
   const { isAuthenticated, loading } = useSelector((state) => state.auth);
   return (
     <>
+      {loading && <FullPageSpinner loading={loading} />}
       {/* Show Navbar only if not on login page */}
       {isAuthenticated && !loading && <Navbar />}
       {children}
-      <CheckoutWrapper />
+      <CheckoutWrapper isAuthenticated={isAuthenticated} />
       {isAuthenticated && !loading && <Footer />}
     </>
   );
@@ -80,19 +78,19 @@ const App = () => {
             {/* Private Routes for Authenticated Users */}
             <Route element={<PrivateRoute />}>
               <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/profile/:userId" element={<ProfilePage />} />
+              <Route path="/profile" element={<ProfilePage />} />
             </Route>
 
             <Route element={<PrivateRoute allowedRoles={[ROLES.PARENT]} />}>
               <Route path="/products" element={<Products />} />
               <Route path="/product/:productId" element={<ProductDetail />} />
-              <Route path="/children/:userId" element={<ChildrenDetails />} />
-              <Route path="/order/:userId" element={<OrderHistory />} />
+              <Route path="/children" element={<ChildrenDetails />} />
+              <Route path="/order/history" element={<OrderHistory />} />
               <Route path="/thankyou" element={<ThankYouPage />} />
               <Route path="/support" element={<Support />} />
             </Route>
 
-            <Route element={<PrivateRoute />}>
+            <Route element={<PrivateRoute allowedRoles={[ROLES.ADMIN]} />}>
               <Route path="/admin/products" element={<ProductManagement />} />
               <Route path="/admin/students" element={<StudentManagement />} />
               <Route path="/admin/orders" element={<OrderManagement />} />

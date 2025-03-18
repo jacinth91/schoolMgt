@@ -1,17 +1,28 @@
 import React, { useState } from "react";
 import TopSellingProducts from "./TopSellingProduct";
 import "./dashboard.css";
+import { loadStudentDetail } from "../../actions/student";
+import FullPageSpinner from "../layout/FullPageSpinner";
 
 const Dashboard = () => {
   const [stuId, setStuId] = useState();
-  const [showStuDetail, setShowStuDetail] = useState(false);
+  const [showDetail, setShowDetail] = useState(false);
+  const [student, setStudent] = useState({});
+  const [loading, setLoading] = useState(false);
 
-  const onStudentSearch = () => {
-    setShowStuDetail(true);
+  const onStudentSearch = async () => {
+    // setShowStuDetail(true);
+    if (stuId.length) {
+      setLoading(true);
+      const response = await loadStudentDetail(stuId);
+      setLoading(false);
+      setStudent(response);
+      setShowDetail(true);
+    }
   };
 
   const addStudentToParent = () => {
-    setShowStuDetail(false);
+    setShowDetail(false);
     setStuId("");
   };
 
@@ -45,20 +56,33 @@ const Dashboard = () => {
                       </button>
                     </div>
                   </div>
-                  {showStuDetail && (
-                    <div>
-                      <span>Enrollment ID: SCD123</span>
+                  {loading && <FullPageSpinner loading={loading} />}
+                  {showDetail && (
+                    <div className="mt-2">
+                      <strong>Enrollment ID: </strong> {student?.usid}
                       <div>
-                        <strong>John Smith</strong>
+                        <strong>Student Name: </strong>
+                        {student?.studentName}
                       </div>
                       <div>
-                        <strong>1st Grade</strong>
+                        <strong>Grade: </strong>
+                        {student?.class}
                       </div>
                       <div>
-                        <strong>A Section</strong>
+                        <strong>Section: </strong>
+                        {student?.section}
                       </div>
                       <div>
-                        <strong>House Red</strong>
+                        <strong>House: </strong>
+                        {student?.house}
+                      </div>
+                      <div>
+                        <strong>Campus: </strong>
+                        {student?.campus}
+                      </div>
+                      <div>
+                        <strong>Gender: </strong>
+                        {student?.gender}
                       </div>
                       <div className="text-center">
                         <button

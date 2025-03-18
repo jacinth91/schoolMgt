@@ -6,9 +6,8 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGOUT,
-  CLEAR_PROFILE,
+  LOADING_CHANGE,
 } from "./types";
-import setAuthToken from "../utils/setAuthToken";
 import { get, post } from "../services/api";
 
 //Load user
@@ -71,13 +70,16 @@ export const login =
       console.error("Login Error:", err);
 
       dispatch({
-        type: "LOGIN_FAIL",
+        type: LOGIN_FAIL,
         payload: err.response?.data?.errors || "Something went wrong",
       });
     }
   };
 
+export const loading = (value) => (dispatch) => {
+  dispatch({ type: LOADING_CHANGE, payload: value });
+};
+
 export const logout = () => (dispatch) => {
-  dispatch({ type: CLEAR_PROFILE });
   dispatch({ type: LOGOUT });
 };

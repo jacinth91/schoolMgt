@@ -1,33 +1,53 @@
-import React, { useState } from "react";
-import "bootstrap-icons/font/bootstrap-icons.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-
-const studentsData = [
-  { id: 1, name: "John Doe", grade: "5th", section: "A", age: 10 },
-  { id: 2, name: "Jane Smith", grade: "6th", section: "B", age: 11 },
-  { id: 3, name: "Alice Johnson", grade: "5th", section: "C", age: 10 },
-];
+import React, { useEffect, useState, useMemo } from "react";
+import { fetchALLStudent } from "../../actions/student";
+import FullPageSpinner from "../layout/FullPageSpinner";
 
 const StudentManagement = () => {
-  const [students, setStudents] = useState(studentsData);
+  const [students, setStudents] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
-  const deleteStudent = (id) => {
-    setStudents(students.filter((student) => student.id !== id));
-  };
+  useEffect(() => {
+    const getStudents = async () => {
+      setLoading(true);
+      try {
+        const response = await fetchALLStudent();
 
-  const filteredStudents = students.filter((student) =>
-    student.name.toLowerCase().includes(searchTerm.toLowerCase())
+        if (Array.isArray(response) && response.length > 0) {
+          setStudents(response);
+        } else {
+          setStudents([]);
+        }
+      } catch (error) {
+        setStudents([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    getStudents();
+  }, []);
+
+  // ✅ Correcting the filter function
+  const filteredStudents = useMemo(() => {
+    return students.filter((student) =>
+      student.studentName?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [students, searchTerm]);
+
+  // ✅ Pagination Logic
+  const totalPages = Math.ceil(filteredStudents.length / itemsPerPage);
+  const paginatedStudents = filteredStudents.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
   );
 
-  return (
+  return loading ? (
+    <FullPageSpinner loading={loading} />
+  ) : (
     <div className="container py-4">
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <h2>Student Management</h2>
-        <button className="btn btn-success">
-          <i className="bi bi-plus-lg me-2"></i> Add Student
-        </button>
-      </div>
+      <h2>Student Management</h2>
 
       <input
         type="text"
@@ -37,46 +57,60 @@ const StudentManagement = () => {
         onChange={(e) => setSearchTerm(e.target.value)}
       />
 
-      <div className="table-responsive">
-        <table className="table table-bordered table-striped">
-          <thead className="table-dark">
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Grade</th>
-              <th>Section</th>
-              <th>Age</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredStudents.map((student) => (
-              <tr key={student.id}>
-                <td>{student.id}</td>
-                <td>{student.name}</td>
-                <td>{student.grade}</td>
+      <table className="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Grade</th>
+            <th>Section</th>
+            <th>Age</th>
+            <th>House</th>
+            <th>Gender</th>
+          </tr>
+        </thead>
+        <tbody>
+          {paginatedStudents.length > 0 ? (
+            paginatedStudents.map((student) => (
+              <tr key={student.usid}>
+                <td>{student.usid}</td>
+                <td>{student.studentName}</td>
+                <td>{student.class}</td>
                 <td>{student.section}</td>
                 <td>{student.age}</td>
-                <td>
-                  <div className="d-flex gap-2">
-                    <button className="btn btn-primary btn-sm">
-                      <i className="bi bi-eye"></i>
-                    </button>
-                    <button className="btn btn-warning btn-sm">
-                      <i className="bi bi-pencil"></i>
-                    </button>
-                    <button
-                      className="btn btn-danger btn-sm"
-                      onClick={() => deleteStudent(student.id)}
-                    >
-                      <i className="bi bi-trash"></i>
-                    </button>
-                  </div>
-                </td>
+                <td>{student.house}</td>
+                <td>{student.gender}</td>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="7" className="text-center">
+                No students found.
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+
+      {/* ✅ Pagination Controls */}
+      <div className="d-flex justify-content-between align-items-center mt-3">
+        <button
+          className="btn btn-primary"
+          disabled={currentPage === 1}
+          onClick={() => setCurrentPage((prev) => prev - 1)}
+        >
+          Previous
+        </button>
+        <span>
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          className="btn btn-primary"
+          disabled={currentPage === totalPages}
+          onClick={() => setCurrentPage((prev) => prev + 1)}
+        >
+          Next
+        </button>
       </div>
     </div>
   );
