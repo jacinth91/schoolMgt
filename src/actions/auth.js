@@ -1,4 +1,3 @@
-import axios from "axios";
 import {
   REGISTER_SUCCESS,
   REGISTER_FAIL,
@@ -7,23 +6,20 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGOUT,
-  CLEAR_PROFILE,
+  LOADING_CHANGE,
+  USER_UPDATED,
+  USER_UPDATE_FAILED,
 } from "./types";
-import setAuthToken from "../utils/setAuthToken";
-import { replace, useNavigate } from "react-router-dom";
+import { get, post, put } from "../services/api";
 
 //Load user
 export const loadUser = () => async (dispatch) => {
-  if (localStorage.token) {
-    setAuthToken(localStorage.token);
-  }
-
   try {
-    // const res = await axios.get("/api/auth");
+    const res = await get("/parents/me/111517");
 
     dispatch({
       type: USER_LOADED,
-      payload: {},
+      payload: res.data,
     });
   } catch (err) {
     dispatch({
@@ -59,32 +55,40 @@ export const register =
   };
 
 export const login =
-  ({ email, password }) =>
+  ({ username, password }) =>
   async (dispatch) => {
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
-
-    const body = JSON.stringify({ email, password });
     try {
+      const res = await post("/auth/login", {
+        usid: username,
+        password: password,
+      });
       dispatch({
         type: LOGIN_SUCCESS,
-        payload: {},
+        payload: res,
       });
 
-      dispatch(loadUser());
+      dispatch(loadUser()); // ✅ Internal function should be triggered
     } catch (err) {
-      const errors = err.response.data.errors;
-
       dispatch({
         type: LOGIN_FAIL,
+        payload: err || "Something went wrong",
       });
     }
   };
 
+export const loadingChange = (value) => (dispatch) => {
+  dispatch({ type: LOADING_CHANGE, payload: value });
+};
+
+export const updateProfile = (data) => async (dispatch) => {
+  try {
+    const res = await put(`/profiles/${data?.id}?role=${data?.role}`, data);
+    dispatch({ type: USER_UPDATED, payload: res.data });
+  } catch (error) {
+    dispatch({ type: USER_UPDATE_FAILED, payload: error });
+  }
+};
+
 export const logout = () => (dispatch) => {
-  dispatch({ type: CLEAR_PROFILE });
   dispatch({ type: LOGOUT });
 };

@@ -1,55 +1,149 @@
-
-// import { Users, DollarSign, TrendingUp } from "lucide-react";
-// import Navbar from "../layout/Navbar";
-// import Footer from "../layout/footer";
-import { Notebook, Pencil, Calculator, Book, Backpack, Ruler, Palette } from "lucide-react";
-
-import ProductList from "./products/productList";
-const products = [
-    { id: 1, name: "Premium Notebook", price: 12.99, icon: Notebook, category: 1, description: "High-quality spiral notebook with 200 pages", image: "https://images.unsplash.com/photo-1531346878377-a5be20888e57?auto=format&fit=crop&q=80&w=500&h=400" },
-    { id: 2, name: "Mechanical Pencil Set", price: 8.99, icon: Pencil, category: 2, description: "5-pack of 0.7mm mechanical pencils", image: "https://images.unsplash.com/photo-1596558450268-9c27524ba856?auto=format&fit=crop&q=80&w=500&h=400" },
-    { id: 3, name: "Scientific Calculator", price: 29.99, icon: Calculator, category: 3, description: "Advanced scientific calculator for math and science", image: "https://images.unsplash.com/photo-1574607383476-f517f260d30b?auto=format&fit=crop&q=80&w=500&h=400" },
-    { id: 1, name: "Premium Notebook", price: 12.99, icon: Notebook, category: 1, description: "High-quality spiral notebook with 200 pages", image: "https://images.unsplash.com/photo-1531346878377-a5be20888e57?auto=format&fit=crop&q=80&w=500&h=400" },
-    { id: 2, name: "Mechanical Pencil Set", price: 8.99, icon: Pencil, category: 2, description: "5-pack of 0.7mm mechanical pencils", image: "https://images.unsplash.com/photo-1596558450268-9c27524ba856?auto=format&fit=crop&q=80&w=500&h=400" },
-    { id: 3, name: "Scientific Calculator", price: 29.99, icon: Calculator, category: 3, description: "Advanced scientific calculator for math and science", image: "https://images.unsplash.com/photo-1574607383476-f517f260d30b?auto=format&fit=crop&q=80&w=500&h=400" },
-    { id: 1, name: "Premium Notebook", price: 12.99, icon: Notebook, category: 1, description: "High-quality spiral notebook with 200 pages", image: "https://images.unsplash.com/photo-1531346878377-a5be20888e57?auto=format&fit=crop&q=80&w=500&h=400" },
-    { id: 2, name: "Mechanical Pencil Set", price: 8.99, icon: Pencil, category: 2, description: "5-pack of 0.7mm mechanical pencils", image: "https://images.unsplash.com/photo-1596558450268-9c27524ba856?auto=format&fit=crop&q=80&w=500&h=400" },
-    { id: 3, name: "Scientific Calculator", price: 29.99, icon: Calculator, category: 3, description: "Advanced scientific calculator for math and science", image: "https://images.unsplash.com/photo-1574607383476-f517f260d30b?auto=format&fit=crop&q=80&w=500&h=400" },
-    { id: 1, name: "Premium Notebook", price: 12.99, icon: Notebook, category: 1, description: "High-quality spiral notebook with 200 pages", image: "https://images.unsplash.com/photo-1531346878377-a5be20888e57?auto=format&fit=crop&q=80&w=500&h=400" },
-    { id: 2, name: "Mechanical Pencil Set", price: 8.99, icon: Pencil, category: 2, description: "5-pack of 0.7mm mechanical pencils", image: "https://images.unsplash.com/photo-1596558450268-9c27524ba856?auto=format&fit=crop&q=80&w=500&h=400" },
-    { id: 3, name: "Scientific Calculator", price: 29.99, icon: Calculator, category: 3, description: "Advanced scientific calculator for math and science", image: "https://images.unsplash.com/photo-1574607383476-f517f260d30b?auto=format&fit=crop&q=80&w=500&h=400" },
-    { id: 1, name: "Premium Notebook", price: 12.99, icon: Notebook, category: 1, description: "High-quality spiral notebook with 200 pages", image: "https://images.unsplash.com/photo-1531346878377-a5be20888e57?auto=format&fit=crop&q=80&w=500&h=400" },
-    { id: 2, name: "Mechanical Pencil Set", price: 8.99, icon: Pencil, category: 2, description: "5-pack of 0.7mm mechanical pencils", image: "https://images.unsplash.com/photo-1596558450268-9c27524ba856?auto=format&fit=crop&q=80&w=500&h=400" },
-    { id: 3, name: "Scientific Calculator", price: 29.99, icon: Calculator, category: 3, description: "Advanced scientific calculator for math and science", image: "https://images.unsplash.com/photo-1574607383476-f517f260d30b?auto=format&fit=crop&q=80&w=500&h=400" },
-    { id: 1, name: "Premium Notebook", price: 12.99, icon: Notebook, category: 1, description: "High-quality spiral notebook with 200 pages", image: "https://images.unsplash.com/photo-1531346878377-a5be20888e57?auto=format&fit=crop&q=80&w=500&h=400" },
-    { id: 2, name: "Mechanical Pencil Set", price: 8.99, icon: Pencil, category: 2, description: "5-pack of 0.7mm mechanical pencils", image: "https://images.unsplash.com/photo-1596558450268-9c27524ba856?auto=format&fit=crop&q=80&w=500&h=400" },
-    { id: 3, name: "Scientific Calculator", price: 29.99, icon: Calculator, category: 3, description: "Advanced scientific calculator for math and science", image: "https://images.unsplash.com/photo-1574607383476-f517f260d30b?auto=format&fit=crop&q=80&w=500&h=400" }
-  ];
-  
-  const categories = [
-    { id: 1, name: "Notebooks", icon: Notebook },
-    { id: 2, name: "Pencils & Pens", icon: Pencil },
-    { id: 3, name: "Backpacks", icon: Backpack }
-  ];
+import React, { useState } from "react";
+import TopSellingProducts from "./TopSellingProduct";
+import "./dashboard.css";
+import { linkStudentToParent, loadStudentDetail } from "../../actions/student";
+import FullPageSpinner from "../layout/FullPageSpinner";
+import { useDispatch, useSelector } from "react-redux";
 
 const Dashboard = () => {
+  const [stuId, setStuId] = useState("");
+  const [showDetail, setShowDetail] = useState(false);
+  const [student, setStudent] = useState({});
+  const [loading, setLoading] = useState(false);
+  const { user } = useSelector((state) => state.auth);
+  const [errorMsg, setErrorMsg] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
+
+  const onStudentSearch = async () => {
+    // setShowStuDetail(true);
+    if (stuId.length) {
+      setLoading(true);
+      const response = await loadStudentDetail(stuId);
+      if (response.statusCode === 404) {
+        setErrorMsg(response.message);
+        setShowDetail(false);
+      } else {
+        setErrorMsg("");
+        setStudent(response);
+        setShowDetail(true);
+      }
+      setLoading(false);
+    }
+  };
+
+  const addStudentToParent = async () => {
+    setLoading(true);
+    const response = await linkStudentToParent({ stuId, parentId: user.id });
+    if ([404, 400, 500].includes(response.statusCode)) {
+      setErrorMsg(response.message);
+    } else {
+      setErrorMsg("");
+      setShowDetail(false);
+      setStuId("");
+      setSuccessMsg("Child added successfully!");
+      setTimeout(() => {
+        setSuccessMsg("");
+      }, 2000);
+    }
+    setLoading(false);
+  };
+
   return (
     <div className="min-vh-100 d-flex flex-column">
-      
-      
-
       {/* Banner */}
-    
 
       {/* Dashboard Content */}
       <div className="container">
-        <div className="dashboard-grid">
-        <ProductList products={products} categories={categories} />
+        <div>
+          <div className="row">
+            <div className="col-md-12">
+              <div className="mt-4">
+                <div className="search-child-box w-50 mx-auto">
+                  <p className="mb-2">Enrollment No. / Admission Number:</p>
+                  <div className="row">
+                    <div className="col-md-9">
+                      <input
+                        type="text"
+                        placeholder="Student enrollment no."
+                        value={stuId}
+                        onChange={(e) => setStuId(e.target.value)}
+                      />
+                    </div>
+                    <div className="col-md-3">
+                      <button
+                        className="btn btn-primary mt-1"
+                        onClick={() => onStudentSearch()}
+                      >
+                        Search <em className="bi-search ps-2"></em>
+                      </button>
+                    </div>
+                  </div>
+                  {loading && <FullPageSpinner loading={loading} />}
+                  {errorMsg && (
+                    <div className="text-danger my-2 h6">{errorMsg}</div>
+                  )}
+                  {successMsg && (
+                    <div className="text-success my-2 h5">{successMsg}</div>
+                  )}
+                  {showDetail && (
+                    <div className="mt-2">
+                      <strong>Enrollment ID: </strong> {student?.usid}
+                      <div>
+                        <strong>Student Name: </strong>
+                        {student?.studentName}
+                      </div>
+                      <div>
+                        <strong>Grade: </strong>
+                        {student?.class}
+                      </div>
+                      <div>
+                        <strong>Section: </strong>
+                        {student?.section}
+                      </div>
+                      <div>
+                        <strong>House: </strong>
+                        {student?.house}
+                      </div>
+                      <div>
+                        <strong>Campus: </strong>
+                        {student?.campus}
+                      </div>
+                      <div>
+                        <strong>Gender: </strong>
+                        {student?.gender}
+                      </div>
+                      <div className="text-center">
+                        <button
+                          className="btn btn-success mt-5 mx-auto"
+                          onClick={() => addStudentToParent()}
+                        >
+                          Add Child<em className="bi-plus ps-2"></em>
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="mt-4 pt-4">
+            <div className="row">
+              <div className="col-md-6">
+                <TopSellingProducts category={"Regular Uniform"} />
+              </div>
+              <div className="col-md-6">
+                <TopSellingProducts category={"Sports Uniform"} />
+              </div>
+              <div className="col-md-6">
+                <TopSellingProducts category={"Accessories"} />
+              </div>
+              <div className="col-md-6">
+                <TopSellingProducts category={"Sportopia"} />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-
-      
-      
     </div>
   );
 };

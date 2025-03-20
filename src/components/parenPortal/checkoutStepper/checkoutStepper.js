@@ -1,17 +1,15 @@
 import React from "react";
 import { Stepper, Step, StepLabel } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import PaymentIcon from "@mui/icons-material/Payment";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
-const steps = ["Cart", "Shipping", "Payment", "Place Order"];
+const steps = ["Cart", "Payment", "Place Order"];
 
 const StepIcons = {
   1: <ShoppingCartIcon />,
-  2: <LocalShippingIcon />,
-  3: <PaymentIcon />,
-  4: <CheckCircleIcon />,
+  2: <PaymentIcon />,
+  3: <CheckCircleIcon />,
 };
 
 const CustomStepIcon = ({ step, active, completed }) => {

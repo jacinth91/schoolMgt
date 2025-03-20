@@ -1,31 +1,21 @@
-import React from "react";
-import { Route, Navigate } from "react-router";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
+import { Navigate, Outlet } from "react-router-dom";
+import { useSelector } from "react-redux";
+import FullPageSpinner from "../layout/FullPageSpinner";
 
-const PrivateRoute = ({
-  component: Component,
-  auth: { isAuthenticated, loading },
-  ...rest
-}) => (
-  <Route
-    {...rest}
-    render={(props) =>
-      !isAuthenticated && !loading ? (
-        <Navigate to="/login" />
-      ) : (
-        <Component {...props} />
-      )
-    }
-  />
-);
+const PrivateRoute = ({ allowedRoles }) => {
+  const { isAuthenticated, loading, user } = useSelector((state) => state.auth);
 
-PrivateRoute.propTypes = {
-  auth: PropTypes.object.isRequired,
+  if (loading) return <FullPageSpinner loading={loading} />; // Prevent redirection while authentication state is loading
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (allowedRoles && (!user || !allowedRoles.includes(user.role))) {
+    return <Navigate to="/" replace />;
+  }
+
+  return <Outlet />; // Render the nested route if authenticated
 };
 
-const mapStateToProps = (state) => ({
-  auth: state.auth,
-});
-
-export default connect(mapStateToProps)(PrivateRoute);
+export default PrivateRoute;
