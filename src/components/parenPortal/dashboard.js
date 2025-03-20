@@ -1,29 +1,51 @@
 import React, { useState } from "react";
 import TopSellingProducts from "./TopSellingProduct";
 import "./dashboard.css";
-import { loadStudentDetail } from "../../actions/student";
+import { linkStudentToParent, loadStudentDetail } from "../../actions/student";
 import FullPageSpinner from "../layout/FullPageSpinner";
+import { useDispatch, useSelector } from "react-redux";
 
 const Dashboard = () => {
   const [stuId, setStuId] = useState("");
   const [showDetail, setShowDetail] = useState(false);
   const [student, setStudent] = useState({});
   const [loading, setLoading] = useState(false);
+  const { user } = useSelector((state) => state.auth);
+  const [errorMsg, setErrorMsg] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
 
   const onStudentSearch = async () => {
     // setShowStuDetail(true);
     if (stuId.length) {
       setLoading(true);
       const response = await loadStudentDetail(stuId);
+      if (response.statusCode === 404) {
+        setErrorMsg(response.message);
+        setShowDetail(false);
+      } else {
+        setErrorMsg("");
+        setStudent(response);
+        setShowDetail(true);
+      }
       setLoading(false);
-      setStudent(response);
-      setShowDetail(true);
     }
   };
 
-  const addStudentToParent = () => {
-    setShowDetail(false);
-    setStuId("");
+  const addStudentToParent = async () => {
+    setLoading(true);
+    const response = await linkStudentToParent({ stuId, parentId: user.id });
+    if ([404, 400, 500].includes(response.statusCode)) {
+      setErrorMsg(response.message);
+    } else {
+      setErrorMsg("");
+      setShowDetail(false);
+      setStuId("");
+      setSuccessMsg("Child added successfully!");
+      setTimeout(() => {
+        setSuccessMsg("");
+      }, 2000);
+    }
+    setLoading(false);
   };
 
   return (
@@ -57,6 +79,12 @@ const Dashboard = () => {
                     </div>
                   </div>
                   {loading && <FullPageSpinner loading={loading} />}
+                  {errorMsg && (
+                    <div className="text-danger my-2 h6">{errorMsg}</div>
+                  )}
+                  {successMsg && (
+                    <div className="text-success my-2 h5">{successMsg}</div>
+                  )}
                   {showDetail && (
                     <div className="mt-2">
                       <strong>Enrollment ID: </strong> {student?.usid}

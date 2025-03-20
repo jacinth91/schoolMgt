@@ -7,13 +7,14 @@ import { logout } from "../../actions/auth";
 const Navbar = () => {
   const { parentName, role } = useSelector((state) => state.auth.user);
   const [showProfile, setShowProfile] = useState(false);
-  const dispacth = useDispatch();
+  const [showNav, setShowNav] = useState(false); // <-- Added state to control navbar visibility
+  const dispatch = useDispatch();
   const dropdownRef = useRef(null);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setShowProfile(false); // Close the dropdown if clicked outside
+        setShowProfile(false);
       }
     };
 
@@ -24,10 +25,18 @@ const Navbar = () => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [showProfile]); // Runs when showProfile changes
+  }, [showProfile]);
+
+  const handleToggleNavbar = () => {
+    setShowNav((prev) => !prev);
+  };
+
+  const handleNavItemClick = () => {
+    setShowNav(false); // Close navbar on link click
+  };
 
   const logoutClick = () => {
-    dispacth(logout());
+    dispatch(logout());
   };
 
   const getNavItems = () => {
@@ -36,7 +45,7 @@ const Navbar = () => {
         return [
           { path: "/dashboard", label: "Home" },
           { path: "/profile", label: "Profile" },
-          { path: "/children/id", label: "Children" },
+          { path: "/children", label: "Children" },
           { path: "/products", label: "Products" },
           { path: "/cart", label: "Cart" },
           { path: "/support", label: "Support" },
@@ -64,29 +73,43 @@ const Navbar = () => {
 
   return (
     <div className="banner align-items-center justify-content-center text-white">
-      <nav className="navbar z-10 absolute top-0 w-full navbar-expand-lg">
+      <nav className="navbar z-10 absolute top-0 w-full navbar-expand-lg position-sticky">
         <div className="container">
-          <Link className="navbar-brand d-flex align-items-center" to="/">
+          <Link
+            className="navbar-brand d-flex align-items-center text-white"
+            to="/"
+          >
             <BarChart3 className="me-2" />
             Dashboard
           </Link>
+
+          {/* Navbar Toggler */}
           <button
-            className="navbar-toggler"
+            className="navbar-toggler text-white"
             type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNav"
+            onClick={handleToggleNavbar}
           >
             <Menu />
           </button>
-          <div className="collapse navbar-collapse" id="navbarNav">
+
+          {/* Navbar Items */}
+          <div
+            className={`collapse navbar-collapse ${showNav ? "show" : ""}`}
+            id="navbarNav"
+          >
             <ul className="navbar-nav ms-auto">
               {getNavItems().map((item, index) => (
                 <li className="nav-item" key={index}>
-                  <Link className="nav-link" to={item.path}>
+                  <Link
+                    className="nav-link text-white"
+                    to={item.path}
+                    onClick={handleNavItemClick}
+                  >
                     {item.label}
                   </Link>
                 </li>
               ))}
+
               {/* Profile Dropdown */}
               <li className="nav-item position-relative ps-3 pt-2">
                 <button

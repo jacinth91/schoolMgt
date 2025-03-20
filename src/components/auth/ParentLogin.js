@@ -2,9 +2,10 @@ import React, { useEffect, useRef, useState } from "react";
 import { KeyRound, UserRound, ArrowRight, Lock, ArrowLeft } from "lucide-react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./style/auth.css"; // Ensure CSS is imported properly
-import { login } from "../../actions/auth";
+import { loadingChange, login } from "../../actions/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
+import FullPageSpinner from "../layout/FullPageSpinner";
 
 const ParentLogin = () => {
   useEffect(() => {
@@ -17,9 +18,18 @@ const ParentLogin = () => {
   const [authMethod, setAuthMethod] = useState("select");
   const [password, setPassword] = useState("");
   const [otp, setOtp] = useState("");
-  const { isAuthenticated } = useSelector((state) => state.auth);
+
+  const { isAuthenticated, error, loading } = useSelector(
+    (state) => state.auth
+  );
+  const [showError, setShowError] = useState(false);
 
   //const [generatedOtp, setGeneratedOtp] = useState("");
+
+  const fillPassword = (e) => {
+    setShowError(false);
+    setPassword(e.target.value);
+  };
 
   const handleUserIdSubmit = (e) => {
     // e.preventDefault();
@@ -30,11 +40,13 @@ const ParentLogin = () => {
 
   const handlePasswordSubmit = (e) => {
     e.preventDefault();
+    dispatch(loadingChange(true));
     if (password.length) {
       dispatch(login({ username: userId, password: password }));
     } else {
       alert("Invalid password. Please try again.");
     }
+    setShowError(true);
   };
 
   const handleOtpSubmit = (e) => {
@@ -48,6 +60,8 @@ const ParentLogin = () => {
 
   return isAuthenticated ? (
     <Navigate to="/dashboard" />
+  ) : loading ? (
+    <FullPageSpinner loading={loading} />
   ) : (
     <div className="auth-container d-flex align-items-center justify-content-center">
       <div className="container">
@@ -123,14 +137,16 @@ const ParentLogin = () => {
                     <input
                       type="password"
                       value={password}
-                      onChange={(e) => setPassword(e.target.value)}
+                      onChange={(e) => fillPassword(e)}
                       className="form-control input-with-icon"
                       placeholder="Enter Password"
                       required
                     />
                   </div>
                 </div>
-
+                {error && password && showError && (
+                  <div className="text-danger mb-2 h6">{error.message}</div>
+                )}
                 <button
                   type="submit"
                   className="btn auth-btn auth-btn-password w-100 mb-3"

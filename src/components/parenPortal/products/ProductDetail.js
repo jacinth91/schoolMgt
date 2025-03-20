@@ -2,11 +2,8 @@ import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./ProductDetail.css";
 import shirtImage from "../../../images/shirt.png"; // Adjust path as needed
-import { useParams } from "react-router-dom";
 
 const ProductDetail = () => {
-  const { productId } = useParams(); // Get productId from URL
-
   const [quantity, setQuantity] = useState(1);
 
   const handleIncrease = () => setQuantity(quantity + 1);

@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./ProfilePage.css";
 import {
@@ -7,34 +6,79 @@ import {
   EnvelopeFill,
   TelephoneFill,
   GeoAltFill,
+  Building,
 } from "react-bootstrap-icons";
 import profileImg from "../../images/profile.png";
 import PopupDialog from "../layout/PopupDialog";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import FullPageSpinner from "../layout/FullPageSpinner";
+import { loadingChange, updateProfile } from "../../actions/auth";
 
 const ProfilePage = () => {
-  const dummyData = [
-    { label: "Name", value: "John Doe", editable: true },
-    { label: "Email", value: "john.doe@example.com", editable: true },
-    { label: "Phone", value: "+1234567890", editable: false },
-    { label: "Address", value: "123 Street, City", editable: true },
-  ];
+  const { user, loading } = useSelector((state) => state.auth);
 
   const [showPopup, setShowPopup] = useState(false);
-  const [formData, setFormData] = useState(dummyData);
-
-  const { user } = useSelector((state) => state.auth);
+  const [formData, setFormData] = useState();
+  const dispatch = useDispatch();
 
   const handleSave = (updatedData) => {
-    console.log("Updated Data:", updatedData);
+    dispatch(loadingChange(true));
     setFormData(updatedData);
+    const apiBody = reverseTransform(formData);
+    dispatch(updateProfile({ ...user, ...apiBody }));
     setShowPopup(false);
+  };
+  const formatLabel = (key) => {
+    return key
+      .replace(/([A-Z])/g, " $1") // Convert camelCase to words
+      .replace(/[_-]/g, " ") // Replace underscores/hyphens with space
+      .replace(/\b\w/g, (char) => char.toUpperCase()) // Capitalize first letter
+      .trim();
+  };
+
+  const openDialog = () => {
+    if (!user || typeof user !== "object") return [];
+
+    // Define which fields are editable
+    const nonEditableFields = ["id", "role", "campus", "password"];
+    const skipKeys = ["students", "role", "gender", "studentData", "password"];
+
+    // Transform parent-level data dynamically
+    const result = Object.entries(user)
+      .filter(([key, value]) => !skipKeys.includes(key)) // Exclude unnecessary fields
+      .map(([key, value]) => ({
+        label: formatLabel(key),
+        value: value,
+        editable: !nonEditableFields.includes(key),
+      }));
+    setFormData(result);
+    setShowPopup(true);
+  };
+
+  const reverseTransform = (array) => {
+    if (!Array.isArray(array)) return {};
+
+    return array.reduce((acc, { label, value }) => {
+      const key = formatKey(label);
+      acc[key] = value;
+      return acc;
+    }, {});
+  };
+
+  const formatKey = (label) => {
+    return label
+      .toLowerCase()
+      .replace(/\s(.)/g, (match) => match.toUpperCase()) // Convert spaces to camelCase
+      .replace(/\s+/g, "") // Remove spaces
+      .replace(/^[A-Z]/, (match) => match.toLowerCase()); // Ensure first letter is lowercase
   };
 
   if (!user)
     return <div className="text-center mt-5 text-danger">User not found!</div>;
 
-  return (
+  return loading ? (
+    <FullPageSpinner loading={loading} />
+  ) : (
     <div className="container profile-container">
       <div className="text-center">
         <img
@@ -60,13 +104,17 @@ const ProfilePage = () => {
           <span>{user.phone}</span>
         </div>
         <div className="profile-row">
+          <Building className="icon" /> <strong>Campus:</strong>{" "}
+          <span>{user.campus}</span>
+        </div>
+        <div className="profile-row">
           <GeoAltFill className="icon" /> <strong>Address:</strong>{" "}
           <span>{user.address}</span>
         </div>
       </div>
 
       <div className="text-center mt-4">
-        <button className="btn update-btn" onClick={() => setShowPopup(true)}>
+        <button className="btn update-btn" onClick={() => openDialog()}>
           Update
         </button>
       </div>

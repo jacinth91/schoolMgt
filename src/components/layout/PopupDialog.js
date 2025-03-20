@@ -32,7 +32,7 @@ const PopupDialog = ({ data, onSave, onCancel, header }) => {
           </div>
           <div className="modal-body">
             {formData.map((item, index) => (
-              <div className="form-group row" key={index}>
+              <div className="form-group row my-2" key={index}>
                 <label className="col-sm-4 col-form-label text-right">
                   {item.label}
                 </label>

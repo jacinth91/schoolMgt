@@ -7,13 +7,15 @@ import {
   LOGIN_FAIL,
   LOGOUT,
   LOADING_CHANGE,
+  USER_UPDATED,
+  USER_UPDATE_FAILED,
 } from "./types";
-import { get, post } from "../services/api";
+import { get, post, put } from "../services/api";
 
 //Load user
 export const loadUser = () => async (dispatch) => {
   try {
-    const res = await get("/parents/me");
+    const res = await get("/parents/me/111517");
 
     dispatch({
       type: USER_LOADED,
@@ -62,22 +64,29 @@ export const login =
       });
       dispatch({
         type: LOGIN_SUCCESS,
-        payload: res.data,
+        payload: res,
       });
 
       dispatch(loadUser()); // ✅ Internal function should be triggered
     } catch (err) {
-      console.error("Login Error:", err);
-
       dispatch({
         type: LOGIN_FAIL,
-        payload: err.response?.data?.errors || "Something went wrong",
+        payload: err || "Something went wrong",
       });
     }
   };
 
-export const loading = (value) => (dispatch) => {
+export const loadingChange = (value) => (dispatch) => {
   dispatch({ type: LOADING_CHANGE, payload: value });
+};
+
+export const updateProfile = (data) => async (dispatch) => {
+  try {
+    const res = await put(`/profiles/${data?.id}?role=${data?.role}`, data);
+    dispatch({ type: USER_UPDATED, payload: res.data });
+  } catch (error) {
+    dispatch({ type: USER_UPDATE_FAILED, payload: error });
+  }
 };
 
 export const logout = () => (dispatch) => {

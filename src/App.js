@@ -36,6 +36,8 @@ import { ROLES } from "./utils/constants";
 import AuthRedirect from "./components/layout/AuthRedirect";
 import FullPageSpinner from "./components/layout/FullPageSpinner";
 import SupportQueries from "./components/admin/SupportQueries";
+import AdminLogin from "./components/auth/AdminLogin";
+import AdminManagement from "./components/admin/AdminManagement";
 
 const CheckoutWrapper = ({ isAuthenticated }) => {
   const location = useLocation();
@@ -78,6 +80,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<AuthRedirect />} />
             <Route path="/login" element={<ParentLogin />} />
+            <Route path="/admin/login" element={<AdminLogin />} />
 
             {/* Private Routes for Authenticated Users */}
             <Route element={<PrivateRoute />}>
@@ -95,6 +98,7 @@ const App = () => {
             </Route>
 
             <Route element={<PrivateRoute allowedRoles={[ROLES.ADMIN]} />}>
+              <Route path="/admin/manage" element={<AdminManagement />} />
               <Route path="/admin/products" element={<ProductManagement />} />
               <Route path="/admin/students" element={<StudentManagement />} />
               <Route path="/admin/orders" element={<OrderManagement />} />

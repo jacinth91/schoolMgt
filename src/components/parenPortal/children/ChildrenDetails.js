@@ -1,77 +1,52 @@
-import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import "./ChildrenDetails.css"; // Import styles
+import { useDispatch, useSelector } from "react-redux";
+import PersonIcon from "@mui/icons-material/Person";
+import Person2Icon from "@mui/icons-material/Person2";
+import { loadUser } from "../../../actions/auth";
 
 const ChildrenDetails = () => {
-  const { userId } = useParams(); // Get userId from URL params
+  const dispatch = useDispatch();
 
-  // Dummy Data
-  const [childrenData, setChildrenData] = useState([
-    {
-      id: 1,
-      name: "John Smith",
-      gender: "male",
-      enrollmentId: "SCID123",
-      grade: "1st Grade",
-      section: "A Section",
-      house: "Red",
-    },
-    {
-      id: 2,
-      name: "Rose Smith",
-      gender: "female",
-      enrollmentId: "SCID456",
-      grade: "2nd Grade",
-      section: "B Section",
-      house: "Blue",
-    },
-  ]);
+  useEffect(() => {
+    dispatch(loadUser());
+  });
+
+  const { user } = useSelector((state) => state.auth);
+
+  const childrenData = user.studentData;
 
   const [selectedChild, setSelectedChild] = useState(childrenData[0]);
 
-  // Uncomment this to fetch child details dynamically
-  /*
-  useEffect(() => {
-    fetch(`https://api.example.com/children/${userId}`)
-      .then(response => response.json())
-      .then(data => {
-        setChildrenData(data);
-        setSelectedChild(data[0]); // Select first child by default
-      })
-      .catch(error => console.error("Error fetching child details:", error));
-  }, [userId]);
-  */
-
   return (
-    <div className="container text-center mt-4">
+    <div className="container text-center mt-4 pb-4">
       {/* Child Icons */}
       <div className="row justify-content-center">
-        {childrenData.map((child) => (
-          <div key={child.id} className="col-auto text-center">
-            <div
-              className={`child-circle ${
-                selectedChild.id === child.id ? "selected" : ""
-              }`}
-              onClick={() => setSelectedChild(child)}
-            >
-              {/* Boy/Girl Icon */}
-              <i
-                className={`bi ${
-                  child.gender === "male"
-                    ? "bi-person-circle"
-                    : "bi-person-fill"
+        {childrenData.map((child) => {
+          const gender = child?.gender?.toLowerCase() || "";
+          const isSelected = selectedChild?.id === child?.id;
+
+          return (
+            <div key={child?.id} className="col-auto text-center">
+              <div
+                className={`child-circle mx-auto ${
+                  isSelected ? "selected" : ""
                 }`}
-              ></i>
+                onClick={() => setSelectedChild(child)}
+              >
+                {/* Boy/Girl Icon */}
+                {gender === "male" ? (
+                  <PersonIcon sx={{ fontSize: 50 }} />
+                ) : gender === "female" ? (
+                  <Person2Icon sx={{ fontSize: 50 }} />
+                ) : null}
+              </div>
+              <p className={`child-name ${isSelected ? "selected-text" : ""}`}>
+                {child?.studentName}
+              </p>
             </div>
-            <p
-              className={`child-name ${
-                selectedChild.id === child.id ? "selected-text" : ""
-              }`}
-            >
-              {child.name}
-            </p>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Child Details Table */}
@@ -83,7 +58,7 @@ const ChildrenDetails = () => {
         </div>
         <div className="col-md-auto">
           <span>
-            Enrollment ID: <strong>{selectedChild.enrollmentId}</strong>
+            Enrollment ID: <strong>{selectedChild.usid}</strong>
           </span>
         </div>
       </div>
@@ -94,13 +69,13 @@ const ChildrenDetails = () => {
               <td className="w-25">
                 <i className="bi bi-person"></i> <strong>Full Name:</strong>
               </td>
-              <td>{selectedChild.name}</td>
+              <td>{selectedChild.studentName}</td>
             </tr>
             <tr>
               <td className="w-25">
                 <i className="bi bi-mortarboard"></i> <strong>Grade:</strong>
               </td>
-              <td>{selectedChild.grade}</td>
+              <td>{selectedChild.class}</td>
             </tr>
             <tr>
               <td className="w-25">
@@ -113,6 +88,12 @@ const ChildrenDetails = () => {
                 <i className="bi bi-house"></i> <strong>House Name:</strong>
               </td>
               <td>{selectedChild.house}</td>
+            </tr>
+            <tr>
+              <td className="w-25">
+                <i className="bi bi-house"></i> <strong>Address:</strong>
+              </td>
+              <td>{selectedChild.address}</td>
             </tr>
           </tbody>
         </table>
