@@ -15,7 +15,7 @@ import { get, post, put } from "../services/api";
 //Load user
 export const loadUser = () => async (dispatch) => {
   try {
-    const res = await get("/parents/me/111517");
+    const res = await get("/parents/me");
 
     dispatch({
       type: USER_LOADED,
