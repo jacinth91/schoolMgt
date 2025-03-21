@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { fetchALLStudent } from "../../actions/student";
 import FullPageSpinner from "../layout/FullPageSpinner";
+import PopupDialog from "../layout/PopupDialog";
+import { reverseTransform, transform } from "../../services/helper";
 
 const StudentManagement = () => {
   const [students, setStudents] = useState([]);
@@ -8,6 +10,9 @@ const StudentManagement = () => {
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+  const [showPopup, setShowPopup] = useState(false);
+  const [selectedRow, setSelectedRow] = useState({});
+  const [selectedId, setSelectedId] = useState();
 
   useEffect(() => {
     const getStudents = async () => {
@@ -28,6 +33,23 @@ const StudentManagement = () => {
     };
     getStudents();
   }, []);
+
+  const onEditStudentClick = (data) => {
+    const nonEditableFields = ["usid"];
+    const skipKeys = ["id"];
+    setSelectedId(data.id);
+
+    const result = transform(data, skipKeys, nonEditableFields);
+    setSelectedRow(result);
+    setShowPopup(true);
+  };
+
+  const handleSave = (updatedData) => {
+    setSelectedRow(updatedData);
+    const apiBody = reverseTransform(selectedRow);
+    console.log({ ...apiBody, id: selectedId });
+    setShowPopup(false);
+  };
 
   // ✅ Correcting the filter function
   const filteredStudents = useMemo(() => {
@@ -67,6 +89,7 @@ const StudentManagement = () => {
             <th>Age</th>
             <th>House</th>
             <th>Gender</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -80,6 +103,16 @@ const StudentManagement = () => {
                 <td>{student.age}</td>
                 <td>{student.house}</td>
                 <td>{student.gender}</td>
+                <td>
+                  <div className="d-flex gap-2">
+                    <button
+                      className="btn btn-warning btn-sm"
+                      onClick={() => onEditStudentClick(student)}
+                    >
+                      <i className="bi bi-pencil"></i>
+                    </button>
+                  </div>
+                </td>
               </tr>
             ))
           ) : (
@@ -112,6 +145,14 @@ const StudentManagement = () => {
           Next
         </button>
       </div>
+      {showPopup && (
+        <PopupDialog
+          data={selectedRow}
+          onSave={handleSave}
+          onCancel={() => setShowPopup(false)}
+          header={"Edit Student"}
+        />
+      )}
     </div>
   );
 };

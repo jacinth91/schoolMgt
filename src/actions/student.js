@@ -26,3 +26,12 @@ export const linkStudentToParent = async ({ stuId, parentId }) => {
     return error;
   }
 };
+
+export const updateStudentDetail = async (data) => {
+  try {
+    const res = await put();
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};

@@ -86,7 +86,7 @@ const TopSellingProducts = ({ category }) => {
           }}
         >
           {products.map((product) => (
-            <div key={product.id} style={{ minWidth: "50%", padding: "10px" }}>
+            <div key={product.id} style={{ minWidth: "50%" }}>
               <div
                 style={{
                   border: "1px solid #ddd",

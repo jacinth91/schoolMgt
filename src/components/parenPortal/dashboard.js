@@ -4,6 +4,7 @@ import "./dashboard.css";
 import { linkStudentToParent, loadStudentDetail } from "../../actions/student";
 import FullPageSpinner from "../layout/FullPageSpinner";
 import { useDispatch, useSelector } from "react-redux";
+import ProductCarousel from "./ProductCarousel";
 
 const Dashboard = () => {
   const [stuId, setStuId] = useState("");
@@ -28,6 +29,8 @@ const Dashboard = () => {
         setShowDetail(true);
       }
       setLoading(false);
+    } else {
+      setErrorMsg("Enter Enrollment No.");
     }
   };
 
@@ -126,7 +129,7 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
-          <div className="mt-4 pt-4">
+          {/* <div className="mt-4 pt-4">
             <div className="row">
               <div className="col-md-6">
                 <TopSellingProducts category={"Regular Uniform"} />
@@ -141,6 +144,10 @@ const Dashboard = () => {
                 <TopSellingProducts category={"Sportopia"} />
               </div>
             </div>
+          </div> */}
+          <div className="my-4 pt-4 row">
+            <h4 className="col-md-12 mb-4 text-primary">School Essentials</h4>
+            <ProductCarousel />
           </div>
         </div>
       </div>
