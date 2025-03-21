@@ -1,26 +1,27 @@
 import React from "react";
 import "./footer.css";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
     <footer className="footer-container d-flex align-items-center justify-content-between p-3">
       <div className="footer-text">@ 2025 All rights reserved.</div>
       <div className="footer-links">
-        <a href="/terms-of-service" className="footer-link">
+        <Link to="/terms-of-service" className="footer-link">
           Terms of Service
-        </a>{" "}
+        </Link>{" "}
         |
-        <a href="/privacy-policy" className="footer-link">
+        <Link to="/privacy-policy" className="footer-link">
           Privacy Policy
-        </a>{" "}
+        </Link>{" "}
         |
-        <a href="/refunds" className="footer-link">
+        <Link to="/refunds" className="footer-link">
           Refunds
-        </a>{" "}
+        </Link>{" "}
         |
-        <a href="/cookie-preferences" className="footer-link">
+        <Link to="/cookie-preferences" className="footer-link">
           Cookie Preferences
-        </a>
+        </Link>
       </div>
     </footer>
   );

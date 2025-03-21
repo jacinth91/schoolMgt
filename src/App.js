@@ -38,6 +38,12 @@ import FullPageSpinner from "./components/layout/FullPageSpinner";
 import SupportQueries from "./components/admin/SupportQueries";
 import AdminLogin from "./components/auth/AdminLogin";
 import AdminManagement from "./components/admin/AdminManagement";
+import {
+  CookiePreferences,
+  PrivacyPolicy,
+  Refunds,
+  TermsOfService,
+} from "./components/layout/FooterLinks";
 
 const CheckoutWrapper = ({ isAuthenticated }) => {
   const location = useLocation();
@@ -81,6 +87,10 @@ const App = () => {
             <Route path="/" element={<AuthRedirect />} />
             <Route path="/login" element={<ParentLogin />} />
             <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/terms-of-service" element={<TermsOfService />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/refunds" element={<Refunds />} />
+            <Route path="/cookie-preferences" element={<CookiePreferences />} />
 
             {/* Private Routes for Authenticated Users */}
             <Route element={<PrivateRoute />}>

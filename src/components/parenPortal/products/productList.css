@@ -1,0 +1,14 @@
+.product-card {
+  transition: transform 0.3s;
+  cursor: pointer;
+}
+.product-card:hover {
+  transform: scale(1.03);
+}
+.product-card .card-img-overlay {
+  transition: opacity 0.3s;
+  opacity: 0;
+}
+.product-card:hover .card-img-overlay {
+  opacity: 1;
+}
