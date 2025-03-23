@@ -66,10 +66,6 @@ const ProfilePage = () => {
           <span>{user.parentName}</span>
         </div>
         <div className="profile-row">
-          <EnvelopeFill className="icon" /> <strong>Email:</strong>{" "}
-          <span>{user.email}</span>
-        </div>
-        <div className="profile-row">
           <TelephoneFill className="icon" /> <strong>Mobile:</strong>{" "}
           <span>{user.phone}</span>
         </div>
