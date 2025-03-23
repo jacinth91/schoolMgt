@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { lazy, Suspense, useEffect } from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -19,10 +19,8 @@ import Footer from "./components/layout/footer";
 import CheckoutSummary from "./components/parenPortal/checkoutSummary/CheckoutSummary";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
-import Products from "./components/parenPortal/Products";
 import ProductDetail from "./components/parenPortal/products/ProductDetail";
 import ProfilePage from "./components/parenPortal/ProfilePage";
-import ChildrenDetails from "./components/parenPortal/children/ChildrenDetails";
 import OrderHistory from "./components/parenPortal/orders/OrderHistory";
 import ProductManagement from "./components/admin/ProductManagement";
 import ParentLogin from "./components/auth/ParentLogin";
@@ -44,19 +42,13 @@ import {
   Refunds,
   TermsOfService,
 } from "./components/layout/FooterLinks";
-
-const CheckoutWrapper = ({ isAuthenticated }) => {
-  const location = useLocation();
-  const checkoutPaths = ["/cart", "/payment", "/checkout"];
-
-  if (checkoutPaths.includes(location.pathname) && !isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
-
-  return checkoutPaths.includes(location.pathname) && isAuthenticated ? (
-    <CheckoutSummary stepPaths={checkoutPaths} />
-  ) : null;
-};
+import { ToastContainer } from "react-toastify";
+const ProductListing = lazy(() =>
+  import("./components/parenPortal/products/productList")
+);
+const ChildrenDetails = lazy(() =>
+  import("./components/parenPortal/children/ChildrenDetails")
+);
 
 const Layout = ({ children }) => {
   const { isAuthenticated, loading } = useSelector((state) => state.auth);
@@ -66,7 +58,7 @@ const Layout = ({ children }) => {
       {/* Show Navbar only if not on login page */}
       {isAuthenticated && !loading && <Navbar />}
       {children}
-      <CheckoutWrapper isAuthenticated={isAuthenticated} />
+      {/* <CheckoutWrapper isAuthenticated={isAuthenticated} /> */}
       {isAuthenticated && !loading && <Footer />}
     </>
   );
@@ -79,7 +71,9 @@ const App = () => {
 
   return (
     <Provider store={store}>
+      <ToastContainer />
       <Router>
+        <Suspense fallback={<FullPageSpinner loading={true} />} />
         {/* <Fragment> */}
         {/* <Navbar /> */}
         <Layout>
@@ -102,12 +96,16 @@ const App = () => {
             </Route>
 
             <Route element={<PrivateRoute allowedRoles={[ROLES.PARENT]} />}>
-              <Route path="/products" element={<Products />} />
+              <Route exact path="/products" element={<ProductListing />} />
               <Route path="/product/:productId" element={<ProductDetail />} />
               <Route path="/children" element={<ChildrenDetails />} />
               <Route path="/order/history" element={<OrderHistory />} />
               <Route path="/thankyou" element={<ThankYouPage />} />
               <Route path="/support" element={<Support />} />
+
+              <Route path="/cart" element={<CheckoutSummary />} />
+              <Route path="/payment" element={<CheckoutSummary />} />
+              <Route path="/checkout" element={<CheckoutSummary />} />
             </Route>
 
             <Route element={<PrivateRoute allowedRoles={[ROLES.ADMIN]} />}>
@@ -118,6 +116,7 @@ const App = () => {
               <Route path="/admin/bundle" element={<BundleManagement />} />
               <Route path="/admin/support" element={<SupportQueries />} />
             </Route>
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>
         </Layout>
       </Router>

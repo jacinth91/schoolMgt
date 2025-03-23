@@ -5,6 +5,7 @@ import { linkStudentToParent, loadStudentDetail } from "../../actions/student";
 import FullPageSpinner from "../layout/FullPageSpinner";
 import { useDispatch, useSelector } from "react-redux";
 import ProductCarousel from "./ProductCarousel";
+import { toast } from "react-toastify";
 
 const Dashboard = () => {
   const [stuId, setStuId] = useState("");
@@ -13,7 +14,6 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(false);
   const { user } = useSelector((state) => state.auth);
   const [errorMsg, setErrorMsg] = useState("");
-  const [successMsg, setSuccessMsg] = useState("");
 
   const onStudentSearch = async () => {
     // setShowStuDetail(true);
@@ -43,10 +43,7 @@ const Dashboard = () => {
       setErrorMsg("");
       setShowDetail(false);
       setStuId("");
-      setSuccessMsg("Child added successfully!");
-      setTimeout(() => {
-        setSuccessMsg("");
-      }, 2000);
+      toast.success("Child added successfully!", { position: "top-right" });
     }
     setLoading(false);
   };
@@ -85,9 +82,7 @@ const Dashboard = () => {
                   {errorMsg && (
                     <div className="text-danger my-2 h6">{errorMsg}</div>
                   )}
-                  {successMsg && (
-                    <div className="text-success my-2 h5">{successMsg}</div>
-                  )}
+
                   {showDetail && (
                     <div className="mt-2">
                       <strong>Enrollment ID: </strong> {student?.usid}

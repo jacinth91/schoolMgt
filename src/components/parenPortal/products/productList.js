@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import QuickViewModal from "./QuickViewModal";
 import "./productList.css";
-import { useSelector } from "react-redux";
-import { fetchLinkedBundles } from "../../../actions/product";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart, fetchLinkedBundles } from "../../../actions/product";
 import FullPageSpinner from "../../layout/FullPageSpinner";
+import { toast } from "react-toastify";
+import { loadUser } from "../../../actions/auth";
 
 const ProductListing = () => {
   const { user } = useSelector((state) => state.auth);
@@ -12,6 +14,7 @@ const ProductListing = () => {
   const [search, setSearch] = useState("");
   const [selectedBundle, setSelectedBundle] = useState(null);
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
 
   const getBundles = async () => {
     if (!user.students?.length) {
@@ -19,8 +22,6 @@ const ProductListing = () => {
       setLoading(false);
       return;
     }
-
-    setLoading(true);
 
     try {
       const bundleResponses = await Promise.all(
@@ -35,8 +36,10 @@ const ProductListing = () => {
   };
 
   useEffect(() => {
+    setLoading(true);
+    dispatch(loadUser());
     getBundles();
-  }, [user.students]);
+  }, [user.students?.length]);
 
   const handleSortChange = (event) => {
     const order = event.target.value;
@@ -53,8 +56,23 @@ const ProductListing = () => {
     setBundles(sortedBundles);
   };
 
-  const addToCartClick = () => {
-    setSelectedBundle(null);
+  const addToCartClick = async (bundleId, quantity) => {
+    setLoading(true);
+    const body = { bundleId: bundleId, quantity: quantity, parentId: user.id };
+    try {
+      await dispatch(addToCart(body)); // Ensure this returns a Promise
+      toast.success("Product added to cart successfully!", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    } catch (error) {
+      toast.error("Failed to add product to cart.", {
+        position: "top-right",
+      });
+    } finally {
+      setLoading(false);
+      setSelectedBundle(null);
+    }
   };
 
   const filteredBundles = bundles.filter((bundle) =>
@@ -114,17 +132,20 @@ const ProductListing = () => {
               <div className="card-body text-center d-flex flex-column">
                 <h5 className="card-title fw-bold">{bundle.bundle_name}</h5>
                 <div className="bundle-details">
-                  <strong>Designed for:</strong> <span>{bundle.gender}</span>
-                  <strong>Recommended for:</strong>{" "}
+                  <strong>Designed For:</strong> <span>{bundle.gender}</span>
+                  <strong>Recommended For:</strong>{" "}
                   <span>{bundle.class_name}</span>
-                  <strong>Suitable for Classes:</strong>{" "}
+                  <strong>Suitable For Classes:</strong>{" "}
                   <span>{bundle.applicable_classes}</span>
                 </div>
                 <p className="fw-bold text-primary fs-5">
                   ₹{bundle.bundle_total}
                 </p>
 
-                <button className="btn btn-outline-primary mt-auto">
+                <button
+                  className="btn btn-outline-primary mt-auto"
+                  onClick={() => addToCartClick(bundle.bundle_id, 1)}
+                >
                   Add to Cart
                 </button>
               </div>
@@ -136,7 +157,7 @@ const ProductListing = () => {
         <QuickViewModal
           bundle={selectedBundle}
           onClose={() => setSelectedBundle(null)}
-          onAddToCart={() => addToCartClick()}
+          onAddToCart={addToCartClick}
         />
       )}
     </div>

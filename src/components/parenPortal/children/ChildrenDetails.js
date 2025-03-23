@@ -6,13 +6,13 @@ import Person2Icon from "@mui/icons-material/Person2";
 import { loadUser } from "../../../actions/auth";
 
 const ChildrenDetails = () => {
+  const { user } = useSelector((state) => state.auth);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(loadUser());
-  });
-
-  const { user } = useSelector((state) => state.auth);
+  }, [user.students?.length]);
 
   const childrenData = user.studentData;
 

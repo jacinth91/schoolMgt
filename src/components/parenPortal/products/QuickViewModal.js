@@ -1,6 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 const QuickViewModal = ({ bundle, onClose, onAddToCart }) => {
+  const [quantity, setQuantity] = useState(1);
+
   useEffect(() => {
     document.body.classList.add("modal-open");
     return () => {
@@ -27,7 +29,7 @@ const QuickViewModal = ({ bundle, onClose, onAddToCart }) => {
       style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
     >
       <div
-        className="modal-dialog modal-dialog-centered modal-lg"
+        className="modal-dialog modal-dialog-centered modal-lg w-m-50"
         role="document"
       >
         <div className="modal-content">
@@ -54,13 +56,13 @@ const QuickViewModal = ({ bundle, onClose, onAddToCart }) => {
               style={{ maxHeight: "400px", width: "100%" }}
             />
             <p>
-              <strong>Designed for:</strong> {bundle.gender}
+              <strong>Designed For:</strong> {bundle.gender}
             </p>
             <p>
-              <strong>Recommended for:</strong> {bundle.class_name}
+              <strong>Recommended For:</strong> {bundle.class_name}
             </p>
             <p>
-              <strong>Suitable for Classes:</strong> {bundle.applicable_classes}
+              <strong>Suitable For Classes:</strong> {bundle.applicable_classes}
             </p>
             <p>
               <strong>Bundle Price:</strong> ₹{bundle.bundle_total}
@@ -82,6 +84,24 @@ const QuickViewModal = ({ bundle, onClose, onAddToCart }) => {
             </div>
           </div>
           <div className="modal-footer">
+            <div className="d-flex align-items-center">
+              <label className="me-2" htmlFor="quantitySelect">
+                Quantity:
+              </label>
+              <select
+                id="quantitySelect"
+                className="form-select me-3"
+                style={{ width: "80px" }}
+                value={quantity}
+                onChange={(e) => setQuantity(Number(e.target.value))}
+              >
+                {[...Array(10)].map((_, i) => (
+                  <option key={i + 1} value={i + 1}>
+                    {i + 1}
+                  </option>
+                ))}
+              </select>
+            </div>
             <button
               type="button"
               className="btn btn-secondary"
@@ -92,7 +112,7 @@ const QuickViewModal = ({ bundle, onClose, onAddToCart }) => {
             <button
               type="button"
               className="btn btn-primary"
-              onClick={onAddToCart}
+              onClick={() => onAddToCart(bundle.bundle_id, quantity)}
             >
               Add to Cart
             </button>
