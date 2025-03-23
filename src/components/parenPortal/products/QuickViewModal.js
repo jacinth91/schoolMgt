@@ -1,14 +1,21 @@
-import React from "react";
+import React, { useEffect } from "react";
 
-const QuickViewModal = ({ bundle, onClose }) => {
+const QuickViewModal = ({ bundle, onClose, onAddToCart }) => {
+  useEffect(() => {
+    document.body.classList.add("modal-open");
+    return () => {
+      document.body.classList.remove("modal-open");
+    };
+  }, []);
+
   if (!bundle) return null;
 
-  // If bundle.items is a simple array, we'll default the quantity to 1.
-  // Alternatively, if you have more detailed data, you can map through that.
-  const tableRows = bundle.items.map((item, index) => (
+  const tableRows = bundle.products.map((item, index) => (
     <tr key={index}>
-      <td>{item}</td>
-      <td>1</td>
+      <td>{item.product_name}</td>
+      <td>{item.quantity}</td>
+      <td>{item.unit_price}</td>
+      <td>{item.optional ? "Yes" : "No"}</td>
     </tr>
   ));
 
@@ -33,18 +40,30 @@ const QuickViewModal = ({ bundle, onClose }) => {
               onClick={onClose}
             ></button>
           </div>
-          <div className="modal-body">
+          <div
+            className="modal-body"
+            style={{ maxHeight: "70vh", overflowY: "auto" }}
+          >
             <img
-              src={bundle.image}
+              src={
+                bundle.image ??
+                "https://res.cloudinary.com/dwgfx9feh/image/upload/v1742726808/WhatsApp_Image_2025-03-22_at_11.55.58_AM_1_ekrabi.jpg"
+              }
               className="img-fluid mb-3"
               alt={bundle.name}
-              style={{ maxHeight: "300px", objectFit: "cover", width: "100%" }}
+              style={{ maxHeight: "400px", width: "100%" }}
             />
             <p>
-              <strong>Grade:</strong> {bundle.grade}
+              <strong>Designed for:</strong> {bundle.gender}
             </p>
             <p>
-              <strong>Price:</strong> ₹{bundle.price}
+              <strong>Recommended for:</strong> {bundle.class_name}
+            </p>
+            <p>
+              <strong>Suitable for Classes:</strong> {bundle.applicable_classes}
+            </p>
+            <p>
+              <strong>Bundle Price:</strong> ₹{bundle.bundle_total}
             </p>
 
             <h6 className="mt-4">Bundle Contents</h6>
@@ -54,6 +73,8 @@ const QuickViewModal = ({ bundle, onClose }) => {
                   <tr>
                     <th>Product</th>
                     <th>Quantity</th>
+                    <th>Unit Price</th>
+                    <th>Optional</th>
                   </tr>
                 </thead>
                 <tbody>{tableRows}</tbody>
@@ -68,7 +89,11 @@ const QuickViewModal = ({ bundle, onClose }) => {
             >
               Close
             </button>
-            <button type="button" className="btn btn-primary">
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={onAddToCart}
+            >
               Add to Cart
             </button>
           </div>

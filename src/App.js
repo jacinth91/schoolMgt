@@ -87,15 +87,18 @@ const App = () => {
             <Route path="/" element={<AuthRedirect />} />
             <Route path="/login" element={<ParentLogin />} />
             <Route path="/admin/login" element={<AdminLogin />} />
-            <Route path="/terms-of-service" element={<TermsOfService />} />
-            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-            <Route path="/refunds" element={<Refunds />} />
-            <Route path="/cookie-preferences" element={<CookiePreferences />} />
 
             {/* Private Routes for Authenticated Users */}
             <Route element={<PrivateRoute />}>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/terms-of-service" element={<TermsOfService />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/refunds" element={<Refunds />} />
+              <Route
+                path="/cookie-preferences"
+                element={<CookiePreferences />}
+              />
             </Route>
 
             <Route element={<PrivateRoute allowedRoles={[ROLES.PARENT]} />}>

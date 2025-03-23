@@ -35,7 +35,7 @@ const StudentManagement = () => {
   }, []);
 
   const onEditStudentClick = (data) => {
-    const nonEditableFields = ["usid"];
+    const nonEditableFields = ["usid", "gender"];
     const skipKeys = ["id"];
     setSelectedId(data.id);
 
