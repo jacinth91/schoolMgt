@@ -6,6 +6,7 @@ import { loadingChange, login } from "../../actions/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 import FullPageSpinner from "../layout/FullPageSpinner";
+import { toast } from "react-toastify";
 
 const ParentLogin = () => {
   useEffect(() => {
@@ -19,15 +20,11 @@ const ParentLogin = () => {
   const [password, setPassword] = useState("");
   const [otp, setOtp] = useState("");
 
-  const { isAuthenticated, error, loading } = useSelector(
-    (state) => state.auth
-  );
-  const [showError, setShowError] = useState(false);
+  const { isAuthenticated, loading } = useSelector((state) => state.auth);
 
   //const [generatedOtp, setGeneratedOtp] = useState("");
 
   const fillPassword = (e) => {
-    setShowError(false);
     setPassword(e.target.value);
   };
 
@@ -44,9 +41,10 @@ const ParentLogin = () => {
     if (password.length) {
       dispatch(login({ username: userId, password: password }));
     } else {
-      alert("Invalid password. Please try again.");
+      toast.error("Invalid password. Please try again.", {
+        position: "top-right",
+      });
     }
-    setShowError(true);
   };
 
   const handleOtpSubmit = (e) => {
@@ -144,9 +142,6 @@ const ParentLogin = () => {
                     />
                   </div>
                 </div>
-                {error && password && showError && (
-                  <div className="text-danger mb-2 h6">{error.message}</div>
-                )}
                 <button
                   type="submit"
                   className="btn auth-btn auth-btn-password w-100 mb-3"

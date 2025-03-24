@@ -68,11 +68,14 @@ export const login =
         payload: res,
       });
 
-      dispatch(loadUser()); // ✅ Internal function should be triggered
+      dispatch(loadUser());
     } catch (err) {
       dispatch({
         type: LOGIN_FAIL,
         payload: err || "Something went wrong",
+      });
+      toast.error("Invalid Credentials!", {
+        position: "top-right",
       });
     }
   };

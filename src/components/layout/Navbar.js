@@ -51,7 +51,7 @@ const Navbar = () => {
           { path: "/profile", label: "Profile" },
           { path: "/children", label: "Children" },
           { path: "/products", label: "Products" },
-          { path: "/cart", label: "Cart", showBadge: true },
+          { path: "/order/history", label: "Orders" },
           { path: "/support", label: "Support" },
         ];
       case "admin":
@@ -110,7 +110,15 @@ const Navbar = () => {
                     onClick={handleNavItemClick}
                   >
                     {item.label}
-                    {item.showBadge && !!cartData?.length && (
+                  </Link>
+                </li>
+              ))}
+
+              {role === "parent" && (
+                <li className="nav-item position-relative ps-3 pt-2">
+                  <Link to="/cart">
+                    <em className="bi bi-cart text-white"></em>
+                    {!!cartData?.length && (
                       <span
                         className="badge rounded-pill bg-danger"
                         style={{ fontSize: "0.75rem", padding: "4px 8px" }}
@@ -120,7 +128,7 @@ const Navbar = () => {
                     )}
                   </Link>
                 </li>
-              ))}
+              )}
 
               {/* Profile Dropdown */}
               <li className="nav-item position-relative ps-3 pt-2">
