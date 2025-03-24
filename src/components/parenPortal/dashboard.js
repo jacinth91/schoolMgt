@@ -13,7 +13,6 @@ const Dashboard = () => {
   const [student, setStudent] = useState({});
   const [loading, setLoading] = useState(false);
   const { user } = useSelector((state) => state.auth);
-  const [errorMsg, setErrorMsg] = useState("");
 
   const onStudentSearch = async () => {
     // setShowStuDetail(true);
@@ -21,16 +20,15 @@ const Dashboard = () => {
       setLoading(true);
       const response = await loadStudentDetail(stuId);
       if (response.statusCode === 404) {
-        setErrorMsg(response.message);
+        toast.error(response.message, { position: "top-right" });
         setShowDetail(false);
       } else {
-        setErrorMsg("");
         setStudent(response);
         setShowDetail(true);
       }
       setLoading(false);
     } else {
-      setErrorMsg("Enter Enrollment No.");
+      toast.error("Enter Enrollment No.", { position: "top-right" });
     }
   };
 
@@ -38,9 +36,8 @@ const Dashboard = () => {
     setLoading(true);
     const response = await linkStudentToParent({ stuId, parentId: user.id });
     if ([404, 400, 500].includes(response.statusCode)) {
-      setErrorMsg(response.message);
+      toast.error(response.message, { position: "top-right" });
     } else {
-      setErrorMsg("");
       setShowDetail(false);
       setStuId("");
       toast.success("Child added successfully!", { position: "top-right" });
@@ -79,9 +76,6 @@ const Dashboard = () => {
                     </div>
                   </div>
                   {loading && <FullPageSpinner loading={loading} />}
-                  {errorMsg && (
-                    <div className="text-danger my-2 h6">{errorMsg}</div>
-                  )}
 
                   {showDetail && (
                     <div className="mt-2">

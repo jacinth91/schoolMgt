@@ -4,6 +4,7 @@ import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import "./ProductCarousel.css";
 
 const productImages = [
   "https://res.cloudinary.com/dwgfx9feh/image/upload/v1742543201/product1_yvygvw.png",
@@ -38,17 +39,24 @@ const ProductCarousel = () => {
     >
       {productImages.map((image, index) => (
         <SwiperSlide key={index}>
-          <img
-            src={image}
-            alt={`Product ${index + 1}`}
+          <div
             style={{
-              width: "100%",
-              height: "250px", // Reduced height
-              objectFit: "contain",
-              borderRadius: "10px",
-              boxShadow: "0px 4px 8px rgba(0,0,0,0.2)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              height: "250px",
             }}
-          />
+          >
+            <img
+              src={image}
+              alt={`Product ${index + 1}`}
+              style={{
+                maxWidth: "100%",
+                maxHeight: "100%",
+                objectFit: "contain",
+              }}
+            />
+          </div>
         </SwiperSlide>
       ))}
     </Swiper>

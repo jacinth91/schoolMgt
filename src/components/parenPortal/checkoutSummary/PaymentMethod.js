@@ -18,7 +18,7 @@ const PaymentMethod = () => {
       });
       return;
     }
-    navigate("/payment-gateway", { state: { method: selectedMethod } });
+    navigate("/checkout", { state: { method: selectedMethod } });
   };
 
   return (
@@ -31,7 +31,7 @@ const PaymentMethod = () => {
             name="paymentMethod"
             id="creditCard"
             value="Credit/Debit Card"
-            onChange={() => handlePaymentSelection("Credit/Debit Card")}
+            onChange={() => handlePaymentSelection("credit_card")}
           />
           <label className="form-check-label" htmlFor="creditCard">
             Credit/Debit Card
@@ -44,7 +44,7 @@ const PaymentMethod = () => {
             name="paymentMethod"
             id="upi"
             value="UPI"
-            onChange={() => handlePaymentSelection("UPI")}
+            onChange={() => handlePaymentSelection("upi")}
           />
           <label className="form-check-label" htmlFor="upi">
             UPI (Google Pay, PhonePe, Paytm)
@@ -57,14 +57,14 @@ const PaymentMethod = () => {
             name="paymentMethod"
             id="netBanking"
             value="Net Banking"
-            onChange={() => handlePaymentSelection("Net Banking")}
+            onChange={() => handlePaymentSelection("net_banking")}
           />
           <label className="form-check-label" htmlFor="netBanking">
             Net Banking
           </label>
         </div>
         <button
-          className="btn btn-success w-100 mt-3 rounded-pill"
+          className="btn btn-success w-50 mx-auto mt-3 rounded-pill"
           onClick={handleProceed}
         >
           Proceed to Payment

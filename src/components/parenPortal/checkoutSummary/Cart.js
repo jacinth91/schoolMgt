@@ -6,6 +6,7 @@ import {
   addToCart,
   deleteCartItem,
   getCartDetail,
+  loadingCartChange,
 } from "../../../actions/product";
 import { useDispatch, useSelector } from "react-redux";
 import FullPageSpinner from "../../layout/FullPageSpinner";
@@ -22,16 +23,13 @@ const CartPage = () => {
   }));
   const [totalPrice, setTotalPrice] = useState(0);
   const [totalQuantity, setTotalQuantity] = useState(0);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchCartItems = async () => {
+    const fetchCartItems = () => {
       try {
         dispatch(getCartDetail(user.id));
       } catch (error) {
         toast.error("Failed to load cart items!", { position: "top-right" });
-      } finally {
-        setLoading(false);
       }
     };
     fetchCartItems();
@@ -57,6 +55,7 @@ const CartPage = () => {
   }, [cartData?.items]);
 
   const handleQuantityChange = (bundleId, quantity) => {
+    dispatch(loadingCartChange(true));
     if (quantity < 1) {
       handleRemove(bundleId);
     } else {
@@ -65,22 +64,18 @@ const CartPage = () => {
         quantity: quantity,
         parentId: user.id,
       };
-      setLoading(true);
       dispatch(addToCart(body))
         .then(() => {
           toast.success("Quantity updated!", { position: "top-right" });
         })
         .catch(() => {
           toast.error("Failed to update quantity!", { position: "top-right" });
-        })
-        .finally(() => {
-          setLoading(false);
         });
     }
   };
 
   const handleRemove = (bundleId) => {
-    setLoading(true);
+    dispatch(loadingCartChange(true));
 
     dispatch(deleteCartItem({ parentId: user.id, bundleId: bundleId }))
       .then(() => {
@@ -90,9 +85,6 @@ const CartPage = () => {
         toast.error("Failed to remove item from cart!", {
           position: "top-right",
         });
-      })
-      .finally(() => {
-        setLoading(false);
       });
   };
 
@@ -106,8 +98,8 @@ const CartPage = () => {
 
   return (
     <div className="container py-4">
-      {loading ? (
-        <FullPageSpinner loading={loading} />
+      {cartData?.loading ? (
+        <FullPageSpinner loading={cartData?.loading} />
       ) : !cartData?.items?.length ? (
         <p className="text-muted text-center">Your cart is empty.</p>
       ) : (

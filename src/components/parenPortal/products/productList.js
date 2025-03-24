@@ -63,7 +63,6 @@ const ProductListing = () => {
       await dispatch(addToCart(body)); // Ensure this returns a Promise
       toast.success("Product added to cart successfully!", {
         position: "top-right",
-        autoClose: 3000,
       });
     } catch (error) {
       toast.error("Failed to add product to cart.", {

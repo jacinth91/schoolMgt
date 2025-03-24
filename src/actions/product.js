@@ -2,6 +2,7 @@ import { del, get, post } from "../services/api";
 import {
   CART_FETCH_SUCCESS,
   CART_FETCH_UPDATE_FAIL,
+  CART_LOADING_CHANGE,
   ITEM_DELETE_FAIL,
   ITEM_DELETE_SUCCESS,
   PRODUCT_ADDED_CART,
@@ -65,3 +66,7 @@ export const deleteCartItem =
       });
     }
   };
+
+export const loadingCartChange = (value) => (dispatch) => {
+  dispatch({ type: CART_LOADING_CHANGE, payload: value });
+};
