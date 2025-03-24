@@ -67,7 +67,7 @@ const ProfilePage = () => {
         </div>
         <div className="profile-row">
           <TelephoneFill className="icon" /> <strong>Mobile:</strong>{" "}
-          <span>{user.phone}</span>
+          <span>{user.phoneNumber}</span>
         </div>
         <div className="profile-row">
           <Building className="icon" /> <strong>Campus:</strong>{" "}
