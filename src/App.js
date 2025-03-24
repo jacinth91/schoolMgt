@@ -19,7 +19,6 @@ import Footer from "./components/layout/footer";
 import CheckoutSummary from "./components/parenPortal/checkoutSummary/CheckoutSummary";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
-import ProductDetail from "./components/parenPortal/products/ProductDetail";
 import ProfilePage from "./components/parenPortal/ProfilePage";
 import OrderHistory from "./components/parenPortal/orders/OrderHistory";
 import ProductManagement from "./components/admin/ProductManagement";
@@ -97,7 +96,6 @@ const App = () => {
 
             <Route element={<PrivateRoute allowedRoles={[ROLES.PARENT]} />}>
               <Route exact path="/products" element={<ProductListing />} />
-              <Route path="/product/:productId" element={<ProductDetail />} />
               <Route path="/children" element={<ChildrenDetails />} />
               <Route path="/order/history" element={<OrderHistory />} />
               <Route path="/thankyou" element={<ThankYouPage />} />

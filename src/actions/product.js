@@ -5,6 +5,8 @@ import {
   CART_LOADING_CHANGE,
   ITEM_DELETE_FAIL,
   ITEM_DELETE_SUCCESS,
+  ORDER_PLACED_SUCCESSFULLY,
+  ORDER_PLACEMENT_FAIL,
   PRODUCT_ADDED_CART,
   PRODUCT_CART_ADD_FAILED,
 } from "./types";
@@ -27,11 +29,13 @@ export const addToCart =
         type: PRODUCT_ADDED_CART,
         payload: res.data,
       });
+      return Promise.resolve(res.data);
     } catch (error) {
       dispatch({
         type: PRODUCT_CART_ADD_FAILED,
         payload: error,
       });
+      return Promise.reject(error);
     }
   };
 
@@ -59,14 +63,35 @@ export const deleteCartItem =
         type: ITEM_DELETE_SUCCESS,
         payload: res.data,
       });
+      return Promise.resolve(res.data);
     } catch (error) {
       dispatch({
         type: ITEM_DELETE_FAIL,
         payload: error,
       });
+      return Promise.reject(error);
     }
   };
 
 export const loadingCartChange = (value) => (dispatch) => {
   dispatch({ type: CART_LOADING_CHANGE, payload: value });
 };
+
+export const orderPlaced =
+  ({ parentId, paymentMethod }) =>
+  async (dispatch) => {
+    try {
+      const res = await post("/orders/cart", { parentId, paymentMethod });
+      dispatch({
+        type: ORDER_PLACED_SUCCESSFULLY,
+        payload: res.data,
+      });
+      return Promise.resolve(res.data);
+    } catch (error) {
+      dispatch({
+        type: ORDER_PLACEMENT_FAIL,
+        payload: error,
+      });
+      return Promise.reject(error);
+    }
+  };

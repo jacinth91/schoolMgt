@@ -4,7 +4,11 @@ import { useDispatch, useSelector } from "react-redux";
 import "./PlaceOrder.css";
 import { toast } from "react-toastify";
 import { PAYMENT_MODE } from "../../../utils/constants";
-import { getCartDetail } from "../../../actions/product";
+import {
+  getCartDetail,
+  loadingCartChange,
+  orderPlaced,
+} from "../../../actions/product";
 import FullPageSpinner from "../../layout/FullPageSpinner";
 
 const SHIPPING_CHARGE = 50;
@@ -70,8 +74,18 @@ const PlaceOrder = () => {
       toast.warning("Your cart is empty!", { position: "top-right" });
       return;
     }
-    toast.success("Order placed successfully!", { position: "top-right" });
-    navigate("/order-success");
+    dispatch(loadingCartChange(true));
+    dispatch(orderPlaced({ parentId: user.id, paymentMethod: method }))
+      .then(() => {
+        toast.success("Order placed successfully!", { position: "top-right" });
+        navigate("/thankyou");
+      })
+      .catch(() => {
+        toast.error(
+          "Something went wrong on our end. Please try again later.",
+          { position: "top-right" }
+        );
+      });
   };
 
   return cartData?.loading ? (

@@ -4,6 +4,8 @@ import {
   CART_LOADING_CHANGE,
   ITEM_DELETE_FAIL,
   ITEM_DELETE_SUCCESS,
+  ORDER_PLACED_SUCCESSFULLY,
+  ORDER_PLACEMENT_FAIL,
   PRODUCT_ADDED_CART,
   PRODUCT_CART_ADD_FAILED,
 } from "../actions/types";
@@ -42,6 +44,21 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: payload,
+      };
+    case ORDER_PLACED_SUCCESSFULLY:
+      return {
+        ...state,
+        loading: false,
+        error: null,
+        cartId: null,
+        parentId: null,
+        items: null,
+      };
+    case ORDER_PLACEMENT_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: payload,
       };
     default:
       return state;

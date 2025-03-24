@@ -12,7 +12,7 @@ const ChildrenDetails = () => {
 
   useEffect(() => {
     dispatch(loadUser());
-  }, [user.students?.length]);
+  }, [dispatch, user.students?.length]);
 
   const childrenData = user.studentData;
 
