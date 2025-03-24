@@ -1,8 +1,8 @@
 import { combineReducers } from "redux";
 import auth from "./auth";
-import student from "./student";
+import product from "./product";
 
 export default combineReducers({
   auth,
-  student,
+  product,
 });

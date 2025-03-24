@@ -4,6 +4,8 @@ import "./dashboard.css";
 import { linkStudentToParent, loadStudentDetail } from "../../actions/student";
 import FullPageSpinner from "../layout/FullPageSpinner";
 import { useDispatch, useSelector } from "react-redux";
+import ProductCarousel from "./ProductCarousel";
+import { toast } from "react-toastify";
 
 const Dashboard = () => {
   const [stuId, setStuId] = useState("");
@@ -11,8 +13,6 @@ const Dashboard = () => {
   const [student, setStudent] = useState({});
   const [loading, setLoading] = useState(false);
   const { user } = useSelector((state) => state.auth);
-  const [errorMsg, setErrorMsg] = useState("");
-  const [successMsg, setSuccessMsg] = useState("");
 
   const onStudentSearch = async () => {
     // setShowStuDetail(true);
@@ -20,14 +20,15 @@ const Dashboard = () => {
       setLoading(true);
       const response = await loadStudentDetail(stuId);
       if (response.statusCode === 404) {
-        setErrorMsg(response.message);
+        toast.error(response.message, { position: "top-right" });
         setShowDetail(false);
       } else {
-        setErrorMsg("");
         setStudent(response);
         setShowDetail(true);
       }
       setLoading(false);
+    } else {
+      toast.error("Enter Enrollment No.", { position: "top-right" });
     }
   };
 
@@ -35,15 +36,11 @@ const Dashboard = () => {
     setLoading(true);
     const response = await linkStudentToParent({ stuId, parentId: user.id });
     if ([404, 400, 500].includes(response.statusCode)) {
-      setErrorMsg(response.message);
+      toast.error(response.message, { position: "top-right" });
     } else {
-      setErrorMsg("");
       setShowDetail(false);
       setStuId("");
-      setSuccessMsg("Child added successfully!");
-      setTimeout(() => {
-        setSuccessMsg("");
-      }, 2000);
+      toast.success("Child added successfully!", { position: "top-right" });
     }
     setLoading(false);
   };
@@ -79,12 +76,7 @@ const Dashboard = () => {
                     </div>
                   </div>
                   {loading && <FullPageSpinner loading={loading} />}
-                  {errorMsg && (
-                    <div className="text-danger my-2 h6">{errorMsg}</div>
-                  )}
-                  {successMsg && (
-                    <div className="text-success my-2 h5">{successMsg}</div>
-                  )}
+
                   {showDetail && (
                     <div className="mt-2">
                       <strong>Enrollment ID: </strong> {student?.usid}
@@ -126,7 +118,7 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
-          <div className="mt-4 pt-4">
+          {/* <div className="mt-4 pt-4">
             <div className="row">
               <div className="col-md-6">
                 <TopSellingProducts category={"Regular Uniform"} />
@@ -141,6 +133,10 @@ const Dashboard = () => {
                 <TopSellingProducts category={"Sportopia"} />
               </div>
             </div>
+          </div> */}
+          <div className="my-4 pt-4 row">
+            <h4 className="col-md-12 mb-4 text-primary">School Essentials</h4>
+            <ProductCarousel />
           </div>
         </div>
       </div>

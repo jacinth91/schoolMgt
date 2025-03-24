@@ -5,7 +5,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../actions/auth";
 
 const Navbar = () => {
-  const { parentName, role } = useSelector((state) => state.auth.user);
+  const { parentName, role, cartData } = useSelector((state) => ({
+    parentName: state.auth.user.parentName,
+    role: state.auth.user.role,
+    cartData: state.product.items,
+  }));
   const [showProfile, setShowProfile] = useState(false);
   const [showNav, setShowNav] = useState(false); // <-- Added state to control navbar visibility
   const dispatch = useDispatch();
@@ -47,7 +51,7 @@ const Navbar = () => {
           { path: "/profile", label: "Profile" },
           { path: "/children", label: "Children" },
           { path: "/products", label: "Products" },
-          { path: "/cart", label: "Cart" },
+          { path: "/cart", label: "Cart", showBadge: true },
           { path: "/support", label: "Support" },
         ];
       case "admin":
@@ -106,6 +110,14 @@ const Navbar = () => {
                     onClick={handleNavItemClick}
                   >
                     {item.label}
+                    {item.showBadge && !!cartData?.length && (
+                      <span
+                        className="badge rounded-pill bg-danger"
+                        style={{ fontSize: "0.75rem", padding: "4px 8px" }}
+                      >
+                        {cartData?.length}
+                      </span>
+                    )}
                   </Link>
                 </li>
               ))}
