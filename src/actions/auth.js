@@ -11,6 +11,7 @@ import {
   USER_UPDATE_FAILED,
 } from "./types";
 import { get, post, put } from "../services/api";
+import { toast } from "react-toastify";
 
 //Load user
 export const loadUser = () => async (dispatch) => {
@@ -84,8 +85,12 @@ export const updateProfile = (data) => async (dispatch) => {
   try {
     const res = await put(`/profiles/${data?.id}?role=${data?.role}`, data);
     dispatch({ type: USER_UPDATED, payload: res.data });
+    toast.success("Profile updated successfully!", { position: "top-right" });
   } catch (error) {
     dispatch({ type: USER_UPDATE_FAILED, payload: error });
+    toast.error("Error while updating profile details!", {
+      position: "top-right",
+    });
   }
 };
 
