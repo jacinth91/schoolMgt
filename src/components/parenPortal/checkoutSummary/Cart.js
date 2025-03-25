@@ -140,7 +140,7 @@ const CartPage = () => {
                       </p>
                       <div className="d-flex align-items-center gap-2">
                         <button
-                          className="btn btn-sm btn-outline-primary rounded-circle px-3"
+                          className="btn btn-sm btn-outline-primary px-3"
                           onClick={() =>
                             handleQuantityChange(
                               item.bundleId,
@@ -152,7 +152,7 @@ const CartPage = () => {
                         </button>
                         <span className="mx-2 fw-bold">{item.quantity}</span>
                         <button
-                          className="btn btn-sm btn-outline-primary rounded-circle px-3"
+                          className="btn btn-sm btn-outline-primary px-3"
                           onClick={() =>
                             handleQuantityChange(
                               item.bundleId,

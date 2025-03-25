@@ -79,8 +79,8 @@ const ProfilePage = () => {
         </div>
       </div>
 
-      <div className="text-center mt-4">
-        <button className="btn update-btn" onClick={() => openDialog()}>
+      <div className="text-center mt-4 mx-auto">
+        <button className="btn update-btn w-100" onClick={() => openDialog()}>
           Update
         </button>
       </div>
