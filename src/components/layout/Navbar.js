@@ -57,18 +57,19 @@ const Navbar = () => {
       case "admin":
         return [
           { path: "/dashboard", label: "Home" },
-          { path: "/profile", label: "Member Management" },
-          { path: "/children", label: "Student Management" },
-          { path: "/products", label: "Bundle Management" },
-          { path: "/cart", label: "Orders" },
-          { path: "/support", label: "Product Management" },
+          { path: "/profile", label: "Profile" },
+          { path: "/admin/member", label: "Member Management" },
+          { path: "/admin/students", label: "Student Management" },
+          { path: "/admin/bundle", label: "Bundle Management" },
+          { path: "/admin/products", label: "Product Management" },
+          { path: "/admin/support", label: "Support Management" },
         ];
       case "vendor":
         return [
           { path: "/dashboard", label: "Home" },
           { path: "/products", label: "Profile" },
-          { path: "/orders", label: "Member Management" },
-          { path: "/settings", label: "Order Management" },
+          { path: "/vendor/member", label: "Member Management" },
+          { path: "/vendor/order", label: "Order Management" },
         ];
       default:
         return [{ path: "/", label: "Home" }];
