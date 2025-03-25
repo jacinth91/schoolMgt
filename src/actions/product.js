@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import { del, get, post } from "../services/api";
 import {
   CART_FETCH_SUCCESS,
@@ -16,6 +17,26 @@ export const fetchLinkedBundles = async (usid) => {
     const res = await get(`/bundles/search/${usid}?type=New`);
     return res.data;
   } catch (error) {
+    return error;
+  }
+};
+
+export const fetchAllBundles = async () => {
+  try {
+    const res = await get("/bundles");
+    return res.data;
+  } catch (error) {
+    toast.error(error, { position: "top-right" });
+    return error;
+  }
+};
+
+export const fetchAllProducts = async () => {
+  try {
+    const res = await get("/products");
+    return res.data;
+  } catch (error) {
+    toast.error(error, { position: "top-right" });
     return error;
   }
 };
@@ -95,3 +116,13 @@ export const orderPlaced =
       return Promise.reject(error);
     }
   };
+
+export const fetchAllOrders = async () => {
+  try {
+    const res = await get("/orders");
+    return res.data;
+  } catch (error) {
+    toast.error(error, { position: "top-right" });
+    return error;
+  }
+};

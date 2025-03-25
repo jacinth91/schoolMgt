@@ -1,105 +1,209 @@
-import React, { useState } from "react";
-import "bootstrap-icons/font/bootstrap-icons.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-
-const ordersData = [
-  {
-    id: 1,
-    parentName: "John Doe",
-    studentName: "Sam Doe",
-    totalAmount: 1500,
-    date: "2025-03-10",
-    status: "Pending",
-  },
-  {
-    id: 2,
-    parentName: "Jane Smith",
-    studentName: "Emma Smith",
-    totalAmount: 2000,
-    date: "2025-03-11",
-    status: "Completed",
-  },
-  {
-    id: 3,
-    parentName: "Alice Johnson",
-    studentName: "Jake Johnson",
-    totalAmount: 1800,
-    date: "2025-03-12",
-    status: "Shipped",
-  },
-];
+import React, { useEffect, useState, useMemo } from "react";
+import FullPageSpinner from "../layout/FullPageSpinner";
+// import {  updateOrderStatus } from "../../actions/order";
+import { Modal, Button, Form } from "react-bootstrap";
+import { fetchAllOrders } from "../../actions/product";
 
 const OrderManagement = () => {
-  const [orders, setOrders] = useState(ordersData);
+  const [orders, setOrders] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [newStatus, setNewStatus] = useState("");
+  const itemsPerPage = 10;
 
-  const deleteOrder = (id) => {
-    setOrders(orders.filter((order) => order.id !== id));
-  };
+  useEffect(() => {
+    const getOrders = async () => {
+      setLoading(true);
+      try {
+        const response = await fetchAllOrders();
+        setOrders(Array.isArray(response) ? response : []);
+      } catch (error) {
+        setOrders([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    getOrders();
+  }, []);
 
-  const filteredOrders = orders.filter(
-    (order) =>
-      order.parentName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order.studentName.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredOrders = useMemo(() => {
+    return orders.filter(
+      (order) =>
+        order?.parent?.parentName
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
+        order?.id?.toString().includes(searchTerm)
+    );
+  }, [orders, searchTerm]);
+
+  const totalPages = Math.ceil(filteredOrders.length / itemsPerPage);
+  const paginatedOrders = filteredOrders.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
   );
 
-  return (
-    <div className="container py-4">
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <h2>Order Management</h2>
-      </div>
+  const onView = (order) => {
+    setSelectedOrder(order);
+    setNewStatus(order.status); // Set initial status
+    setShowModal(true);
+  };
 
+  const handleStatusUpdate = async () => {
+    if (!selectedOrder) return;
+
+    try {
+      // await updateOrderStatus(selectedOrder.id, newStatus);
+      // setOrders((prevOrders) =>
+      //   prevOrders.map((order) =>
+      //     order.id === selectedOrder.id
+      //       ? { ...order, status: newStatus }
+      //       : order
+      //   )
+      // );
+      setShowModal(false);
+    } catch (error) {
+      console.error("Error updating status:", error);
+    }
+  };
+
+  return loading ? (
+    <FullPageSpinner loading={loading} />
+  ) : (
+    <div className="container py-4">
+      <h2>Order Management</h2>
       <input
         type="text"
         className="form-control mb-3"
-        placeholder="Search by Parent or Student Name..."
+        placeholder="Search by Parent Name or Order ID..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
 
-      <div className="table-responsive">
-        <table className="table table-bordered table-striped">
-          <thead className="table-dark">
-            <tr>
-              <th>ID</th>
-              <th>Parent Name</th>
-              <th>Student Name</th>
-              <th>Total Amount</th>
-              <th>Date</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredOrders.map((order) => (
+      <table className="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Parent Name</th>
+            <th>Contact Number</th>
+            <th>Total Price</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {paginatedOrders.length > 0 ? (
+            paginatedOrders.map((order) => (
               <tr key={order.id}>
                 <td>{order.id}</td>
-                <td>{order.parentName}</td>
-                <td>{order.studentName}</td>
-                <td>{order.totalAmount}</td>
-                <td>{order.date}</td>
+                <td>{order.parent?.parentName}</td>
+                <td>{order.parent?.phoneNumber}</td>
+                <td>{order.totalPrice}</td>
                 <td>{order.status}</td>
                 <td>
-                  <div className="d-flex gap-2">
-                    <button className="btn btn-primary btn-sm">
-                      <i className="bi bi-eye"></i>
-                    </button>
-                    <button className="btn btn-warning btn-sm">
-                      <i className="bi bi-pencil"></i>
-                    </button>
-                    <button
-                      className="btn btn-danger btn-sm"
-                      onClick={() => deleteOrder(order.id)}
-                    >
-                      <i className="bi bi-trash"></i>
-                    </button>
-                  </div>
+                  <button
+                    className="btn btn-primary btn-sm"
+                    onClick={() => onView(order)}
+                  >
+                    <em className="bi bi-eye" />
+                  </button>
                 </td>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="5" className="text-center">
+                No orders found.
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+
+      <div className="d-flex justify-content-between align-items-center mt-3">
+        <button
+          className="btn btn-primary"
+          disabled={currentPage === 1}
+          onClick={() => setCurrentPage((prev) => prev - 1)}
+        >
+          Previous
+        </button>
+        <span>
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          className="btn btn-primary"
+          disabled={currentPage === totalPages}
+          onClick={() => setCurrentPage((prev) => prev + 1)}
+        >
+          Next
+        </button>
       </div>
+
+      {/* Order Details Modal */}
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Order Details</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {selectedOrder && (
+            <div>
+              <p>
+                <strong>Order ID:</strong> {selectedOrder.id}
+              </p>
+              <p>
+                <strong>Total Price:</strong> {selectedOrder.totalPrice}
+              </p>
+              <p>
+                <strong>Created At:</strong>{" "}
+                {new Date(selectedOrder.createdAt).toLocaleString()}
+              </p>
+              <hr />
+              <h5>Parent Details</h5>
+              <p>
+                <strong>Name:</strong> {selectedOrder.parent.parentName}
+              </p>
+              <p>
+                <strong>Phone:</strong> {selectedOrder.parent.phoneNumber}
+              </p>
+              <p>
+                <strong>Address:</strong> {selectedOrder.parent.address}
+              </p>
+              <p>
+                <strong>Campus:</strong> {selectedOrder.parent.campus}
+              </p>
+              <p>
+                <strong>Students:</strong>{" "}
+                {selectedOrder.parent.students.join(", ")}
+              </p>
+
+              {/* Status Update */}
+              <hr />
+              <h5>Update Status</h5>
+              <Form.Select
+                value={newStatus}
+                onChange={(e) => setNewStatus(e.target.value)}
+              >
+                <option value="pending">Pending</option>
+                <option value="processing">Processing</option>
+                <option value="shipped">Shipped</option>
+                <option value="delivered">Delivered</option>
+                <option value="cancelled">Cancelled</option>
+              </Form.Select>
+            </div>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleStatusUpdate}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

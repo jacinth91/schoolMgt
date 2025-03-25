@@ -106,7 +106,7 @@ const App = () => {
               <Route path="/checkout" element={<CheckoutSummary />} />
             </Route>
 
-            <Route element={<PrivateRoute />}>
+            <Route element={<PrivateRoute allowedRoles={[ROLES.ADMIN]} />}>
               <Route path="/admin/manage" element={<AdminManagement />} />
               <Route path="/admin/products" element={<ProductManagement />} />
               <Route path="/admin/students" element={<StudentManagement />} />

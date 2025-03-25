@@ -157,6 +157,7 @@ const ProductListing = () => {
           bundle={selectedBundle}
           onClose={() => setSelectedBundle(null)}
           onAddToCart={addToCartClick}
+          showAction={true}
         />
       )}
     </div>

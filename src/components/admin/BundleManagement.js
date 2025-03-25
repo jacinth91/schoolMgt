@@ -1,108 +1,146 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
+import FullPageSpinner from "../layout/FullPageSpinner";
+import { fetchAllBundles } from "../../actions/product";
+import QuickViewModal from "../parenPortal/products/QuickViewModal";
 
 const BundleManagement = () => {
   const [bundles, setBundles] = useState([]);
-
-  const onView = () => {};
-
-  const onDelete = () => {};
-
-  const onEdit = () => {};
+  const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedBundle, setSelectedBundle] = useState(null);
+  const itemsPerPage = 10;
 
   useEffect(() => {
-    // Fetch data from API (Uncomment when API is ready)
-    // fetch("API_ENDPOINT_HERE")
-    //   .then(response => response.json())
-    //   .then(data => setBundles(data))
-    //   .catch(error => console.error("Error fetching bundles:", error));
-
-    // Using dummy data for now
-    const dummyBundles = [
-      { id: 1, name: "John Doe", grade: "5", house: "Red", gender: "Male" },
-      {
-        id: 2,
-        name: "Jane Smith",
-        grade: "6",
-        house: "Blue",
-        gender: "Female",
-      },
-      {
-        id: 3,
-        name: "Alice Brown",
-        grade: "7",
-        house: "Green",
-        gender: "Female",
-      },
-      {
-        id: 4,
-        name: "Bob Johnson",
-        grade: "8",
-        house: "Yellow",
-        gender: "Male",
-      },
-      {
-        id: 5,
-        name: "Charlie Davis",
-        grade: "9",
-        house: "Red",
-        gender: "Male",
-      },
-    ];
-    setBundles(dummyBundles);
+    const getBundles = async () => {
+      setLoading(true);
+      try {
+        const response = await fetchAllBundles();
+        setBundles(Array.isArray(response) ? response : []);
+      } catch (error) {
+        setBundles([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    getBundles();
   }, []);
 
-  return (
-    <div className="container mt-4">
-      <h2 className=" mb-4">Bundle List</h2>
-      <table className="table table-bordered table-hover text-center">
-        <thead className="table-dark">
+  const filteredBundles = useMemo(() => {
+    return bundles.filter((bundle) =>
+      bundle.name?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [bundles, searchTerm]);
+
+  const totalPages = Math.ceil(filteredBundles.length / itemsPerPage);
+  const paginatedBundles = filteredBundles.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const transformBundle = (bundle) => {
+    return {
+      bundle_id: bundle.id,
+      bundle_name: bundle.name,
+      gender: bundle.gender,
+      applicable_classes: bundle.applicableClasses,
+      class_name: bundle.applicableClasses.split(", ")[0],
+      bundle_total: parseFloat(bundle.totalPrice),
+      products: bundle.bundleProducts.map((bp) => ({
+        product_id: bp.product.id,
+        product_name: bp.product.name,
+        unit_price: parseFloat(bp.product.unitPrice),
+        quantity: bp.quantity,
+        optional: bp.optional,
+      })),
+    };
+  };
+
+  const onView = (bundle) => {
+    setSelectedBundle(transformBundle(bundle));
+  };
+
+  return loading ? (
+    <FullPageSpinner loading={loading} />
+  ) : (
+    <div className="container py-4">
+      <h2>Bundle Management</h2>
+      <input
+        type="text"
+        className="form-control mb-3"
+        placeholder="Search by name..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+
+      <table className="table table-bordered table-striped">
+        <thead>
           <tr>
-            <th>#</th>
+            <th>ID</th>
             <th>Name</th>
-            <th>Grade</th>
-            <th>House</th>
             <th>Gender</th>
+            <th>Suitable Classes</th>
+            <th>Student Type</th>
+            <th>Price</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {bundles.length > 0 ? (
-            bundles.map((bundle, index) => (
+          {paginatedBundles.length > 0 ? (
+            paginatedBundles.map((bundle) => (
               <tr key={bundle.id}>
-                <td>{index + 1}</td>
+                <td>{bundle.id}</td>
                 <td>{bundle.name}</td>
-                <td>{bundle.grade}</td>
-                <td>{bundle.house}</td>
                 <td>{bundle.gender}</td>
+                <td>{bundle.applicableClasses}</td>
+                <td>{bundle.studentType}</td>
+                <td>{bundle.totalPrice}</td>
                 <td>
                   <button
-                    className="btn btn-primary  btn-sm me-2"
+                    className="btn btn-primary btn-sm"
                     onClick={() => onView(bundle)}
                   >
-                    <i className="bi bi-eye"></i>
-                  </button>
-                  <button
-                    className="btn btn-warning  btn-sm me-2"
-                    onClick={() => onEdit(bundle)}
-                  >
-                    <i className="bi bi-pencil"></i>
-                  </button>
-                  <button
-                    className="btn btn-danger  btn-sm"
-                    onClick={() => onDelete(bundle.id)}
-                  >
-                    <i className="bi bi-pencil"></i>
+                    <em className="bi bi-eye" />
                   </button>
                 </td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="6">No bundles available</td>
+              <td colSpan="6" className="text-center">
+                No bundles found.
+              </td>
             </tr>
           )}
         </tbody>
       </table>
+
+      <div className="d-flex justify-content-between align-items-center mt-3">
+        <button
+          className="btn btn-primary"
+          disabled={currentPage === 1}
+          onClick={() => setCurrentPage((prev) => prev - 1)}
+        >
+          Previous
+        </button>
+        <span>
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          className="btn btn-primary"
+          disabled={currentPage === totalPages}
+          onClick={() => setCurrentPage((prev) => prev + 1)}
+        >
+          Next
+        </button>
+      </div>
+      {selectedBundle && (
+        <QuickViewModal
+          bundle={selectedBundle}
+          onClose={() => setSelectedBundle(null)}
+          showAction={false}
+        />
+      )}
     </div>
   );
 };
