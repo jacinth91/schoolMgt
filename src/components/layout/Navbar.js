@@ -51,24 +51,25 @@ const Navbar = () => {
           { path: "/profile", label: "Profile" },
           { path: "/children", label: "Children" },
           { path: "/products", label: "Products" },
-          { path: "/cart", label: "Cart", showBadge: true },
+          { path: "/order/history", label: "Orders" },
           { path: "/support", label: "Support" },
         ];
       case "admin":
         return [
           { path: "/dashboard", label: "Home" },
-          { path: "/profile", label: "Member Management" },
-          { path: "/children", label: "Student Management" },
-          { path: "/products", label: "Bundle Management" },
-          { path: "/cart", label: "Orders" },
-          { path: "/support", label: "Product Management" },
+          { path: "/profile", label: "Profile" },
+          { path: "/admin/member", label: "Member Management" },
+          { path: "/admin/students", label: "Student Management" },
+          { path: "/admin/bundle", label: "Bundle Management" },
+          { path: "/admin/products", label: "Product Management" },
+          { path: "/admin/support", label: "Support Management" },
         ];
       case "vendor":
         return [
           { path: "/dashboard", label: "Home" },
           { path: "/products", label: "Profile" },
-          { path: "/orders", label: "Member Management" },
-          { path: "/settings", label: "Order Management" },
+          { path: "/vendor/member", label: "Member Management" },
+          { path: "/vendor/order", label: "Order Management" },
         ];
       default:
         return [{ path: "/", label: "Home" }];
@@ -110,7 +111,15 @@ const Navbar = () => {
                     onClick={handleNavItemClick}
                   >
                     {item.label}
-                    {item.showBadge && !!cartData?.length && (
+                  </Link>
+                </li>
+              ))}
+
+              {role === "parent" && (
+                <li className="nav-item position-relative ps-3 pt-2">
+                  <Link to="/cart">
+                    <em className="bi bi-cart text-white"></em>
+                    {!!cartData?.length && (
                       <span
                         className="badge rounded-pill bg-danger"
                         style={{ fontSize: "0.75rem", padding: "4px 8px" }}
@@ -120,7 +129,7 @@ const Navbar = () => {
                     )}
                   </Link>
                 </li>
-              ))}
+              )}
 
               {/* Profile Dropdown */}
               <li className="nav-item position-relative ps-3 pt-2">

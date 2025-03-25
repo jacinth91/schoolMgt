@@ -1,16 +1,21 @@
 import React, { useEffect, useRef, useState } from "react";
-import { KeyRound, UserRound, ArrowRight, Lock, ArrowLeft } from "lucide-react";
+import {
+  KeyRound,
+  UserRound,
+  ArrowRight,
+  Lock,
+  ArrowLeft,
+  Mail,
+} from "lucide-react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./style/auth.css"; // Ensure CSS is imported properly
+import "./ParentLogin.css";
 import { loadingChange, login } from "../../actions/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 import FullPageSpinner from "../layout/FullPageSpinner";
+import { toast } from "react-toastify";
 
 const ParentLogin = () => {
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
   const dispatch = useDispatch();
   const inputRef = useRef(null);
 
@@ -19,24 +24,11 @@ const ParentLogin = () => {
   const [password, setPassword] = useState("");
   const [otp, setOtp] = useState("");
 
-  const { isAuthenticated, error, loading } = useSelector(
-    (state) => state.auth
-  );
-  const [showError, setShowError] = useState(false);
+  const { isAuthenticated, loading } = useSelector((state) => state.auth);
 
-  //const [generatedOtp, setGeneratedOtp] = useState("");
-
-  const fillPassword = (e) => {
-    setShowError(false);
-    setPassword(e.target.value);
-  };
-
-  const handleUserIdSubmit = (e) => {
-    // e.preventDefault();
-    // const newOtp = Math.floor(100000 + Math.random() * 900000).toString();
-    // setGeneratedOtp(newOtp);
-    // console.log('Generated OTP:', newOtp);
-  };
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
 
   const handlePasswordSubmit = (e) => {
     e.preventDefault();
@@ -44,170 +36,144 @@ const ParentLogin = () => {
     if (password.length) {
       dispatch(login({ username: userId, password: password }));
     } else {
-      alert("Invalid password. Please try again.");
+      toast.error("Invalid password. Please try again.", {
+        position: "top-right",
+      });
     }
-    setShowError(true);
   };
 
   const handleOtpSubmit = (e) => {
-    // e.preventDefault();
-    // if (otp === generatedOtp) {
-    //   alert('Login successful!');
-    // } else {
-    //   alert('Invalid OTP. Please try again.');
-    // }
+    e.preventDefault();
+    toast.info("OTP verification is not implemented yet.", {
+      position: "top-right",
+    });
   };
 
-  return isAuthenticated ? (
-    <Navigate to="/dashboard" />
-  ) : loading ? (
-    <FullPageSpinner loading={loading} />
-  ) : (
-    <div className="auth-container d-flex align-items-center justify-content-center">
+  if (isAuthenticated) return <Navigate to="/dashboard" />;
+  if (loading) return <FullPageSpinner loading={loading} />;
+
+  return (
+    <div className="auth-container">
       <div className="container">
         <div className="row justify-content-center">
-          <div className="col-12 col-md-6 col-lg-5">
-            {authMethod === "select" && (
-              <div className="auth-card">
-                <div className="text-center">
-                  <h1 className="auth-title">Welcome Back</h1>
-                  <p className="auth-subtitle">
-                    Please enter your User ID to continue
-                  </p>
-                </div>
-
-                <div className="mb-4">
-                  <div className="input-icon-wrapper">
-                    <UserRound className="input-icon" size={20} />
-                    <input
-                      type="text"
-                      value={userId}
-                      onChange={(e) => setUserId(e.target.value)}
-                      className="form-control input-with-icon"
-                      placeholder="Enter User ID"
-                      ref={inputRef}
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div className="auth-buttons-container">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (userId) setAuthMethod("password");
-                    }}
-                    className="btn auth-btn auth-btn-password"
-                    disabled={!userId}
-                  >
-                    <Lock size={20} />
-                    <span>Password</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (userId) {
-                        handleUserIdSubmit();
-                        setAuthMethod("otp");
-                      }
-                    }}
-                    className="btn auth-btn auth-btn-otp"
-                    disabled={!userId}
-                  >
-                    <KeyRound size={20} />
-                    <span>OTP</span>
-                  </button>
-                </div>
+          <div className="col-12 col-md-6 col-lg-4 mb-5">
+            <div className="user-icon-container">
+              <div className="user-icon">
+                <UserRound size={40} />
               </div>
-            )}
+            </div>
+          </div>
+        </div>
+        <div className="row justify-content-center">
+          <div className="col-12 col-md-6 col-lg-4">
+            <div className="auth-card p-4 shadow-sm rounded">
+              <div className="text-center">
+                <h2 className="auth-title mb-3">Welcome Back</h2>
+                <p className="auth-subtitle">
+                  Please enter your details to continue
+                </p>
+              </div>
 
-            {authMethod === "password" && (
-              <form onSubmit={handlePasswordSubmit} className="auth-card">
-                <div className="text-center">
-                  <h1 className="auth-title">Password Login</h1>
-                  <p className="auth-subtitle">
-                    Enter your password to continue
-                  </p>
-                </div>
-
-                <div className="mb-4">
-                  <div className="input-icon-wrapper">
-                    <Lock className="input-icon" size={20} />
-                    <input
-                      type="password"
-                      value={password}
-                      onChange={(e) => fillPassword(e)}
-                      className="form-control input-with-icon"
-                      placeholder="Enter Password"
-                      required
-                    />
+              {authMethod === "select" && (
+                <>
+                  <div className="mb-4">
+                    <div className="input-icon-wrapper">
+                      <Mail className="input-icon" size={20} />
+                      <input
+                        type="text"
+                        value={userId}
+                        onChange={(e) => setUserId(e.target.value)}
+                        className="form-control input-with-icon"
+                        placeholder="Enter User ID"
+                        ref={inputRef}
+                        required
+                      />
+                    </div>
                   </div>
-                </div>
-                {error && password && showError && (
-                  <div className="text-danger mb-2 h6">{error.message}</div>
-                )}
-                <button
-                  type="submit"
-                  className="btn auth-btn auth-btn-password w-100 mb-3"
-                >
-                  <span>Login</span>
-                  <ArrowRight size={20} />
-                </button>
 
-                <button
-                  type="button"
-                  onClick={() => setAuthMethod("select")}
-                  className="back-btn w-100"
-                >
-                  <ArrowLeft size={20} />
-                  <span>Back</span>
-                </button>
-              </form>
-            )}
-
-            {authMethod === "otp" && (
-              <form onSubmit={handleOtpSubmit} className="auth-card">
-                <div className="text-center">
-                  <h1 className="auth-title">Enter OTP</h1>
-                  <p className="auth-subtitle">
-                    We've sent a one-time password to your registered contact
-                  </p>
-                </div>
-
-                <div className="mb-4">
-                  <div className="input-icon-wrapper">
-                    <KeyRound className="input-icon" size={20} />
-                    <input
-                      type="text"
-                      value={otp}
-                      onChange={(e) => setOtp(e.target.value)}
-                      className="form-control input-with-icon"
-                      placeholder="Enter OTP"
-                      maxLength={6}
-                      required
-                    />
+                  <div className="col-12">
+                    <button
+                      type="button"
+                      onClick={() => userId && setAuthMethod("password")}
+                      className="btn btn-primary w-100 mb-3"
+                      disabled={!userId}
+                    >
+                      <Lock size={20} className="me-2" /> Continue with Password
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => userId && setAuthMethod("otp")}
+                      className="btn btn-secondary w-100"
+                      disabled={!userId}
+                    >
+                      <KeyRound size={20} className="me-2" /> Continue with OTP
+                    </button>
                   </div>
-                </div>
+                </>
+              )}
 
-                <button
-                  type="submit"
-                  className="btn auth-btn auth-btn-otp w-100 mb-3"
-                >
-                  <span>Verify OTP</span>
-                  <ArrowRight size={20} />
-                </button>
+              {authMethod === "password" && (
+                <form onSubmit={handlePasswordSubmit}>
+                  <div className="mb-4">
+                    <div className="input-icon-wrapper">
+                      <Lock className="input-icon" size={20} />
+                      <input
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="form-control input-with-icon"
+                        placeholder="Enter Password"
+                        required
+                      />
+                    </div>
+                  </div>
 
-                <button
-                  type="button"
-                  onClick={() => setAuthMethod("select")}
-                  className="back-btn w-100"
-                >
-                  <ArrowLeft size={20} />
-                  <span>Back</span>
-                </button>
-              </form>
-            )}
+                  <button type="submit" className="btn btn-primary w-100 mb-3">
+                    <ArrowRight size={20} className="me-2" /> Login
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setAuthMethod("select")}
+                    className="btn btn-light w-100"
+                  >
+                    <ArrowLeft size={20} className="me-2" /> Back
+                  </button>
+                </form>
+              )}
+
+              {authMethod === "otp" && (
+                <form onSubmit={handleOtpSubmit}>
+                  <div className="mb-4">
+                    <div className="input-icon-wrapper">
+                      <KeyRound className="input-icon" size={20} />
+                      <input
+                        type="text"
+                        value={otp}
+                        onChange={(e) => setOtp(e.target.value)}
+                        className="form-control input-with-icon"
+                        placeholder="Enter OTP"
+                        maxLength={6}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="btn btn-secondary w-100 mb-3"
+                  >
+                    <ArrowRight size={20} className="me-2" /> Verify OTP
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setAuthMethod("select")}
+                    className="btn btn-light w-100"
+                  >
+                    <ArrowLeft size={20} className="me-2" /> Back
+                  </button>
+                </form>
+              )}
+            </div>
           </div>
         </div>
       </div>

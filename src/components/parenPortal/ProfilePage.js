@@ -67,7 +67,7 @@ const ProfilePage = () => {
         </div>
         <div className="profile-row">
           <TelephoneFill className="icon" /> <strong>Mobile:</strong>{" "}
-          <span>{user.phone}</span>
+          <span>{user.phoneNumber}</span>
         </div>
         <div className="profile-row">
           <Building className="icon" /> <strong>Campus:</strong>{" "}
@@ -79,8 +79,8 @@ const ProfilePage = () => {
         </div>
       </div>
 
-      <div className="text-center mt-4">
-        <button className="btn update-btn" onClick={() => openDialog()}>
+      <div className="text-center mt-4 mx-auto">
+        <button className="btn update-btn w-100" onClick={() => openDialog()}>
           Update
         </button>
       </div>

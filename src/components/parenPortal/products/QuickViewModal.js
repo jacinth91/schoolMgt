@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-const QuickViewModal = ({ bundle, onClose, onAddToCart }) => {
+const QuickViewModal = ({ bundle, onClose, onAddToCart, showAction }) => {
   const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
@@ -34,7 +34,7 @@ const QuickViewModal = ({ bundle, onClose, onAddToCart }) => {
       >
         <div className="modal-content">
           <div className="modal-header">
-            <h5 className="modal-title">{bundle.name}</h5>
+            <h5 className="modal-title">{bundle.bundle_name}</h5>
             <button
               type="button"
               className="btn-close"
@@ -52,15 +52,17 @@ const QuickViewModal = ({ bundle, onClose, onAddToCart }) => {
                 "https://res.cloudinary.com/dwgfx9feh/image/upload/v1742726808/WhatsApp_Image_2025-03-22_at_11.55.58_AM_1_ekrabi.jpg"
               }
               className="img-fluid mb-3"
-              alt={bundle.name}
+              alt={bundle.bundle_name}
               style={{ maxHeight: "400px", width: "100%" }}
             />
             <p>
               <strong>Designed For:</strong> {bundle.gender}
             </p>
-            <p>
-              <strong>Recommended For:</strong> {bundle.class_name}
-            </p>
+            {showAction && (
+              <p>
+                <strong>Recommended For:</strong> {bundle.class_name}
+              </p>
+            )}
             <p>
               <strong>Suitable For Classes:</strong> {bundle.applicable_classes}
             </p>
@@ -84,24 +86,26 @@ const QuickViewModal = ({ bundle, onClose, onAddToCart }) => {
             </div>
           </div>
           <div className="modal-footer">
-            <div className="d-flex align-items-center">
-              <label className="me-2" htmlFor="quantitySelect">
-                Quantity:
-              </label>
-              <select
-                id="quantitySelect"
-                className="form-select me-3"
-                style={{ width: "80px" }}
-                value={quantity}
-                onChange={(e) => setQuantity(Number(e.target.value))}
-              >
-                {[...Array(10)].map((_, i) => (
-                  <option key={i + 1} value={i + 1}>
-                    {i + 1}
-                  </option>
-                ))}
-              </select>
-            </div>
+            {showAction && (
+              <div className="d-flex align-items-center">
+                <label className="me-2" htmlFor="quantitySelect">
+                  Quantity:
+                </label>
+                <select
+                  id="quantitySelect"
+                  className="form-select me-3"
+                  style={{ width: "80px" }}
+                  value={quantity}
+                  onChange={(e) => setQuantity(Number(e.target.value))}
+                >
+                  {[...Array(10)].map((_, i) => (
+                    <option key={i + 1} value={i + 1}>
+                      {i + 1}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
             <button
               type="button"
               className="btn btn-secondary"
@@ -109,13 +113,15 @@ const QuickViewModal = ({ bundle, onClose, onAddToCart }) => {
             >
               Close
             </button>
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={() => onAddToCart(bundle.bundle_id, quantity)}
-            >
-              Add to Cart
-            </button>
+            {showAction && (
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={() => onAddToCart(bundle.bundle_id, quantity)}
+              >
+                Add to Cart
+              </button>
+            )}
           </div>
         </div>
       </div>

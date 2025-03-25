@@ -86,7 +86,6 @@ const StudentManagement = () => {
             <th>Name</th>
             <th>Grade</th>
             <th>Section</th>
-            <th>Age</th>
             <th>House</th>
             <th>Gender</th>
             <th>Actions</th>
@@ -100,13 +99,12 @@ const StudentManagement = () => {
                 <td>{student.studentName}</td>
                 <td>{student.class}</td>
                 <td>{student.section}</td>
-                <td>{student.age}</td>
                 <td>{student.house}</td>
                 <td>{student.gender}</td>
                 <td>
                   <div className="d-flex gap-2">
                     <button
-                      className="btn btn-warning btn-sm"
+                      className="btn btn-primary btn-sm"
                       onClick={() => onEditStudentClick(student)}
                     >
                       <i className="bi bi-pencil"></i>
