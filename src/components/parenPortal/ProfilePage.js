@@ -11,8 +11,15 @@ import profileImg from "../../images/profilepic.jpg";
 import PopupDialog from "../layout/PopupDialog";
 import { useDispatch, useSelector } from "react-redux";
 import FullPageSpinner from "../layout/FullPageSpinner";
-import { loadingChange, updateProfile } from "../../actions/auth";
+import {
+  loadAdminUser,
+  loadingChange,
+  updateProfile,
+} from "../../actions/auth";
 import { reverseTransform, transform } from "../../services/helper";
+import { ROLES } from "../../utils/constants";
+import { Mail } from "lucide-react";
+import { updateAdminVendor } from "../../actions/admin";
 
 const ProfilePage = () => {
   const { user, loading } = useSelector((state) => state.auth);
@@ -21,12 +28,16 @@ const ProfilePage = () => {
   const [formData, setFormData] = useState();
   const dispatch = useDispatch();
 
-  const handleSave = (updatedData) => {
+  const handleSave = async (updatedData) => {
     dispatch(loadingChange(true));
     setFormData(updatedData);
     const apiBody = reverseTransform(formData);
-    console.log({ ...user, ...apiBody });
-    dispatch(updateProfile({ ...user, ...apiBody }));
+    if (user.role === ROLES.PARENT) {
+      dispatch(updateProfile({ ...user, ...apiBody }));
+    } else {
+      await updateAdminVendor({ ...user, ...apiBody }, user.id);
+      dispatch(loadAdminUser());
+    }
     setShowPopup(false);
   };
 
@@ -69,20 +80,32 @@ const ProfilePage = () => {
       <div className="profile-card">
         <div className="profile-row">
           <PersonFill className="icon" /> <strong>Full Name:</strong>{" "}
-          <span>{user.parentName}</span>
+          <span>{user.parentName ?? user.name}</span>
         </div>
         <div className="profile-row">
           <TelephoneFill className="icon" /> <strong>Mobile:</strong>{" "}
           <span>{user.phoneNumber}</span>
         </div>
-        <div className="profile-row">
-          <Building className="icon" /> <strong>Campus:</strong>{" "}
-          <span>{user.campus}</span>
-        </div>
-        <div className="profile-row">
-          <GeoAltFill className="icon" /> <strong>Address:</strong>{" "}
-          <span>{user.address}</span>
-        </div>
+        {user.role === ROLES.PARENT && (
+          <>
+            <div className="profile-row">
+              <Building className="icon" /> <strong>Campus:</strong>{" "}
+              <span>{user.campus}</span>
+            </div>
+            <div className="profile-row">
+              <GeoAltFill className="icon" /> <strong>Address:</strong>{" "}
+              <span>{user.address}</span>
+            </div>
+          </>
+        )}
+        {(user.role === ROLES.ADMIN || user.role === ROLES.VENDOR) && (
+          <>
+            <div className="profile-row">
+              <Mail className="icon" /> <strong>Email:</strong>{" "}
+              <span>{user.email}</span>
+            </div>
+          </>
+        )}
       </div>
 
       <div className="text-center mt-4 mx-auto">

@@ -47,7 +47,6 @@ export const updateAdminVendor = async (
       role,
     });
     toast.success("Data updated successfully!", { position: "top-right" });
-    console.log(res);
     return res.data;
   } catch (error) {
     toast.error(error.message, { position: "top-right" });

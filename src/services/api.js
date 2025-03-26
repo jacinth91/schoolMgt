@@ -25,7 +25,6 @@ export const request = async (endpoint, method = "GET", data = null) => {
 
     return { data: response.data, token: response.data?.access_token };
   } catch (error) {
-    console.error("API Error:", error);
     throw error.response ? error.response.data : error;
   }
 };

@@ -47,10 +47,7 @@ const QuickViewModal = ({ bundle, onClose, onAddToCart, showAction }) => {
             style={{ maxHeight: "70vh", overflowY: "auto" }}
           >
             <img
-              src={
-                bundle.image ??
-                "https://res.cloudinary.com/dwgfx9feh/image/upload/v1742726808/WhatsApp_Image_2025-03-22_at_11.55.58_AM_1_ekrabi.jpg"
-              }
+              src={bundle.image}
               className="img-fluid mb-3"
               alt={bundle.bundle_name}
               style={{ maxHeight: "400px", width: "100%" }}

@@ -13,8 +13,6 @@ import FullPageSpinner from "../../layout/FullPageSpinner";
 
 const SHIPPING_CHARGE = 50;
 const TAX_RATE = 0.05;
-const fallbackImage =
-  "https://res.cloudinary.com/dwgfx9feh/image/upload/v1742726808/WhatsApp_Image_2025-03-22_at_11.55.58_AM_1_ekrabi.jpg";
 
 const PlaceOrder = () => {
   const location = useLocation();
@@ -101,7 +99,7 @@ const PlaceOrder = () => {
                 <div className="row g-0 align-items-center">
                   <div className="col-md-3 text-center p-2">
                     <img
-                      src={item.image || fallbackImage}
+                      src={item.image}
                       className="img-fluid rounded shadow-sm"
                       alt={item.bundle?.name || "Product"}
                       style={{ maxHeight: "120px" }}

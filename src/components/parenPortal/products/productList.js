@@ -25,7 +25,15 @@ const ProductListing = () => {
 
     try {
       const bundleResponses = await Promise.all(
-        user.students.map((id) => fetchLinkedBundles(id))
+        user.students.map((id, index) => {
+          let type = "";
+          if (user?.studentData[index].boardingStatus === "Yes") {
+            type = "Hostel";
+          } else {
+            type = user?.studentData[index]?.studentType;
+          }
+          return fetchLinkedBundles(id, type);
+        })
       );
       setBundles(bundleResponses.flat());
     } catch (error) {
@@ -75,7 +83,7 @@ const ProductListing = () => {
   };
 
   const filteredBundles = bundles.filter((bundle) =>
-    bundle.bundle_name.toLowerCase().includes(search.toLowerCase())
+    bundle.bundle_name?.toLowerCase().includes(search?.toLowerCase())
   );
 
   return loading ? (
@@ -106,51 +114,57 @@ const ProductListing = () => {
       </div>
 
       <div className="row g-4">
-        {filteredBundles.map((bundle) => (
-          <div key={bundle.bundle_id} className="col-12 col-sm-6 col-md-6">
-            <div className="card product-card shadow-sm border-0 h-100">
-              <div className="position-relative">
-                <img
-                  src={
-                    bundle.image ??
-                    "https://res.cloudinary.com/dwgfx9feh/image/upload/v1742726808/WhatsApp_Image_2025-03-22_at_11.55.58_AM_1_ekrabi.jpg"
-                  }
-                  className="card-img-top"
-                  alt={bundle.name}
-                  style={{ maxHeight: "350px" }}
-                />
-                <div className="card-img-overlay d-flex justify-content-center align-items-center">
-                  <button
-                    className="btn btn-primary"
-                    onClick={() => setSelectedBundle(bundle)}
-                  >
-                    Quick View
-                  </button>
-                </div>
-              </div>
-              <div className="card-body text-center d-flex flex-column">
-                <h5 className="card-title fw-bold">{bundle.bundle_name}</h5>
-                <div className="bundle-details">
-                  <strong>Designed For:</strong> <span>{bundle.gender}</span>
-                  <strong>Recommended For:</strong>{" "}
-                  <span>{bundle.class_name}</span>
-                  <strong>Suitable For Classes:</strong>{" "}
-                  <span>{bundle.applicable_classes}</span>
-                </div>
-                <p className="fw-bold text-primary fs-5">
-                  ₹{bundle.bundle_total}
-                </p>
+        {filteredBundles.length > 0 ? (
+          <div className="row g-4">
+            {filteredBundles.map((bundle) => (
+              <div key={bundle.bundle_id} className="col-12 col-sm-6 col-md-6">
+                <div className="card product-card shadow-sm border-0 h-100">
+                  <div className="position-relative">
+                    <img
+                      src={bundle.image}
+                      className="card-img-top"
+                      alt={bundle.name}
+                      style={{ maxHeight: "350px" }}
+                    />
+                    <div className="card-img-overlay d-flex justify-content-center align-items-center">
+                      <button
+                        className="btn btn-primary"
+                        onClick={() => setSelectedBundle(bundle)}
+                      >
+                        Quick View
+                      </button>
+                    </div>
+                  </div>
+                  <div className="card-body text-center d-flex flex-column">
+                    <h5 className="card-title fw-bold">{bundle.bundle_name}</h5>
+                    <div className="bundle-details">
+                      <strong>Designed For:</strong>{" "}
+                      <span>{bundle.gender}</span>
+                      <strong>Recommended For:</strong>{" "}
+                      <span>{bundle.class_name}</span>
+                      <strong>Suitable For Classes:</strong>{" "}
+                      <span>{bundle.applicable_classes}</span>
+                    </div>
+                    <p className="fw-bold text-primary fs-5">
+                      ₹{bundle.bundle_total}
+                    </p>
 
-                <button
-                  className="btn btn-outline-primary mt-auto"
-                  onClick={() => addToCartClick(bundle.bundle_id, 1)}
-                >
-                  Add to Cart
-                </button>
+                    <button
+                      className="btn btn-outline-primary mt-auto"
+                      onClick={() => addToCartClick(bundle.bundle_id, 1)}
+                    >
+                      Add to Cart
+                    </button>
+                  </div>
+                </div>
               </div>
-            </div>
+            ))}
           </div>
-        ))}
+        ) : (
+          <div className="text-center py-5">
+            <h4 className="text-muted">No products found</h4>
+          </div>
+        )}
       </div>
       {selectedBundle && (
         <QuickViewModal
