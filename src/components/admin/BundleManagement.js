@@ -43,6 +43,7 @@ const BundleManagement = () => {
       bundle_id: bundle.id,
       bundle_name: bundle.name,
       gender: bundle.gender,
+      image: bundle.image,
       applicable_classes: bundle.applicableClasses,
       class_name: bundle.applicableClasses.split(", ")[0],
       bundle_total: parseFloat(bundle.totalPrice),

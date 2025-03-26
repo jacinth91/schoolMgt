@@ -11,10 +11,15 @@ import profileImg from "../../images/profilepic.jpg";
 import PopupDialog from "../layout/PopupDialog";
 import { useDispatch, useSelector } from "react-redux";
 import FullPageSpinner from "../layout/FullPageSpinner";
-import { loadingChange, updateProfile } from "../../actions/auth";
+import {
+  loadAdminUser,
+  loadingChange,
+  updateProfile,
+} from "../../actions/auth";
 import { reverseTransform, transform } from "../../services/helper";
 import { ROLES } from "../../utils/constants";
 import { Mail } from "lucide-react";
+import { updateAdminVendor } from "../../actions/admin";
 
 const ProfilePage = () => {
   const { user, loading } = useSelector((state) => state.auth);
@@ -23,12 +28,16 @@ const ProfilePage = () => {
   const [formData, setFormData] = useState();
   const dispatch = useDispatch();
 
-  const handleSave = (updatedData) => {
+  const handleSave = async (updatedData) => {
     dispatch(loadingChange(true));
     setFormData(updatedData);
     const apiBody = reverseTransform(formData);
-    console.log({ ...user, ...apiBody });
-    dispatch(updateProfile({ ...user, ...apiBody }));
+    if (user.role === ROLES.PARENT) {
+      dispatch(updateProfile({ ...user, ...apiBody }));
+    } else {
+      await updateAdminVendor({ ...user, ...apiBody }, user.id);
+      dispatch(loadAdminUser());
+    }
     setShowPopup(false);
   };
 
