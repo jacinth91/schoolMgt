@@ -1,13 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
-import { UserRound, ArrowRight, Lock } from "lucide-react";
+import { ArrowRight, Lock, Mail } from "lucide-react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./style/auth.css"; // Ensure CSS is imported properly
-import { loadingChange, login } from "../../actions/auth";
+import { adminLogin, loadingChange } from "../../actions/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 import FullPageSpinner from "../layout/FullPageSpinner";
+import { toast } from "react-toastify";
 
-const AdminLogin = () => {
+const AdminLogin = ({ userType }) => {
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
@@ -15,26 +16,24 @@ const AdminLogin = () => {
   const dispatch = useDispatch();
   const inputRef = useRef(null);
 
-  const [userId, setUserId] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { isAuthenticated, error, loading } = useSelector(
-    (state) => state.auth
-  );
-  const [showError, setShowError] = useState(false);
+  const { isAuthenticated, loading } = useSelector((state) => state.auth);
 
   const handleLoginSubmit = (e) => {
     e.preventDefault();
     dispatch(loadingChange(true));
-    if (userId && password) {
-      dispatch(login({ username: userId, password: password }));
+    if (email && password) {
+      dispatch(adminLogin({ email: email, password: password }));
     } else {
-      alert("Invalid credentials. Please try again.");
+      toast.error("Enter Email and Password.", {
+        position: "top-right",
+      });
     }
-    setShowError(true);
   };
 
   return isAuthenticated ? (
-    <Navigate to="/admin-dashboard" />
+    <Navigate to="/dashboard" />
   ) : loading ? (
     <FullPageSpinner loading={loading} />
   ) : (
@@ -44,7 +43,7 @@ const AdminLogin = () => {
           <div className="col-12 col-md-6 col-lg-5">
             <form onSubmit={handleLoginSubmit} className="auth-card">
               <div className="text-center">
-                <h1 className="auth-title">Admin Login</h1>
+                <h1 className="auth-title">{userType} Login</h1>
                 <p className="auth-subtitle">
                   Enter your credentials to continue
                 </p>
@@ -52,11 +51,11 @@ const AdminLogin = () => {
 
               <div className="mb-4">
                 <div className="input-icon-wrapper">
-                  <UserRound className="input-icon" size={20} />
+                  <Mail className="input-icon" size={20} />
                   <input
                     type="text"
-                    value={userId}
-                    onChange={(e) => setUserId(e.target.value)}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     className="form-control input-with-icon"
                     placeholder="Enter Username"
                     ref={inputRef}
@@ -78,9 +77,6 @@ const AdminLogin = () => {
                   />
                 </div>
               </div>
-              {error && userId && password && showError && (
-                <div className="text-danger mb-2 h6">{error.message}</div>
-              )}
 
               <button
                 type="submit"

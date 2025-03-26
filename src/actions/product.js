@@ -26,7 +26,7 @@ export const fetchAllBundles = async () => {
     const res = await get("/bundles");
     return res.data;
   } catch (error) {
-    toast.error(error, { position: "top-right" });
+    toast.error(error.message, { position: "top-right" });
     return error;
   }
 };
@@ -36,7 +36,7 @@ export const fetchAllProducts = async () => {
     const res = await get("/products");
     return res.data;
   } catch (error) {
-    toast.error(error, { position: "top-right" });
+    toast.error(error.message, { position: "top-right" });
     return error;
   }
 };
@@ -122,7 +122,7 @@ export const fetchAllOrders = async () => {
     const res = await get("/orders");
     return res.data;
   } catch (error) {
-    toast.error(error, { position: "top-right" });
+    toast.error(error.message, { position: "top-right" });
     return error;
   }
 };

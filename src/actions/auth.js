@@ -1,6 +1,4 @@
 import {
-  REGISTER_SUCCESS,
-  REGISTER_FAIL,
   USER_LOADED,
   AUTH_ERROR,
   LOGIN_SUCCESS,
@@ -9,6 +7,7 @@ import {
   LOADING_CHANGE,
   USER_UPDATED,
   USER_UPDATE_FAILED,
+  CLEAR_PRODUCT,
 } from "./types";
 import { get, post, put } from "../services/api";
 import { toast } from "react-toastify";
@@ -23,37 +22,23 @@ export const loadUser = () => async (dispatch) => {
       payload: res.data,
     });
   } catch (err) {
+    dispatch(loadAdminUser());
+  }
+};
+
+export const loadAdminUser = () => async (dispatch) => {
+  try {
+    const res = await get("/admins/load-user");
+    dispatch({
+      type: USER_LOADED,
+      payload: res.data,
+    });
+  } catch (error) {
     dispatch({
       type: AUTH_ERROR,
     });
   }
 };
-
-export const register =
-  ({ name, email, password }) =>
-  async (dispatch) => {
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
-
-    const body = JSON.stringify({ name, email, password });
-
-    try {
-      dispatch({
-        type: REGISTER_SUCCESS,
-        payload: {},
-      });
-      dispatch(loadUser());
-    } catch (err) {
-      const errors = err.response.data.errors;
-
-      dispatch({
-        type: REGISTER_FAIL,
-      });
-    }
-  };
 
 export const login =
   ({ username, password }) =>
@@ -97,6 +82,55 @@ export const updateProfile = (data) => async (dispatch) => {
   }
 };
 
+export const sendOTP = async (usid) => {
+  try {
+    const res = await post("/auth/send-otp", { usid: usid });
+    toast.success("OTP send successfully!", { position: "top-right" });
+    return res.data;
+  } catch (error) {
+    toast.error("Error while sending OTP!", { position: "top-right" });
+    return error;
+  }
+};
+
+export const verifyOTP =
+  ({ usid, otp }) =>
+  async (dispatch) => {
+    try {
+      const res = await post("/auth/verify-otp", { usid, otp });
+      dispatch({
+        type: LOGIN_SUCCESS,
+        payload: res,
+      });
+      dispatch(loadUser());
+    } catch (error) {
+      dispatch({
+        type: LOGIN_FAIL,
+        payload: error || "Something went wrong",
+      });
+      toast.error("Invalid OTP. Please try again.!", {
+        position: "top-right",
+      });
+    }
+  };
+
+export const adminLogin =
+  ({ email, password }) =>
+  async (dispatch) => {
+    try {
+      const res = await post("/admins/login", { email, password });
+      dispatch({
+        type: LOGIN_SUCCESS,
+        payload: res,
+      });
+      dispatch(loadAdminUser());
+    } catch (error) {
+      toast.error(error.message, { position: "top-right" });
+      dispatch({ type: LOGIN_FAIL, payload: error || "Something went wrong" });
+    }
+  };
+
 export const logout = () => (dispatch) => {
   dispatch({ type: LOGOUT });
+  dispatch({ type: CLEAR_PRODUCT });
 };

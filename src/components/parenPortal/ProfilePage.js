@@ -3,12 +3,11 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./ProfilePage.css";
 import {
   PersonFill,
-  EnvelopeFill,
   TelephoneFill,
   GeoAltFill,
   Building,
 } from "react-bootstrap-icons";
-import profileImg from "../../images/profile.png";
+import profileImg from "../../images/profilepic.jpg";
 import PopupDialog from "../layout/PopupDialog";
 import { useDispatch, useSelector } from "react-redux";
 import FullPageSpinner from "../layout/FullPageSpinner";
@@ -26,6 +25,7 @@ const ProfilePage = () => {
     dispatch(loadingChange(true));
     setFormData(updatedData);
     const apiBody = reverseTransform(formData);
+    console.log({ ...user, ...apiBody });
     dispatch(updateProfile({ ...user, ...apiBody }));
     setShowPopup(false);
   };
@@ -34,8 +34,18 @@ const ProfilePage = () => {
     if (!user || typeof user !== "object") return [];
 
     // Define which fields are editable
-    const nonEditableFields = ["id", "role", "campus", "password"];
-    const skipKeys = ["students", "role", "gender", "studentData", "password"];
+    const nonEditableFields = ["role", "campus", "password"];
+    const skipKeys = [
+      "id",
+      "students",
+      "role",
+      "gender",
+      "studentData",
+      "password",
+      "otp",
+      "otpExpiresAt",
+      "isOtpVerified",
+    ];
 
     // Transform parent-level data dynamically
     const result = transform(user, skipKeys, nonEditableFields);
@@ -51,11 +61,7 @@ const ProfilePage = () => {
   ) : (
     <div className="container profile-container">
       <div className="text-center">
-        <img
-          src={user.profileImage ?? profileImg}
-          alt="Profile"
-          className="profile-image mx-auto"
-        />
+        <img src={profileImg} alt="Profile" className="profile-image mx-auto" />
       </div>
       <hr />
       <h5 className="text-primary">Personal Details:</h5>

@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./ParentLogin.css";
-import { loadingChange, login } from "../../actions/auth";
+import { loadingChange, login, sendOTP, verifyOTP } from "../../actions/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 import FullPageSpinner from "../layout/FullPageSpinner";
@@ -23,6 +23,7 @@ const ParentLogin = () => {
   const [authMethod, setAuthMethod] = useState("select");
   const [password, setPassword] = useState("");
   const [otp, setOtp] = useState("");
+  const [otpLoading, setOtpLoading] = useState(false);
 
   const { isAuthenticated, loading } = useSelector((state) => state.auth);
 
@@ -44,9 +45,27 @@ const ParentLogin = () => {
 
   const handleOtpSubmit = (e) => {
     e.preventDefault();
-    toast.info("OTP verification is not implemented yet.", {
-      position: "top-right",
-    });
+    dispatch(loadingChange(true));
+    if (otp.length) {
+      dispatch(verifyOTP({ usid: userId, otp: otp }));
+    } else {
+      toast.error("Please enter OTP.", {
+        position: "top-right",
+      });
+    }
+  };
+
+  const triggerOTP = async () => {
+    if (userId) {
+      setOtpLoading(true);
+      try {
+        await sendOTP(userId);
+      } catch (error) {
+      } finally {
+        setOtpLoading(false);
+        setAuthMethod("otp");
+      }
+    }
   };
 
   if (isAuthenticated) return <Navigate to="/dashboard" />;
@@ -74,43 +93,48 @@ const ParentLogin = () => {
                 </p>
               </div>
 
-              {authMethod === "select" && (
-                <>
-                  <div className="mb-4">
-                    <div className="input-icon-wrapper">
-                      <Mail className="input-icon" size={20} />
-                      <input
-                        type="text"
-                        value={userId}
-                        onChange={(e) => setUserId(e.target.value)}
-                        className="form-control input-with-icon"
-                        placeholder="Enter User ID"
-                        ref={inputRef}
-                        required
-                      />
+              {authMethod === "select" &&
+                (otpLoading ? (
+                  <FullPageSpinner loading={otpLoading} />
+                ) : (
+                  <>
+                    <div className="mb-4">
+                      <div className="input-icon-wrapper">
+                        <Mail className="input-icon" size={20} />
+                        <input
+                          type="text"
+                          value={userId}
+                          onChange={(e) => setUserId(e.target.value)}
+                          className="form-control input-with-icon"
+                          placeholder="Enter User ID"
+                          ref={inputRef}
+                          required
+                        />
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="col-12">
-                    <button
-                      type="button"
-                      onClick={() => userId && setAuthMethod("password")}
-                      className="btn btn-primary w-100 mb-3"
-                      disabled={!userId}
-                    >
-                      <Lock size={20} className="me-2" /> Continue with Password
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => userId && setAuthMethod("otp")}
-                      className="btn btn-secondary w-100"
-                      disabled={!userId}
-                    >
-                      <KeyRound size={20} className="me-2" /> Continue with OTP
-                    </button>
-                  </div>
-                </>
-              )}
+                    <div className="col-12">
+                      <button
+                        type="button"
+                        onClick={() => userId && setAuthMethod("password")}
+                        className="btn btn-primary w-100 mb-3"
+                        disabled={!userId}
+                      >
+                        <Lock size={20} className="me-2" /> Continue with
+                        Password
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => triggerOTP()}
+                        className="btn btn-secondary w-100"
+                        disabled={!userId}
+                      >
+                        <KeyRound size={20} className="me-2" /> Continue with
+                        OTP
+                      </button>
+                    </div>
+                  </>
+                ))}
 
               {authMethod === "password" && (
                 <form onSubmit={handlePasswordSubmit}>
