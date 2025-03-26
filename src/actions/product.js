@@ -127,3 +127,13 @@ export const fetchAllOrders = async () => {
     return error;
   }
 };
+
+export const fetchOrdersParent = async (id) => {
+  try {
+    const res = await get(`/orders/parent/${id}`);
+    return res.data;
+  } catch (error) {
+    toast.error(error.message, { position: "top-right" });
+    return error;
+  }
+};
