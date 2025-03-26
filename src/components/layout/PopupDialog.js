@@ -38,13 +38,31 @@ const PopupDialog = ({ data, onSave, onCancel, header }) => {
                 </label>
                 <div className="col-sm-8">
                   {item.editable ? (
-                    <input
-                      type="text"
-                      className="form-control"
-                      value={item.value}
-                      onChange={(e) => handleChange(index, e.target.value)}
-                    />
+                    item.options && Array.isArray(item.options) ? (
+                      // Dropdown (Select) Field with Default Option
+                      <select
+                        className="form-control"
+                        value={item.value}
+                        onChange={(e) => handleChange(index, e.target.value)}
+                      >
+                        <option value="">Select an option</option>
+                        {item.options.map((option) => (
+                          <option key={option.key} value={option.key}>
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
+                    ) : (
+                      // Text Input Field
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={item.value}
+                        onChange={(e) => handleChange(index, e.target.value)}
+                      />
+                    )
                   ) : (
+                    // Read-only Text
                     <p className="form-control-plaintext text-start">
                       {item.value}
                     </p>

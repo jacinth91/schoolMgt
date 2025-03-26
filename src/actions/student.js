@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import { get, put } from "../services/api";
 
 export const loadStudentDetail = async (stuId) => {
@@ -14,6 +15,7 @@ export const fetchALLStudent = async () => {
     const res = await get("/students");
     return res.data;
   } catch (error) {
+    toast.error(error.message, { position: "top-right" });
     return error;
   }
 };

@@ -2,6 +2,7 @@ import {
   CART_FETCH_SUCCESS,
   CART_FETCH_UPDATE_FAIL,
   CART_LOADING_CHANGE,
+  CLEAR_PRODUCT,
   ITEM_DELETE_FAIL,
   ITEM_DELETE_SUCCESS,
   ORDER_PLACED_SUCCESSFULLY,
@@ -59,6 +60,14 @@ export default function (state = initialState, action) {
         ...state,
         loading: false,
         error: payload,
+      };
+    case CLEAR_PRODUCT:
+      return {
+        loading: true,
+        cartId: null,
+        parentId: null,
+        items: null,
+        error: null,
       };
     default:
       return state;

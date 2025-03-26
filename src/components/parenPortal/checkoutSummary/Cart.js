@@ -33,7 +33,7 @@ const CartPage = () => {
       }
     };
     fetchCartItems();
-  }, []);
+  }, [user.id, dispatch]);
 
   useEffect(() => {
     if (cartData?.items?.length) {

@@ -3,7 +3,6 @@ import {
   BrowserRouter as Router,
   Route,
   Routes,
-  useLocation,
   Navigate,
 } from "react-router-dom";
 import Navbar from "./components/layout/Navbar";
@@ -79,7 +78,14 @@ const App = () => {
           <Routes>
             <Route path="/" element={<AuthRedirect />} />
             <Route path="/login" element={<ParentLogin />} />
-            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route
+              path="/admin/login"
+              element={<AdminLogin userType={"Admin"} />}
+            />
+            <Route
+              path="/vendor/login"
+              element={<AdminLogin userType={"Vendor"} />}
+            />
 
             {/* Private Routes for Authenticated Users */}
             <Route element={<PrivateRoute />}>
@@ -113,6 +119,13 @@ const App = () => {
               <Route path="/admin/orders" element={<OrderManagement />} />
               <Route path="/admin/bundle" element={<BundleManagement />} />
               <Route path="/admin/support" element={<SupportQueries />} />
+            </Route>
+            <Route element={<PrivateRoute allowedRoles={[ROLES.VENDOR]} />}>
+              <Route
+                path="/vendor/manage"
+                element={<AdminManagement vendor={true} />}
+              />
+              <Route path="/vendor/orders" element={<OrderManagement />} />
             </Route>
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>

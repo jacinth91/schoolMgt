@@ -24,12 +24,18 @@ export const formatLabel = (key) => {
     .trim();
 };
 
-export const transform = (data, skipKeys, nonEditableFields) => {
+const findValueByKey = (data, searchKey) => {
+  const foundItem = data.find((item) => Object.keys(item)[0] === searchKey);
+  return foundItem ? foundItem[searchKey] : null;
+};
+
+export const transform = (data, skipKeys, nonEditableFields, dropdownData) => {
   return Object.entries(data)
     .filter(([key, value]) => !skipKeys.includes(key)) // Exclude unnecessary fields
     .map(([key, value]) => ({
       label: formatLabel(key),
       value: value,
       editable: !nonEditableFields.includes(key),
+      options: dropdownData?.length ? findValueByKey(dropdownData, key) : null,
     }));
 };

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { BarChart3, Menu, User } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../actions/auth";
+import { ROLES } from "../../utils/constants";
 
 const Navbar = () => {
   const { parentName, role, cartData } = useSelector((state) => ({
@@ -58,18 +59,19 @@ const Navbar = () => {
         return [
           { path: "/dashboard", label: "Home" },
           { path: "/profile", label: "Profile" },
-          { path: "/admin/member", label: "Member Management" },
+          { path: "/admin/manage", label: "Member Management" },
           { path: "/admin/students", label: "Student Management" },
           { path: "/admin/bundle", label: "Bundle Management" },
+          { path: "/admin/orders", label: "Orders" },
           { path: "/admin/products", label: "Product Management" },
           { path: "/admin/support", label: "Support Management" },
         ];
       case "vendor":
         return [
           { path: "/dashboard", label: "Home" },
-          { path: "/products", label: "Profile" },
-          { path: "/vendor/member", label: "Member Management" },
-          { path: "/vendor/order", label: "Order Management" },
+          { path: "/profile", label: "Profile" },
+          { path: "/vendor/manage", label: "Member Management" },
+          { path: "/vendor/orders", label: "Order Management" },
         ];
       default:
         return [{ path: "/", label: "Home" }];
@@ -115,7 +117,7 @@ const Navbar = () => {
                 </li>
               ))}
 
-              {role === "parent" && (
+              {role === ROLES.PARENT && (
                 <li className="nav-item position-relative ps-3 pt-2">
                   <Link to="/cart">
                     <em className="bi bi-cart text-white"></em>

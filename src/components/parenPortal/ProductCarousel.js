@@ -7,18 +7,22 @@ import "swiper/css/pagination";
 import "./ProductCarousel.css";
 
 const productImages = [
-  "https://res.cloudinary.com/dwgfx9feh/image/upload/v1742543201/product1_yvygvw.png",
-  "https://res.cloudinary.com/dwgfx9feh/image/upload/v1742543343/2_gwapw6.jpg",
-  "https://res.cloudinary.com/dwgfx9feh/image/upload/v1742543521/3_glg5ck.jpg",
-  "https://res.cloudinary.com/dwgfx9feh/image/upload/v1742543521/4_yjw96g.jpg",
-  "https://res.cloudinary.com/dwgfx9feh/image/upload/v1742543521/5_lgmwpd.jpg",
-  "https://res.cloudinary.com/dwgfx9feh/image/upload/v1742543521/6_exkun8.jpg",
-  "https://res.cloudinary.com/dwgfx9feh/image/upload/v1742543522/7_qn9rqi.jpg",
-  "https://res.cloudinary.com/dwgfx9feh/image/upload/v1742543525/8_icgob0.jpg",
-  "https://res.cloudinary.com/dwgfx9feh/image/upload/v1742543520/9_rmkmeq.jpg",
-  "https://res.cloudinary.com/dwgfx9feh/image/upload/v1742543521/10_moc0sn.jpg",
-  "https://res.cloudinary.com/dwgfx9feh/image/upload/v1742543521/11_rgzyxj.jpg",
-  "https://res.cloudinary.com/dwgfx9feh/image/upload/v1742543521/12_wcngt9.jpg",
+  "https://product-images-2025.s3.ap-south-1.amazonaws.com/1.jpeg",
+  "https://product-images-2025.s3.ap-south-1.amazonaws.com/10.jpeg",
+  "https://product-images-2025.s3.ap-south-1.amazonaws.com/11.jpeg",
+  "https://product-images-2025.s3.ap-south-1.amazonaws.com/2.jpeg",
+  "https://product-images-2025.s3.ap-south-1.amazonaws.com/3.jpeg",
+  "https://product-images-2025.s3.ap-south-1.amazonaws.com/4.jpeg",
+  "https://product-images-2025.s3.ap-south-1.amazonaws.com/5.jpeg",
+  "https://product-images-2025.s3.ap-south-1.amazonaws.com/6.jpeg",
+  "https://product-images-2025.s3.ap-south-1.amazonaws.com/7.jpeg",
+  "https://product-images-2025.s3.ap-south-1.amazonaws.com/8.jpeg",
+  "https://product-images-2025.s3.ap-south-1.amazonaws.com/9.jpeg",
+  "https://product-images-2025.s3.ap-south-1.amazonaws.com/Gaudium+blue+tee.png",
+  "https://product-images-2025.s3.ap-south-1.amazonaws.com/Gaudium+byellow+tee.png",
+  "https://product-images-2025.s3.ap-south-1.amazonaws.com/Gaudium+green+tee.png",
+  "https://product-images-2025.s3.ap-south-1.amazonaws.com/Gaudium+red+tee.png",
+  "https://product-images-2025.s3.ap-south-1.amazonaws.com/knit+back+shirt.jpeg",
 ];
 
 const ProductCarousel = () => {
