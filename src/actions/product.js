@@ -12,11 +12,12 @@ import {
   PRODUCT_CART_ADD_FAILED,
 } from "./types";
 
-export const fetchLinkedBundles = async (usid) => {
+export const fetchLinkedBundles = async (usid, type) => {
   try {
-    const res = await get(`/bundles/search/${usid}?type=New`);
+    const res = await get(`/bundles/search/${usid}?type=${type}`);
     return res.data;
   } catch (error) {
+    toast.error(error.message, { position: "top-right" });
     return error;
   }
 };

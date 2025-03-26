@@ -6,10 +6,11 @@ import { logout } from "../../actions/auth";
 import { ROLES } from "../../utils/constants";
 
 const Navbar = () => {
-  const { parentName, role, cartData } = useSelector((state) => ({
+  const { parentName, role, cartData, name } = useSelector((state) => ({
     parentName: state.auth.user.parentName,
     role: state.auth.user.role,
     cartData: state.product.items,
+    name: state.auth.user.name,
   }));
   const [showProfile, setShowProfile] = useState(false);
   const [showNav, setShowNav] = useState(false); // <-- Added state to control navbar visibility
@@ -148,7 +149,7 @@ const Navbar = () => {
                     ref={dropdownRef}
                   >
                     <p className="mb-2 fw-bold text-center text-dark">
-                      {parentName}
+                      {parentName ?? name}
                     </p>
                     <hr className="m-2" />
                     <button

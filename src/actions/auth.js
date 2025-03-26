@@ -28,10 +28,10 @@ export const loadUser = () => async (dispatch) => {
 
 export const loadAdminUser = () => async (dispatch) => {
   try {
-    const res = await get("/admins/load-user");
+    const res = await get("/admins/load/user");
     dispatch({
       type: USER_LOADED,
-      payload: res.data,
+      payload: res.data.admin,
     });
   } catch (error) {
     dispatch({
