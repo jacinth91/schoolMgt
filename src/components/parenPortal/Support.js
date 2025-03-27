@@ -27,7 +27,15 @@ const SupportForm = () => {
   const { getRootProps, getInputProps } = useDropzone({
     accept: "image/*",
     onDrop: (acceptedFiles) => {
-      setFile(acceptedFiles[0]);
+      const selectedFile = acceptedFiles[0];
+
+      if (selectedFile.size > 2 * 1024 * 1024) {
+        setMessage("File size should not exceed 2MB.");
+        setFile(null);
+        return;
+      }
+
+      setFile(selectedFile);
       setMessage("");
     },
   });
@@ -55,6 +63,12 @@ const SupportForm = () => {
     } finally {
       setUploading(false);
     }
+  };
+
+  const removeUploaded = () => {
+    setFile(null);
+    setMessage("");
+    setFormData({ ...formData, file_path: "" });
   };
 
   const handleChange = (e) => {
@@ -127,7 +141,7 @@ const SupportForm = () => {
           </select>
         </div>
         <div className="mb-3">
-          <label className="form-label fw-bold">
+          <label className="form-label">
             Upload File (JPG, PNG, PDF, max 2MB)
           </label>
           <div className="row mx-0">
@@ -169,7 +183,7 @@ const SupportForm = () => {
                 </button>
                 <button
                   className="btn btn-outline-danger btn-sm"
-                  onClick={() => setFile(null)}
+                  onClick={() => removeUploaded()}
                 >
                   Remove
                 </button>
@@ -207,7 +221,8 @@ const SupportForm = () => {
         <div className="text-center">
           <button
             type="submit"
-            className={`btn btn-success ${uploading && "disabled"}`}
+            className={`btn btn-success`}
+            disabled={uploading}
           >
             Submit Query
           </button>
