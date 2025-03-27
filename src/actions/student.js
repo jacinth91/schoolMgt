@@ -1,5 +1,5 @@
 import { toast } from "react-toastify";
-import { get, put, patch } from "../services/api";
+import { get, put, patch, post } from "../services/api";
 
 export const loadStudentDetail = async (stuId) => {
   try {
@@ -32,6 +32,19 @@ export const linkStudentToParent = async ({ stuId, parentId }) => {
 export const updateStudentDetail = async (data, id) => {
   try {
     const res = await patch(`/students/${id}`, data);
+    return res.data;
+  } catch (error) {
+    toast.error(error.message, { position: "top-right" });
+    return error;
+  }
+};
+
+export const createStudent = async (data) => {
+  try {
+    const res = await post("/students", data);
+    toast.success(`New with usid ${data.usid} student created successfully!`, {
+      position: "top-right",
+    });
     return res.data;
   } catch (error) {
     toast.error(error.message, { position: "top-right" });

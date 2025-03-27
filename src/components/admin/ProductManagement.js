@@ -55,6 +55,7 @@ const ProductManagement = () => {
             <th>ID</th>
             <th>Name</th>
             <th>Unit Price</th>
+            <th>Image</th>
             <th>Created At</th>
           </tr>
         </thead>
@@ -65,6 +66,11 @@ const ProductManagement = () => {
                 <td>{product.id}</td>
                 <td>{product.name}</td>
                 <td>{product.price}</td>
+                <td>
+                  {product.imageUrl && (
+                    <img src={product.imageUrl} width={90} alt={product.name} />
+                  )}
+                </td>
                 <td>{new Date(product.createdAt).toLocaleDateString()}</td>
               </tr>
             ))

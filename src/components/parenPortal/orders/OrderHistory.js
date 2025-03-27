@@ -100,7 +100,7 @@ const OrderHistory = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="5" className="text-center text-muted fw-bold">
+              <td colSpan="6" className="text-center text-muted fw-bold">
                 No orders found
               </td>
             </tr>

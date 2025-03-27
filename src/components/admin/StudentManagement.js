@@ -1,5 +1,9 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { fetchALLStudent, updateStudentDetail } from "../../actions/student";
+import {
+  createStudent,
+  fetchALLStudent,
+  updateStudentDetail,
+} from "../../actions/student";
 import FullPageSpinner from "../layout/FullPageSpinner";
 import PopupDialog from "../layout/PopupDialog";
 import { reverseTransform, transform } from "../../services/helper";
@@ -33,6 +37,133 @@ const StudentManagement = () => {
     };
     getStudents();
   }, []);
+
+  const addStudentClick = () => {
+    const dropdownData = [
+      {
+        boardingStatus: [
+          { key: "Yes", label: "Yes" },
+          { key: "No", label: "No" },
+        ],
+      },
+      {
+        gender: [
+          { label: "Male", key: "Male" },
+          { label: "Female", key: "Female" },
+        ],
+      },
+      {
+        studentType: [
+          { label: "New", key: "New" },
+          { label: "Existing", key: "Existing" },
+          { label: "Hostel", key: "Hostel" },
+        ],
+      },
+    ];
+
+    const data = [
+      {
+        label: "Usid",
+        value: "",
+        editable: true,
+        options: null,
+      },
+      {
+        label: "Student Name",
+        value: "",
+        editable: true,
+        options: null,
+      },
+      {
+        label: "Student Type",
+        value: "",
+        editable: true,
+        options: [
+          {
+            label: "New",
+            key: "New",
+          },
+          {
+            label: "Existing",
+            key: "Existing",
+          },
+          {
+            label: "Hostel",
+            key: "Hostel",
+          },
+        ],
+      },
+      {
+        label: "Admission Year",
+        value: "",
+        editable: true,
+        options: null,
+      },
+      {
+        label: "Boarding Status",
+        value: "",
+        editable: true,
+        options: [
+          {
+            key: "Yes",
+            label: "Yes",
+          },
+          {
+            key: "No",
+            label: "No",
+          },
+        ],
+      },
+      {
+        label: "Gender",
+        value: "",
+        editable: true,
+        options: [
+          {
+            label: "Male",
+            key: "Male",
+          },
+          {
+            label: "Female",
+            key: "Female",
+          },
+        ],
+      },
+      {
+        label: "Campus",
+        value: "",
+        editable: true,
+        options: null,
+      },
+      {
+        label: "Class",
+        value: "",
+        editable: true,
+        options: null,
+      },
+      {
+        label: "Section",
+        value: "",
+        editable: true,
+        options: null,
+      },
+      {
+        label: "Address",
+        value: "",
+        editable: true,
+        options: null,
+      },
+      {
+        label: "House",
+        value: "",
+        editable: true,
+        options: null,
+      },
+    ];
+    setSelectedId(null);
+    setSelectedRow(data);
+    setShowPopup(true);
+  };
 
   const onEditStudentClick = (data) => {
     const nonEditableFields = ["usid"];
@@ -69,13 +200,18 @@ const StudentManagement = () => {
       setLoading(true);
       setSelectedRow(updatedData);
       const apiBody = reverseTransform(selectedRow);
-      const response = await updateStudentDetail(apiBody, selectedId);
-      if (response.success) {
-        setStudents((prevStudents) =>
-          prevStudents.map((student) =>
-            student.id === response.student.id ? response.student : student
-          )
-        );
+      if (selectedId) {
+        const response = await updateStudentDetail(apiBody, selectedId);
+        if (response.success) {
+          setStudents((prevStudents) =>
+            prevStudents.map((student) =>
+              student.id === response.student.id ? response.student : student
+            )
+          );
+        }
+      } else {
+        const newStudent = await createStudent(apiBody);
+        setStudents([...students, newStudent]);
       }
     } catch (error) {
       setSelectedId(null);
@@ -104,7 +240,14 @@ const StudentManagement = () => {
   ) : (
     <div className="container py-4">
       <h2>Student Management</h2>
-
+      <button
+        className="btn btn-success mb-3 float-end"
+        onClick={() => {
+          addStudentClick();
+        }}
+      >
+        Add Student
+      </button>
       <input
         type="text"
         className="form-control mb-3"
