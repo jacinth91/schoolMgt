@@ -18,7 +18,7 @@ const AdminLogin = ({ userType }) => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { isAuthenticated, loading } = useSelector((state) => state.auth);
+  const { isAuthenticated } = useSelector((state) => state.auth);
 
   const handleLoginSubmit = (e) => {
     e.preventDefault();
@@ -34,8 +34,6 @@ const AdminLogin = ({ userType }) => {
 
   return isAuthenticated ? (
     <Navigate to="/dashboard" />
-  ) : loading ? (
-    <FullPageSpinner loading={loading} />
   ) : (
     <div className="auth-container d-flex align-items-center justify-content-center">
       <div className="container">

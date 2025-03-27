@@ -1,5 +1,5 @@
 import { toast } from "react-toastify";
-import { del, get, post } from "../services/api";
+import { del, get, patch, post } from "../services/api";
 import {
   CART_FETCH_SUCCESS,
   CART_FETCH_UPDATE_FAIL,
@@ -131,6 +131,16 @@ export const fetchAllOrders = async () => {
 export const fetchOrdersParent = async (id) => {
   try {
     const res = await get(`/orders/parent/${id}`);
+    return res.data;
+  } catch (error) {
+    toast.error(error.message, { position: "top-right" });
+    return error;
+  }
+};
+
+export const updateOrderStatus = async (id, status) => {
+  try {
+    const res = await patch(`/orders/${id}/status`, { status });
     return res.data;
   } catch (error) {
     toast.error(error.message, { position: "top-right" });

@@ -1,8 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import FullPageSpinner from "../layout/FullPageSpinner";
-// import {  updateOrderStatus } from "../../actions/order";
 import { Modal, Button, Form } from "react-bootstrap";
-import { fetchAllOrders } from "../../actions/product";
+import { fetchAllOrders, updateOrderStatus } from "../../actions/product";
 
 const OrderManagement = () => {
   const [orders, setOrders] = useState([]);
@@ -53,19 +52,21 @@ const OrderManagement = () => {
 
   const handleStatusUpdate = async () => {
     if (!selectedOrder) return;
-
+    setLoading(true);
     try {
-      // await updateOrderStatus(selectedOrder.id, newStatus);
-      // setOrders((prevOrders) =>
-      //   prevOrders.map((order) =>
-      //     order.id === selectedOrder.id
-      //       ? { ...order, status: newStatus }
-      //       : order
-      //   )
-      // );
+      await updateOrderStatus(selectedOrder.id, newStatus);
+      setOrders((prevOrders) =>
+        prevOrders.map((order) =>
+          order.id === selectedOrder.id
+            ? { ...order, status: newStatus }
+            : order
+        )
+      );
       setShowModal(false);
     } catch (error) {
       console.error("Error updating status:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -101,7 +102,7 @@ const OrderManagement = () => {
                 <td>{order.parent?.parentName}</td>
                 <td>{order.parent?.phoneNumber}</td>
                 <td>{order.totalPrice}</td>
-                <td>{order.status}</td>
+                <td className="text-capitalize">{order.status}</td>
                 <td>
                   <button
                     className="btn btn-primary btn-sm"

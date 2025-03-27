@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { fetchALLStudent } from "../../actions/student";
+import { fetchALLStudent, updateStudentDetail } from "../../actions/student";
 import FullPageSpinner from "../layout/FullPageSpinner";
 import PopupDialog from "../layout/PopupDialog";
 import { reverseTransform, transform } from "../../services/helper";
@@ -35,20 +35,54 @@ const StudentManagement = () => {
   }, []);
 
   const onEditStudentClick = (data) => {
-    const nonEditableFields = ["usid", "gender"];
+    const nonEditableFields = ["usid"];
     const skipKeys = ["id"];
-    setSelectedId(data.id);
-
-    const result = transform(data, skipKeys, nonEditableFields);
+    const dropdownData = [
+      {
+        boardingStatus: [
+          { key: "Yes", label: "Yes" },
+          { key: "No", label: "No" },
+        ],
+      },
+      {
+        gender: [
+          { label: "Male", key: "Male" },
+          { label: "Female", key: "Female" },
+        ],
+      },
+      {
+        studentType: [
+          { label: "New", key: "New" },
+          { label: "Existing", key: "Existing" },
+          { label: "Hostel", key: "Hostel" },
+        ],
+      },
+    ];
+    setSelectedId(data.usid);
+    const result = transform(data, skipKeys, nonEditableFields, dropdownData);
     setSelectedRow(result);
     setShowPopup(true);
   };
 
-  const handleSave = (updatedData) => {
-    setSelectedRow(updatedData);
-    const apiBody = reverseTransform(selectedRow);
-    console.log({ ...apiBody, id: selectedId });
-    setShowPopup(false);
+  const handleSave = async (updatedData) => {
+    try {
+      setLoading(true);
+      setSelectedRow(updatedData);
+      const apiBody = reverseTransform(selectedRow);
+      const response = await updateStudentDetail(apiBody, selectedId);
+      if (response.success) {
+        setStudents((prevStudents) =>
+          prevStudents.map((student) =>
+            student.id === response.student.id ? response.student : student
+          )
+        );
+      }
+    } catch (error) {
+      setSelectedId(null);
+    } finally {
+      setShowPopup(false);
+      setLoading(false);
+    }
   };
 
   // ✅ Correcting the filter function
