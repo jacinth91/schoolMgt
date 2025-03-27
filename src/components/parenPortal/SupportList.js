@@ -61,6 +61,7 @@ const SupportList = ({ refreshTrigger }) => {
             <th>Query Type</th>
             <th>Student USID</th>
             <th>Status</th>
+            <th>Attachment</th>
             <th>Description</th>
           </tr>
         </thead>
@@ -72,6 +73,11 @@ const SupportList = ({ refreshTrigger }) => {
                 <td>{query.query_type}</td>
                 <td>{query.student_usid}</td>
                 <td>{query.status}</td>
+                <td>
+                  {query?.details?.file_path && (
+                    <img src={query?.details?.file_path} width={70} />
+                  )}
+                </td>
                 <td>{query?.details?.description}</td>
               </tr>
             ))

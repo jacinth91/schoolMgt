@@ -48,7 +48,7 @@ const SupportForm = () => {
 
       const uploadedImageUrl = uploadResponse.data.secure_url; // Get image URL
       if (uploadedImageUrl) {
-        setFormData({ ...formData, file_path: uploadedImageUrl });
+        setFormData((prev) => ({ ...prev, file_path: uploadedImageUrl }));
       }
     } catch (error) {
       setMessage("Upload failed. Please try again.");

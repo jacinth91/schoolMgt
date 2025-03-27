@@ -4,12 +4,12 @@ import { get, post, put } from "../services/api";
 export const submitSupportQuery = async (formData, user) => {
   try {
     const postBody = {
-      parentId: user.id,
       description: formData.description,
       student_usid: formData.studentId,
       query_type: formData.queryType,
       parent_name: formData.parentName,
       file_path: formData.file_path,
+      parent_id: user.id,
     };
     const res = await post("/feedback", postBody);
     return res.data;

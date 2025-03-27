@@ -104,7 +104,11 @@ const SupportQueries = () => {
                 <td>{query.parent_name}</td>
                 <td className="text-capitalize">{query.query_type}</td>
                 <td className="text-capitalize">{query.status}</td>
-                <td>{query.details?.file_path}</td>
+                <td>
+                  {query.details?.file_path && (
+                    <img src={query.details?.file_path} width={70} />
+                  )}
+                </td>
                 <td>{query.details?.description}</td>
                 <td>
                   <button
