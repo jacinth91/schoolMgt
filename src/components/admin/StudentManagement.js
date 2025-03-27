@@ -1,5 +1,9 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { fetchALLStudent, updateStudentDetail } from "../../actions/student";
+import {
+  createStudent,
+  fetchALLStudent,
+  updateStudentDetail,
+} from "../../actions/student";
 import FullPageSpinner from "../layout/FullPageSpinner";
 import PopupDialog from "../layout/PopupDialog";
 import { reverseTransform, transform } from "../../services/helper";
@@ -196,13 +200,18 @@ const StudentManagement = () => {
       setLoading(true);
       setSelectedRow(updatedData);
       const apiBody = reverseTransform(selectedRow);
-      const response = await updateStudentDetail(apiBody, selectedId);
-      if (response.success) {
-        setStudents((prevStudents) =>
-          prevStudents.map((student) =>
-            student.id === response.student.id ? response.student : student
-          )
-        );
+      if (selectedId) {
+        const response = await updateStudentDetail(apiBody, selectedId);
+        if (response.success) {
+          setStudents((prevStudents) =>
+            prevStudents.map((student) =>
+              student.id === response.student.id ? response.student : student
+            )
+          );
+        }
+      } else {
+        const newStudent = await createStudent(apiBody);
+        setStudents([...students, newStudent]);
       }
     } catch (error) {
       setSelectedId(null);

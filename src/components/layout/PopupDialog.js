@@ -10,6 +10,9 @@ const PopupDialog = ({ data, onSave, onCancel, header }) => {
     setFormData(updatedData);
   };
 
+  // Check if all fields are filled
+  const isFormValid = formData.every((item) => item.value.trim() !== "");
+
   return (
     <div
       className="modal fade show d-block"
@@ -73,17 +76,14 @@ const PopupDialog = ({ data, onSave, onCancel, header }) => {
             ))}
           </div>
           <div className="modal-footer">
-            <button
-              type="button"
-              className="btn btn-secondary"
-              onClick={onCancel}
-            >
+            <button type="button" className="btn btn-danger" onClick={onCancel}>
               Cancel
             </button>
             <button
               type="button"
               className="btn btn-primary"
               onClick={() => onSave(formData)}
+              disabled={!isFormValid}
             >
               Save
             </button>

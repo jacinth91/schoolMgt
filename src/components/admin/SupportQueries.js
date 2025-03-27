@@ -197,7 +197,7 @@ const SupportQueries = () => {
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
+          <Button variant="danger" onClick={() => setShowModal(false)}>
             Close
           </Button>
           <Button variant="primary" onClick={handleStatusUpdate}>
