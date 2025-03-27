@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./PopupDialog.css";
 
 const PopupDialog = ({ data, onSave, onCancel, header }) => {
   const [formData, setFormData] = useState(data);
@@ -41,7 +42,7 @@ const PopupDialog = ({ data, onSave, onCancel, header }) => {
                     item.options && Array.isArray(item.options) ? (
                       // Dropdown (Select) Field with Default Option
                       <select
-                        className="form-control"
+                        className="form-control dialog-select"
                         value={item.value}
                         onChange={(e) => handleChange(index, e.target.value)}
                       >

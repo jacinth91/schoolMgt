@@ -111,7 +111,7 @@ const CartPage = () => {
                 <div className="row g-0 align-items-center">
                   <div className="col-md-3 text-center p-2">
                     <img
-                      src={item.image}
+                      src={item.bundle?.image}
                       className="img-fluid rounded shadow-sm"
                       alt={item.bundle?.name}
                       style={{ maxHeight: "120px" }}

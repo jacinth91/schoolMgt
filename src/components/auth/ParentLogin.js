@@ -1,12 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import {
-  KeyRound,
-  UserRound,
-  ArrowRight,
-  Lock,
-  ArrowLeft,
-  Mail,
-} from "lucide-react";
+import { KeyRound, UserRound, ArrowRight, Lock, ArrowLeft } from "lucide-react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./ParentLogin.css";
 import { loadingChange, login, sendOTP, verifyOTP } from "../../actions/auth";
@@ -25,7 +18,7 @@ const ParentLogin = () => {
   const [otp, setOtp] = useState("");
   const [otpLoading, setOtpLoading] = useState(false);
 
-  const { isAuthenticated, loading } = useSelector((state) => state.auth);
+  const { isAuthenticated } = useSelector((state) => state.auth);
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -69,7 +62,6 @@ const ParentLogin = () => {
   };
 
   if (isAuthenticated) return <Navigate to="/dashboard" />;
-  if (loading) return <FullPageSpinner loading={loading} />;
 
   return (
     <div className="auth-container">
@@ -100,7 +92,7 @@ const ParentLogin = () => {
                   <>
                     <div className="mb-4">
                       <div className="input-icon-wrapper">
-                        <Mail className="input-icon" size={20} />
+                        <UserRound className="input-icon" size={20} />
                         <input
                           type="text"
                           value={userId}
