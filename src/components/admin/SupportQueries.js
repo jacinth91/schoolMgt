@@ -1,35 +1,24 @@
 import React, { useEffect, useState, useMemo } from "react";
 import FullPageSpinner from "../layout/FullPageSpinner";
+import { Modal, Button, Form } from "react-bootstrap";
+import { fetchAllQueries, updateFeedbackStatus } from "../../actions/support";
 
 const SupportQueries = () => {
   const [queries, setQueries] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedQuery, setSelectedQuery] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [newStatus, setNewStatus] = useState("");
   const queriesPerPage = 10;
 
   useEffect(() => {
     const fetchQueries = async () => {
       setLoading(true);
       try {
-        // Simulating API fetch with dummy data
-        const response = [
-          { id: 1, user: "John Doe", issue: "Login Issue", status: "Open" },
-          {
-            id: 2,
-            user: "Jane Smith",
-            issue: "Payment Failure",
-            status: "Resolved",
-          },
-          {
-            id: 3,
-            user: "Alice Johnson",
-            issue: "Bug Report",
-            status: "In Progress",
-          },
-          { id: 4, user: "Bob Brown", issue: "Access Denied", status: "Open" },
-        ];
-        setQueries(response);
+        const response = await fetchAllQueries();
+        setQueries(Array.isArray(response) ? response : []);
       } catch (error) {
         setQueries([]);
       } finally {
@@ -42,8 +31,8 @@ const SupportQueries = () => {
   const filteredQueries = useMemo(() => {
     return queries.filter(
       (query) =>
-        query.user.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        query.issue.toLowerCase().includes(searchTerm.toLowerCase())
+        query.parentName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        query.status?.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }, [queries, searchTerm]);
 
@@ -53,12 +42,40 @@ const SupportQueries = () => {
     currentPage * queriesPerPage
   );
 
+  const onView = (query) => {
+    setSelectedQuery(query);
+    setNewStatus(query.status);
+    setShowModal(true);
+  };
+
+  const handleStatusUpdate = async () => {
+    if (!selectedQuery) return;
+    setLoading(true);
+    try {
+      await updateFeedbackStatus(selectedQuery.id, {
+        ...selectedQuery,
+        status: newStatus,
+      });
+      setQueries((prevQueries) =>
+        prevQueries.map((query) =>
+          query.id === selectedQuery.id
+            ? { ...query, status: newStatus }
+            : query
+        )
+      );
+      setShowModal(false);
+    } catch (error) {
+      console.error("Error updating status:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return loading ? (
     <FullPageSpinner loading={loading} />
   ) : (
     <div className="container py-4">
       <h2>Support Queries</h2>
-
       <input
         type="text"
         className="form-control mb-3"
@@ -72,8 +89,11 @@ const SupportQueries = () => {
           <tr>
             <th>ID</th>
             <th>User</th>
-            <th>Issue</th>
+            <th>Query Type</th>
             <th>Status</th>
+            <th>Attachment</th>
+            <th>Description</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -81,14 +101,24 @@ const SupportQueries = () => {
             displayedQueries.map((query) => (
               <tr key={query.id}>
                 <td>{query.id}</td>
-                <td>{query.user}</td>
-                <td>{query.issue}</td>
-                <td>{query.status}</td>
+                <td>{query.parent_name}</td>
+                <td className="text-capitalize">{query.query_type}</td>
+                <td className="text-capitalize">{query.status}</td>
+                <td>{query.details?.file_path}</td>
+                <td>{query.details?.description}</td>
+                <td>
+                  <button
+                    className="btn btn-primary btn-sm"
+                    onClick={() => onView(query)}
+                  >
+                    <em className="bi bi-eye" />
+                  </button>
+                </td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="4" className="text-center">
+              <td colSpan="7" className="text-center">
                 No queries found.
               </td>
             </tr>
@@ -115,6 +145,62 @@ const SupportQueries = () => {
           Next
         </button>
       </div>
+
+      {/* Query Details Modal */}
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Query Details</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {selectedQuery && (
+            <div>
+              <p>
+                <strong>Query ID:</strong> {selectedQuery.id}
+              </p>
+              <p>
+                <strong>User:</strong> {selectedQuery.parent_name}
+              </p>
+              <p>
+                <strong>Query Type:</strong> {selectedQuery.query_type}
+              </p>
+              <p>
+                <strong>Description:</strong>{" "}
+                {selectedQuery.details?.description}
+              </p>
+              {selectedQuery.details?.file_path && (
+                <>
+                  <p>
+                    <strong>Attachment:</strong>{" "}
+                    <img
+                      src={selectedQuery.details?.file_path}
+                      alt={selectedQuery.query_type}
+                    />
+                  </p>
+                </>
+              )}
+              <hr />
+              <h5>Update Status</h5>
+              <Form.Select
+                value={newStatus || selectedQuery?.status || "pending"}
+                onChange={(e) => setNewStatus(e.target.value)}
+              >
+                <option value="pending">Pending</option>
+                <option value="progress">Progress</option>
+                <option value="resolved">Resolved</option>
+                <option value="closed">Closed</option>
+              </Form.Select>
+            </div>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleStatusUpdate}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

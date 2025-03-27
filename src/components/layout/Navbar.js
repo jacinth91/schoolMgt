@@ -13,7 +13,8 @@ const Navbar = () => {
     name: state.auth.user.name,
   }));
   const [showProfile, setShowProfile] = useState(false);
-  const [showNav, setShowNav] = useState(false); // <-- Added state to control navbar visibility
+  const [showNav, setShowNav] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState(null);
   const dispatch = useDispatch();
   const dropdownRef = useRef(null);
 
@@ -21,53 +22,63 @@ const Navbar = () => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setShowProfile(false);
+        setActiveDropdown(null);
       }
     };
 
     if (showProfile) {
       document.addEventListener("mousedown", handleClickOutside);
     }
+    if (activeDropdown) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [showProfile]);
+  }, [showProfile, activeDropdown]);
 
-  const handleToggleNavbar = () => {
-    setShowNav((prev) => !prev);
-  };
+  const handleToggleNavbar = () => setShowNav((prev) => !prev);
+  const handleNavItemClick = () => setShowNav(false);
+  const logoutClick = () => dispatch(logout());
 
-  const handleNavItemClick = () => {
-    setShowNav(false); // Close navbar on link click
-  };
-
-  const logoutClick = () => {
-    dispatch(logout());
+  const toggleDropdown = (menu) => {
+    setActiveDropdown((prev) => (prev === menu ? null : menu));
   };
 
   const getNavItems = () => {
     switch (role) {
-      case "parent":
+      case ROLES.PARENT:
         return [
           { path: "/dashboard", label: "Home" },
           { path: "/profile", label: "Profile" },
-          { path: "/children", label: "Children" },
+          { path: "/children", label: "My Children" },
           { path: "/products", label: "Products" },
-          { path: "/order/history", label: "Orders" },
+          { path: "/order/history", label: "My Orders" },
           { path: "/support", label: "Support" },
         ];
-      case "admin":
+      case ROLES.ADMIN:
         return [
           { path: "/dashboard", label: "Home" },
           { path: "/profile", label: "Profile" },
-          { path: "/admin/manage", label: "Member Management" },
-          { path: "/admin/students", label: "Student Management" },
-          { path: "/admin/bundle", label: "Bundle Management" },
-          { path: "/admin/orders", label: "Orders" },
-          { path: "/admin/products", label: "Product Management" },
+          {
+            label: "User Management",
+            submenu: [
+              { path: "/admin/manage", label: "Member Management" },
+              { path: "/admin/students", label: "Student Management" },
+            ],
+          },
+          {
+            label: "Operations Management",
+            submenu: [
+              { path: "/admin/bundle", label: "Bundle Management" },
+              { path: "/admin/orders", label: "Order Management" },
+              { path: "/admin/products", label: "Product Management" },
+            ],
+          },
           { path: "/admin/support", label: "Support Management" },
         ];
-      case "vendor":
+      case ROLES.VENDOR:
         return [
           { path: "/dashboard", label: "Home" },
           { path: "/profile", label: "Profile" },
@@ -91,7 +102,6 @@ const Navbar = () => {
             Dashboard
           </Link>
 
-          {/* Navbar Toggler */}
           <button
             className="navbar-toggler text-white"
             type="button"
@@ -100,7 +110,6 @@ const Navbar = () => {
             <Menu />
           </button>
 
-          {/* Navbar Items */}
           <div
             className={`collapse navbar-collapse ${showNav ? "show" : ""}`}
             id="navbarNav"
@@ -108,16 +117,41 @@ const Navbar = () => {
             <ul className="navbar-nav ms-auto">
               {getNavItems().map((item, index) => (
                 <li className="nav-item" key={index}>
-                  <Link
-                    className="nav-link text-white"
-                    to={item.path}
-                    onClick={handleNavItemClick}
-                  >
-                    {item.label}
-                  </Link>
+                  {item.submenu ? (
+                    <div className="dropdown">
+                      <button
+                        className="nav-link dropdown-toggle text-white border-0 bg-transparent"
+                        onClick={() => toggleDropdown(item.label)}
+                      >
+                        {item.label}
+                      </button>
+                      {activeDropdown === item.label && (
+                        <ul className="dropdown-menu show" ref={dropdownRef}>
+                          {item.submenu.map((subItem, subIndex) => (
+                            <li key={subIndex}>
+                              <Link
+                                className="dropdown-item"
+                                to={subItem.path}
+                                onClick={() => setActiveDropdown(null)}
+                              >
+                                {subItem.label}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  ) : (
+                    <Link
+                      className="nav-link text-white"
+                      to={item.path}
+                      onClick={handleNavItemClick}
+                    >
+                      {item.label}
+                    </Link>
+                  )}
                 </li>
               ))}
-
               {role === ROLES.PARENT && (
                 <li className="nav-item position-relative ps-3 pt-2">
                   <Link to="/cart">
@@ -134,7 +168,6 @@ const Navbar = () => {
                 </li>
               )}
 
-              {/* Profile Dropdown */}
               <li className="nav-item position-relative ps-3 pt-2">
                 <button
                   className="profile-button d-flex align-items-center justify-content-center border-0 bg-transparent"

@@ -14,3 +14,6 @@ export const PAYMENT_MODE = {
   net_banking: "Net Banking",
   na: "Not Applicable",
 };
+
+export const SUPORT_ATTACHMENT_URL =
+  "https://api.cloudinary.com/v1_1/dwgfx9feh/image/upload";

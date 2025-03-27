@@ -34,6 +34,133 @@ const StudentManagement = () => {
     getStudents();
   }, []);
 
+  const addStudentClick = () => {
+    const dropdownData = [
+      {
+        boardingStatus: [
+          { key: "Yes", label: "Yes" },
+          { key: "No", label: "No" },
+        ],
+      },
+      {
+        gender: [
+          { label: "Male", key: "Male" },
+          { label: "Female", key: "Female" },
+        ],
+      },
+      {
+        studentType: [
+          { label: "New", key: "New" },
+          { label: "Existing", key: "Existing" },
+          { label: "Hostel", key: "Hostel" },
+        ],
+      },
+    ];
+
+    const data = [
+      {
+        label: "Usid",
+        value: "",
+        editable: true,
+        options: null,
+      },
+      {
+        label: "Student Name",
+        value: "",
+        editable: true,
+        options: null,
+      },
+      {
+        label: "Student Type",
+        value: "",
+        editable: true,
+        options: [
+          {
+            label: "New",
+            key: "New",
+          },
+          {
+            label: "Existing",
+            key: "Existing",
+          },
+          {
+            label: "Hostel",
+            key: "Hostel",
+          },
+        ],
+      },
+      {
+        label: "Admission Year",
+        value: "",
+        editable: true,
+        options: null,
+      },
+      {
+        label: "Boarding Status",
+        value: "",
+        editable: true,
+        options: [
+          {
+            key: "Yes",
+            label: "Yes",
+          },
+          {
+            key: "No",
+            label: "No",
+          },
+        ],
+      },
+      {
+        label: "Gender",
+        value: "",
+        editable: true,
+        options: [
+          {
+            label: "Male",
+            key: "Male",
+          },
+          {
+            label: "Female",
+            key: "Female",
+          },
+        ],
+      },
+      {
+        label: "Campus",
+        value: "",
+        editable: true,
+        options: null,
+      },
+      {
+        label: "Class",
+        value: "",
+        editable: true,
+        options: null,
+      },
+      {
+        label: "Section",
+        value: "",
+        editable: true,
+        options: null,
+      },
+      {
+        label: "Address",
+        value: "",
+        editable: true,
+        options: null,
+      },
+      {
+        label: "House",
+        value: "",
+        editable: true,
+        options: null,
+      },
+    ];
+    setSelectedId(null);
+    setSelectedRow(data);
+    setShowPopup(true);
+  };
+
   const onEditStudentClick = (data) => {
     const nonEditableFields = ["usid"];
     const skipKeys = ["id"];
@@ -104,7 +231,14 @@ const StudentManagement = () => {
   ) : (
     <div className="container py-4">
       <h2>Student Management</h2>
-
+      <button
+        className="btn btn-success mb-3 float-end"
+        onClick={() => {
+          addStudentClick();
+        }}
+      >
+        Add Student
+      </button>
       <input
         type="text"
         className="form-control mb-3"
