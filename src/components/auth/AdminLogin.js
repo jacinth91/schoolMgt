@@ -5,8 +5,9 @@ import "./style/auth.css"; // Ensure CSS is imported properly
 import { adminLogin, loadingChange } from "../../actions/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
-import FullPageSpinner from "../layout/FullPageSpinner";
 import { toast } from "react-toastify";
+import adminLoginImg from "../../images/adminLoginImg.png";
+import logo from "../../images/logo.png";
 
 const AdminLogin = ({ userType }) => {
   useEffect(() => {
@@ -35,12 +36,22 @@ const AdminLogin = ({ userType }) => {
   return isAuthenticated ? (
     <Navigate to="/dashboard" />
   ) : (
-    <div className="auth-container d-flex align-items-center justify-content-center">
-      <div className="container">
-        <div className="row justify-content-center">
-          <div className="col-12 col-md-6 col-lg-5">
-            <form onSubmit={handleLoginSubmit} className="auth-card">
-              <div className="text-center">
+    <div className="d-inline-flex vh-99 w-100 row">
+      <div className="col-md-6 d-none d-md-block p-0 m-0 h-100">
+        <img
+          src={adminLoginImg}
+          width={500}
+          alt="Students going to school"
+          className="w-100 vh-100 object-fit-cover"
+        />
+      </div>
+      <div className="col-md-6 p-0 m-0 col-sm-12 d-flex align-items-center justify-content-center bg-light ">
+        <div className="bg-white align-content-around h-100 w-100">
+          <div className="mx-auto w-75">
+            <form onSubmit={handleLoginSubmit} className="w-75 float-end">
+              <div className="">
+                <img src={logo} alt="logo" width={100} />
+
                 <h1 className="auth-title">{userType} Login</h1>
                 <p className="auth-subtitle">
                   Enter your credentials to continue

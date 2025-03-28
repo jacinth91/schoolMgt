@@ -164,10 +164,10 @@ const CartPage = () => {
                   </div>
                   <div className="col-md-3 text-end pe-3">
                     <button
-                      className="btn btn-outline-danger rounded-pill px-4"
+                      className="btn btn-outline-danger rounded-pill px-4 mx-auto"
                       onClick={() => handleRemove(item.bundleId)}
                     >
-                      Remove
+                      <em className="bi bi-trash" />
                     </button>
                   </div>
                 </div>
@@ -186,7 +186,7 @@ const CartPage = () => {
                 <span>Total Price:</span> <strong>₹{totalPrice}</strong>
               </p>
               <button
-                className="btn btn-success w-100 mt-3 rounded-pill"
+                className="btn btn-primary w-100 mt-3 "
                 onClick={handleCheckout}
               >
                 Proceed to Checkout 🛒

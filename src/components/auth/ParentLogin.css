@@ -1,13 +1,4 @@
-/* General Styles */
-.auth-container {
-  background-color: #f4f6f9;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.auth-card {
+General Styles .auth-card {
   background: #fff;
   border-radius: 12px;
   padding: 30px;
@@ -98,4 +89,8 @@
 
 .btn-light:hover {
   background-color: #dee2e6;
+}
+
+.vh-99 {
+  height: 99vh;
 }

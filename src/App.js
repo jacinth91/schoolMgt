@@ -34,12 +34,7 @@ import FullPageSpinner from "./components/layout/FullPageSpinner";
 import SupportQueries from "./components/admin/SupportQueries";
 import AdminLogin from "./components/auth/AdminLogin";
 import AdminManagement from "./components/admin/AdminManagement";
-import {
-  CookiePreferences,
-  PrivacyPolicy,
-  Refunds,
-  TermsOfService,
-} from "./components/layout/FooterLinks";
+
 import { ToastContainer } from "react-toastify";
 const ProductListing = lazy(() =>
   import("./components/parenPortal/products/productList")
@@ -91,13 +86,6 @@ const App = () => {
             <Route element={<PrivateRoute />}>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/profile" element={<ProfilePage />} />
-              <Route path="/terms-of-service" element={<TermsOfService />} />
-              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-              <Route path="/refunds" element={<Refunds />} />
-              <Route
-                path="/cookie-preferences"
-                element={<CookiePreferences />}
-              />
             </Route>
 
             <Route element={<PrivateRoute allowedRoles={[ROLES.PARENT]} />}>

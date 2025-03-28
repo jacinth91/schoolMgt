@@ -11,9 +11,6 @@ import {
 } from "../../../actions/product";
 import FullPageSpinner from "../../layout/FullPageSpinner";
 
-const SHIPPING_CHARGE = 50;
-const TAX_RATE = 0.05;
-
 const PlaceOrder = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -24,9 +21,7 @@ const PlaceOrder = () => {
   }));
   const method = location.state?.method || "na";
 
-  const [totalPrice, setTotalPrice] = useState(0);
   const [totalQuantity, setTotalQuantity] = useState(0);
-  const [taxes, setTaxes] = useState(0);
   const [grandTotal, setGrandTotal] = useState(0);
 
   useEffect(() => {
@@ -52,17 +47,11 @@ const PlaceOrder = () => {
         (acc, item) => acc + (item.quantity || 0),
         0
       );
-      const taxAmount = total * TAX_RATE;
-      const finalAmount = total + taxAmount + SHIPPING_CHARGE;
 
-      setTotalPrice(total);
       setTotalQuantity(quantity);
-      setTaxes(taxAmount);
-      setGrandTotal(finalAmount);
+      setGrandTotal(total);
     } else {
-      setTotalPrice(0);
       setTotalQuantity(0);
-      setTaxes(0);
       setGrandTotal(0);
     }
   }, [cartData?.items]);
@@ -93,6 +82,7 @@ const PlaceOrder = () => {
       <div className="row">
         {/* Left Column - Order Summary */}
         <div className="col-lg-8">
+          <div className="mb-3 fs-3">Order Items</div>
           {cartData?.items?.length ? (
             cartData.items.map((item) => (
               <div key={item.bundleId} className="card default-card ">
@@ -131,35 +121,18 @@ const PlaceOrder = () => {
             <p className="text-center text-muted">Your cart is empty 🛒</p>
           )}
         </div>
-
         {/* Right Column - Shipping & Payment */}
         <div className="col-lg-4">
           {/* Shipping Details */}
-          <div className="card shipping-card">
-            <h4 className="shipping-title">🚚 Shipping Details</h4>
-            <p className="fw-bold mb-1">Recipient: {user?.parentName}</p>
-            <p className="shipping-details">
-              📍{user?.address || "No address provided"}
-            </p>
-          </div>
-
+          <div className="fs-3 mb-3">Order Summary</div>
           {/* Payment & Total Summary */}
           <div className="card default-card ">
-            <h4 className="text-center mb-3 text-primary">
-              💳 Payment & Shipping
-            </h4>
+            <h4 className="mb-3 text-primary">💳 Payment & Shipping</h4>
             <p className="d-flex justify-content-between fw-bold">
               <span>Total Items:</span> <span>{totalQuantity}</span>
             </p>
-            <p className="d-flex justify-content-between text-dark fw-bold">
-              <span>Total Price:</span>{" "}
-              <strong>₹{totalPrice.toFixed(2)}</strong>
-            </p>
             <p className="d-flex justify-content-between text-dark">
-              <span>Taxes (5%):</span> <span>₹{taxes.toFixed(2)}</span>
-            </p>
-            <p className="d-flex justify-content-between text-dark">
-              <span>Shipping Charges:</span> <span>₹{SHIPPING_CHARGE}</span>
+              <span>Shipping Charges:</span> <span>Free</span>
             </p>
             <p className="d-flex justify-content-between text-dark fw-bold">
               <span>Grand Total:</span>{" "}
@@ -169,9 +142,16 @@ const PlaceOrder = () => {
               <span>Payment Mode:</span>
               <strong>{PAYMENT_MODE[method] || "Credit Card"}</strong>
             </p>
+            <hr />
+            <div className="fs-5 shipping-title">Shipping details</div>
+            <p className=" mb-1">{user?.parentName}</p>
+            <p className="shipping-details">
+              {user?.address || "No address provided"}
+            </p>
+            <hr />
 
             <button
-              className="btn btn-success w-100 mt-3 rounded-pill"
+              className="btn btn-primary w-100 mt-3 text-white"
               onClick={handlePlaceOrder}
               disabled={!cartData?.items?.length}
             >

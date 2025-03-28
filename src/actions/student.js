@@ -42,9 +42,12 @@ export const updateStudentDetail = async (data, id) => {
 export const createStudent = async (data) => {
   try {
     const res = await post("/students", data);
-    toast.success(`New with usid ${data.usid} student created successfully!`, {
-      position: "top-right",
-    });
+    toast.success(
+      `Student with usid ${data.usid} student created successfully!`,
+      {
+        position: "top-right",
+      }
+    );
     return res.data;
   } catch (error) {
     toast.error(error.message, { position: "top-right" });

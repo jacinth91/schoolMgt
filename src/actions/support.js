@@ -24,7 +24,10 @@ export const fetchParentQueries = async (parentId) => {
     const res = await get(`/feedback/parent/${parentId}`);
     return res.data;
   } catch (error) {
-    toast.error(error.message, { position: "top-right" });
+    toast.error(
+      error.message || "Something went wrong. Please try again later.",
+      { position: "top-right" }
+    );
     return error;
   }
 };

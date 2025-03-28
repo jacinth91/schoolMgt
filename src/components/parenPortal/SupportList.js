@@ -28,7 +28,7 @@ const SupportList = ({ refreshTrigger }) => {
   }, [refreshTrigger]);
 
   const filteredQueries = useMemo(() => {
-    return queries?.filter(
+    return queries.filter(
       (query) =>
         query?.parent_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         query?.status?.toLowerCase().includes(searchTerm.toLowerCase())
