@@ -35,7 +35,7 @@ export const createAdminVendor = async ({
 };
 
 export const updateAdminVendor = async (
-  { name, email, phoneNumber, password, role },
+  { name, email, phoneNumber, password, role, imageUrl },
   id
 ) => {
   try {
@@ -45,6 +45,7 @@ export const updateAdminVendor = async (
       phoneNumber,
       password,
       role,
+      imageUrl,
     });
     toast.success("Data updated successfully!", { position: "top-right" });
     return res.data;
