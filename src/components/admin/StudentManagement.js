@@ -78,20 +78,7 @@ const StudentManagement = () => {
         label: "Student Type",
         value: "",
         editable: true,
-        options: [
-          {
-            label: "New",
-            key: "New",
-          },
-          {
-            label: "Existing",
-            key: "Existing",
-          },
-          {
-            label: "Hostel",
-            key: "Hostel",
-          },
-        ],
+        options: dropdownData.studentType,
       },
       {
         label: "Admission Year",
@@ -103,31 +90,13 @@ const StudentManagement = () => {
         label: "Boarding Status",
         value: "",
         editable: true,
-        options: [
-          {
-            key: "Yes",
-            label: "Yes",
-          },
-          {
-            key: "No",
-            label: "No",
-          },
-        ],
+        options: dropdownData.boardingStatus,
       },
       {
         label: "Gender",
         value: "",
         editable: true,
-        options: [
-          {
-            label: "Male",
-            key: "Male",
-          },
-          {
-            label: "Female",
-            key: "Female",
-          },
-        ],
+        options: dropdownData.gender,
       },
       {
         label: "Campus",
@@ -223,9 +192,15 @@ const StudentManagement = () => {
 
   // ✅ Correcting the filter function
   const filteredStudents = useMemo(() => {
-    return students.filter((student) =>
-      student.studentName?.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    return students.filter((student) => {
+      const nameMatch = student.studentName
+        ?.toLowerCase()
+        .includes(searchTerm.toLowerCase());
+      const usidMatch = student.usid
+        ?.toLowerCase()
+        .includes(searchTerm.toLowerCase());
+      return nameMatch || usidMatch;
+    });
   }, [students, searchTerm]);
 
   // ✅ Pagination Logic

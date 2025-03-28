@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 import FullPageSpinner from "../layout/FullPageSpinner";
 import { toast } from "react-toastify";
+import loginImg from "../../images/parentLoginImg.png";
+import logo from "../../images/logo.png";
 
 const ParentLogin = () => {
   const dispatch = useDispatch();
@@ -64,22 +66,22 @@ const ParentLogin = () => {
   if (isAuthenticated) return <Navigate to="/dashboard" />;
 
   return (
-    <div className="auth-container">
-      <div className="container">
-        <div className="row justify-content-center">
-          <div className="col-12 col-md-6 col-lg-4 mb-5">
-            <div className="user-icon-container">
-              <div className="user-icon">
-                <UserRound size={40} />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="row justify-content-center">
-          <div className="col-12 col-md-6 col-lg-4">
-            <div className="auth-card p-4 shadow-sm rounded">
-              <div className="text-center">
-                <h2 className="auth-title mb-3">Welcome Back</h2>
+    <div className="d-inline-flex vh-99 w-100 row">
+      <div className="col-md-6 d-none d-md-block p-0 m-0 h-100">
+        <img
+          src={loginImg}
+          width={500}
+          alt="Students going to school"
+          className="w-100 vh-100 object-fit-cover"
+        />
+      </div>
+      <div className="col-md-6 p-0 m-0 col-sm-12 d-flex align-items-center justify-content-center bg-light ">
+        <div className="bg-white align-content-around h-100 w-100">
+          <div className="mx-auto w-75">
+            <div className="w-75 float-end">
+              <div className="">
+                <img src={logo} alt="logo" width={100} />
+                <h2 className="fs-2 mb-3">Welcome Back</h2>
                 <p className="auth-subtitle">
                   Please enter your details to continue
                 </p>
@@ -91,6 +93,7 @@ const ParentLogin = () => {
                 ) : (
                   <>
                     <div className="mb-4">
+                      <div className="fw-medium pb-2">Enter User ID</div>
                       <div className="input-icon-wrapper">
                         <UserRound className="input-icon" size={20} />
                         <input
@@ -118,7 +121,7 @@ const ParentLogin = () => {
                       <button
                         type="button"
                         onClick={() => triggerOTP()}
-                        className="btn btn-secondary w-100"
+                        className="btn btn-outline-primary w-100"
                         disabled={!userId}
                       >
                         <KeyRound size={20} className="me-2" /> Continue with
@@ -150,7 +153,7 @@ const ParentLogin = () => {
                   <button
                     type="button"
                     onClick={() => setAuthMethod("select")}
-                    className="btn btn-light w-100"
+                    className="btn btn-outline-primary w-100"
                   >
                     <ArrowLeft size={20} className="me-2" /> Back
                   </button>

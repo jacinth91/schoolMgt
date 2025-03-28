@@ -9,7 +9,6 @@ const PopupDialog = ({ data, onSave, onCancel, header }) => {
     updatedData[index].value = newValue;
     setFormData(updatedData);
   };
-
   // Check if all fields are filled
   const isFormValid = formData.every((item) => item.value.trim() !== "");
 

@@ -64,7 +64,7 @@ const PaymentMethod = () => {
           </label>
         </div>
         <button
-          className="btn btn-success w-50 mx-auto mt-3 rounded-pill"
+          className="btn btn-primary w-50 mx-auto mt-3 "
           onClick={handleProceed}
         >
           Proceed to Payment

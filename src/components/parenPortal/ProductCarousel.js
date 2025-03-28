@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
@@ -6,26 +6,28 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "./ProductCarousel.css";
 
-const productImages = [
-  "https://product-images-2025.s3.ap-south-1.amazonaws.com/1.jpeg",
-  "https://product-images-2025.s3.ap-south-1.amazonaws.com/10.jpeg",
-  "https://product-images-2025.s3.ap-south-1.amazonaws.com/11.jpeg",
-  "https://product-images-2025.s3.ap-south-1.amazonaws.com/2.jpeg",
-  "https://product-images-2025.s3.ap-south-1.amazonaws.com/3.jpeg",
-  "https://product-images-2025.s3.ap-south-1.amazonaws.com/4.jpeg",
-  "https://product-images-2025.s3.ap-south-1.amazonaws.com/5.jpeg",
-  "https://product-images-2025.s3.ap-south-1.amazonaws.com/6.jpeg",
-  "https://product-images-2025.s3.ap-south-1.amazonaws.com/7.jpeg",
-  "https://product-images-2025.s3.ap-south-1.amazonaws.com/8.jpeg",
-  "https://product-images-2025.s3.ap-south-1.amazonaws.com/9.jpeg",
-  "https://product-images-2025.s3.ap-south-1.amazonaws.com/Gaudium+blue+tee.png",
-  "https://product-images-2025.s3.ap-south-1.amazonaws.com/Gaudium+byellow+tee.png",
-  "https://product-images-2025.s3.ap-south-1.amazonaws.com/Gaudium+green+tee.png",
-  "https://product-images-2025.s3.ap-south-1.amazonaws.com/Gaudium+red+tee.png",
-  "https://product-images-2025.s3.ap-south-1.amazonaws.com/knit+back+shirt.jpeg",
-];
-
-const ProductCarousel = () => {
+const ProductCarousel = ({ type }) => {
+  const [images, setImages] = useState([]);
+  useEffect(() => {
+    const bundleImages = [
+      "https://images-bundle.s3.ap-south-1.amazonaws.com/1.png",
+      "https://images-bundle.s3.ap-south-1.amazonaws.com/2.png",
+      "https://images-bundle.s3.ap-south-1.amazonaws.com/3.png",
+    ];
+    const galleryImages = [
+      "https://schoolimagesdata.s3.ap-south-1.amazonaws.com/The_Gaudium_International_School_Hyderabad_Gallery_2023_05-12.webp",
+      "https://schoolimagesdata.s3.ap-south-1.amazonaws.com/The_Gaudium_International_School_Hyderabad_Gallery_2023_05-13.webp",
+      "https://schoolimagesdata.s3.ap-south-1.amazonaws.com/The_Gaudium_International_School_Hyderabad_Gallery_2023_05-2.webp",
+      "https://schoolimagesdata.s3.ap-south-1.amazonaws.com/The_Gaudium_International_School_Hyderabad_Gallery_2023_05-5.webp",
+      "https://schoolimagesdata.s3.ap-south-1.amazonaws.com/The_Gaudium_International_School_Hyderabad_Gallery_2023_05-6.webp",
+    ];
+    console.log(type);
+    if (type === "bundle") {
+      setImages(bundleImages);
+    } else if (type === "gallery") {
+      setImages(galleryImages);
+    }
+  }, [type]);
   return (
     <Swiper
       modules={[Navigation, Pagination, Autoplay]}
@@ -41,7 +43,7 @@ const ProductCarousel = () => {
       loop
       style={{ width: "100%", maxWidth: "100%", margin: "auto" }}
     >
-      {productImages.map((image, index) => (
+      {images.map((image, index) => (
         <SwiperSlide key={index}>
           <div
             style={{
