@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import adminLoginImg from "../../images/adminLoginImg.png";
-import logo from "../../images/logo.png";
+import logo from "../../images/logoWText.png";
 
 const AdminLogin = ({ userType }) => {
   useEffect(() => {
@@ -40,7 +40,6 @@ const AdminLogin = ({ userType }) => {
       <div className="col-md-6 d-none d-md-block p-0 m-0 h-100">
         <img
           src={adminLoginImg}
-          width={500}
           alt="Students going to school"
           className="w-100 vh-100 object-fit-cover"
         />
@@ -50,7 +49,7 @@ const AdminLogin = ({ userType }) => {
           <div className="mx-auto w-75">
             <form onSubmit={handleLoginSubmit} className="w-75 float-end">
               <div className="">
-                <img src={logo} alt="logo" width={100} />
+                <img src={logo} alt="logo" width={250} />
 
                 <h1 className="auth-title">{userType} Login</h1>
                 <p className="auth-subtitle">
