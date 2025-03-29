@@ -35,7 +35,7 @@ const ProfilePage = () => {
     setFormData(updatedData);
     const apiBody = reverseTransform(formData);
     if (user.role === ROLES.PARENT) {
-      dispatch(updateProfile({ ...user, ...apiBody }));
+      await dispatch(updateProfile({ ...user, ...apiBody }));
     } else {
       await updateAdminVendor({ ...user, ...apiBody }, user.id);
       dispatch(loadAdminUser());
@@ -58,6 +58,7 @@ const ProfilePage = () => {
       "otp",
       "otpExpiresAt",
       "isOtpVerified",
+      "imageUrl",
     ];
 
     const result = transform(user, skipKeys, nonEditableFields);
