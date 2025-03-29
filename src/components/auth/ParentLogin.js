@@ -8,7 +8,7 @@ import { Navigate } from "react-router-dom";
 import FullPageSpinner from "../layout/FullPageSpinner";
 import { toast } from "react-toastify";
 import loginImg from "../../images/parentLoginImg.png";
-import logo from "../../images/logo.png";
+import logo from "../../images/logoWText.png";
 
 const ParentLogin = () => {
   const dispatch = useDispatch();
@@ -70,7 +70,6 @@ const ParentLogin = () => {
       <div className="col-md-6 d-none d-md-block p-0 m-0 h-100">
         <img
           src={loginImg}
-          width={500}
           alt="Students going to school"
           className="w-100 vh-100 object-fit-cover"
         />
@@ -80,7 +79,7 @@ const ParentLogin = () => {
           <div className="mx-auto w-75">
             <div className="w-75 float-end">
               <div className="">
-                <img src={logo} alt="logo" width={100} />
+                <img src={logo} alt="logo" width={250} />
                 <h2 className="fs-2 mb-3">Welcome Back</h2>
                 <p className="auth-subtitle">
                   Please enter your details to continue

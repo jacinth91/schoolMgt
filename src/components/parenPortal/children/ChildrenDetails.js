@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import "./ChildrenDetails.css"; // Import styles
 import { useDispatch, useSelector } from "react-redux";
 import { loadUser } from "../../../actions/auth";
-import boy from "../../../images/boy.png";
-import girl from "../../../images/girl.png";
+import boy from "../../../images/boy.svg";
+import girl from "../../../images/girl.svg";
 
 const ChildrenDetails = () => {
   const { user } = useSelector((state) => state.auth);
@@ -36,9 +36,9 @@ const ChildrenDetails = () => {
               >
                 {/* Boy/Girl Icon */}
                 {gender === "male" ? (
-                  <img src={boy} width={140} />
+                  <img src={boy} width={200} alt="boy_img" />
                 ) : gender === "female" ? (
-                  <img src={girl} width={200} />
+                  <img src={girl} width={200} alt="girl_img" />
                 ) : null}
               </div>
               <p className={`child-name ${isSelected ? "selected-text" : ""}`}>
