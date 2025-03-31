@@ -11,6 +11,7 @@ import {
 } from "../../actions/admin";
 import { reverseTransform, transform } from "../../services/helper";
 import { toast } from "react-toastify";
+import { ROLES } from "../../utils/constants";
 
 const AdminManagement = ({ vendor }) => {
   const [admins, setAdmins] = useState([]);
@@ -91,12 +92,20 @@ const AdminManagement = ({ vendor }) => {
     setShowPopup(true);
   };
 
-  const onDeleteAdminClick = (id) => {
-    if (admins?.length > 1) {
+  const onDeleteAdminClick = (id, role) => {
+    let deletionAllowed = true;
+    if (role === ROLES.ADMIN) {
+      const checkAdminsOnly = admins.filter(
+        (admin) => admin.role === ROLES.ADMIN
+      );
+      deletionAllowed = checkAdminsOnly.length > 1;
+    }
+
+    if (deletionAllowed) {
       setSelectedId(id);
       setShowConfirm(true);
     } else {
-      toast.error("At least one member should be present!", {
+      toast.error("At least one admin should be present!", {
         position: "top-right",
       });
     }
@@ -245,7 +254,7 @@ const AdminManagement = ({ vendor }) => {
                     </button>
                     <button
                       className="btn btn-danger btn-sm"
-                      onClick={() => onDeleteAdminClick(admin.id)}
+                      onClick={() => onDeleteAdminClick(admin.id, admin.role)}
                     >
                       <em className="bi bi-trash" />
                     </button>
