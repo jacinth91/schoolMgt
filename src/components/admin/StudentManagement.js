@@ -39,27 +39,23 @@ const StudentManagement = () => {
   }, []);
 
   const addStudentClick = () => {
-    const dropdownData = [
-      {
-        boardingStatus: [
-          { key: "Yes", label: "Yes" },
-          { key: "No", label: "No" },
-        ],
-      },
-      {
-        gender: [
-          { label: "Male", key: "Male" },
-          { label: "Female", key: "Female" },
-        ],
-      },
-      {
-        studentType: [
-          { label: "New", key: "New" },
-          { label: "Existing", key: "Existing" },
-          { label: "Hostel", key: "Hostel" },
-        ],
-      },
-    ];
+    const dropdownData = {
+      boardingStatus: [
+        { key: "Yes", label: "Yes" },
+        { key: "No", label: "No" },
+      ],
+
+      gender: [
+        { label: "Male", key: "Male" },
+        { label: "Female", key: "Female" },
+      ],
+
+      studentType: [
+        { label: "New", key: "New" },
+        { label: "Existing", key: "Existing" },
+        { label: "Hostel", key: "Hostel" },
+      ],
+    };
 
     const data = [
       {
@@ -131,6 +127,7 @@ const StudentManagement = () => {
     ];
     setSelectedId(null);
     setSelectedRow(data);
+    console.log(data);
     setShowPopup(true);
   };
 
