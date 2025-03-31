@@ -10,6 +10,7 @@ import {
   fetchAllVendors,
 } from "../../actions/admin";
 import { reverseTransform, transform } from "../../services/helper";
+import { toast } from "react-toastify";
 
 const AdminManagement = ({ vendor }) => {
   const [admins, setAdmins] = useState([]);
@@ -82,7 +83,7 @@ const AdminManagement = ({ vendor }) => {
     }
     const result = transform(
       admin,
-      ["id", "password", "createdAt", "updatedAt"],
+      ["id", "password", "createdAt", "updatedAt", "imageUrl"],
       [],
       dropdownData
     );
@@ -91,8 +92,14 @@ const AdminManagement = ({ vendor }) => {
   };
 
   const onDeleteAdminClick = (id) => {
-    setSelectedId(id);
-    setShowConfirm(true);
+    if (admins?.length > 1) {
+      setSelectedId(id);
+      setShowConfirm(true);
+    } else {
+      toast.error("At least one member should be present!", {
+        position: "top-right",
+      });
+    }
   };
 
   const deleteConfirmClick = async () => {
@@ -104,13 +111,13 @@ const AdminManagement = ({ vendor }) => {
   };
 
   const handleSave = async (updatedData) => {
-    setSelectedRow(updatedData);
+    setSelectedRow({ ...selectedRow, updatedData });
     setLoading(true);
     const apiBody = reverseTransform(updatedData);
     if (selectedId) {
       await updateAdminVendor(apiBody, selectedId);
       const response = await fetchAllAdmins();
-      setAdmins(Array.isArray(response) ? response : []);
+      setAdmins(Array.isArray(response.admins) ? response.admins : []);
     } else {
       const newAdmin = await createAdminVendor(apiBody);
       setAdmins([...admins, newAdmin]);

@@ -80,7 +80,6 @@ const ParentLogin = () => {
             <div className="w-75 float-end">
               <div className="">
                 <img src={logo} alt="logo" width={250} />
-                <h2 className="fs-2 mb-3">Welcome Back</h2>
                 <p className="auth-subtitle">
                   Please enter your details to continue
                 </p>

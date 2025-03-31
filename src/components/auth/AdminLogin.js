@@ -48,10 +48,10 @@ const AdminLogin = ({ userType }) => {
         <div className="bg-white align-content-around h-100 w-100">
           <div className="mx-auto w-75">
             <form onSubmit={handleLoginSubmit} className="w-75 float-end">
-              <div className="">
+              <div className="text-center">
                 <img src={logo} alt="logo" width={250} />
 
-                <h1 className="auth-title">{userType} Login</h1>
+                <h2 className="fs-2">{userType} Login</h2>
                 <p className="auth-subtitle">
                   Enter your credentials to continue
                 </p>

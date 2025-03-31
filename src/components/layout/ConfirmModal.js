@@ -21,7 +21,7 @@ const ConfirmModal = ({ show, onClose, onConfirm, message }) => {
             <p>{message || "Are you sure you want to proceed?"}</p>
           </div>
           <div className="modal-footer">
-            <button className="btn btn-secondary" onClick={onClose}>
+            <button className="btn btn-primary" onClick={onClose}>
               Cancel
             </button>
             <button className="btn btn-danger" onClick={onConfirm}>
