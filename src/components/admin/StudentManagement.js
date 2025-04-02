@@ -1,12 +1,23 @@
 import React, { useEffect, useState, useMemo } from "react";
 import {
   createStudent,
+  deleteStudent,
   fetchALLStudent,
   updateStudentDetail,
 } from "../../actions/student";
 import FullPageSpinner from "../layout/FullPageSpinner";
 import PopupDialog from "../layout/PopupDialog";
 import { reverseTransform, transform } from "../../services/helper";
+import ConfirmModal from "../layout/ConfirmModal";
+import {
+  boardingStatusList,
+  campusList,
+  classList,
+  genderList,
+  houseList,
+  sectionList,
+  studentTypeList,
+} from "../../utils/constants";
 
 const StudentManagement = () => {
   const [students, setStudents] = useState([]);
@@ -17,6 +28,7 @@ const StudentManagement = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [selectedRow, setSelectedRow] = useState({});
   const [selectedId, setSelectedId] = useState();
+  const [showConfirm, setShowConfirm] = useState(false);
 
   useEffect(() => {
     const getStudents = async () => {
@@ -38,28 +50,28 @@ const StudentManagement = () => {
     getStudents();
   }, []);
 
+  const admissionYears = Array.from({ length: 11 }, (_, i) => {
+    const year1 = 2015 + i;
+    const year2 = year1 + 1;
+    return { key: `${year1}-${year2}`, label: `${year1}-${year2}` };
+  });
+
   const addStudentClick = () => {
     const dropdownData = {
-      boardingStatus: [
-        { key: "Yes", label: "Yes" },
-        { key: "No", label: "No" },
-      ],
+      boardingStatus: boardingStatusList,
 
-      gender: [
-        { label: "Male", key: "Male" },
-        { label: "Female", key: "Female" },
-      ],
+      gender: genderList,
 
-      studentType: [
-        { label: "New", key: "New" },
-        { label: "Existing", key: "Existing" },
-        { label: "Hostel", key: "Hostel" },
-      ],
+      studentType: studentTypeList,
+      house: houseList,
+      class: classList,
+      section: sectionList,
+      campus: campusList,
     };
 
     const data = [
       {
-        label: "Usid",
+        label: "USID",
         value: "",
         editable: true,
         options: null,
@@ -80,7 +92,7 @@ const StudentManagement = () => {
         label: "Admission Year",
         value: "",
         editable: true,
-        options: null,
+        options: admissionYears,
       },
       {
         label: "Boarding Status",
@@ -98,19 +110,19 @@ const StudentManagement = () => {
         label: "Campus",
         value: "",
         editable: true,
-        options: null,
+        options: dropdownData.campus,
       },
       {
         label: "Class",
         value: "",
         editable: true,
-        options: null,
+        options: dropdownData.class,
       },
       {
         label: "Section",
         value: "",
         editable: true,
-        options: null,
+        options: dropdownData.section,
       },
       {
         label: "Address",
@@ -122,13 +134,26 @@ const StudentManagement = () => {
         label: "House",
         value: "",
         editable: true,
-        options: null,
+        options: dropdownData.house,
       },
     ];
     setSelectedId(null);
     setSelectedRow(data);
-    console.log(data);
     setShowPopup(true);
+  };
+
+  const onDeleteClick = (id) => {
+    setSelectedId(id);
+    setShowConfirm(true);
+  };
+
+  const deleteConfirmClick = async () => {
+    setLoading(true);
+    await deleteStudent(selectedId);
+    setShowConfirm(false);
+    setLoading(false);
+    setStudents(students.filter((student) => student.id !== selectedId));
+    setSelectedId(null);
   };
 
   const onEditStudentClick = (data) => {
@@ -136,24 +161,19 @@ const StudentManagement = () => {
     const skipKeys = ["id"];
     const dropdownData = [
       {
-        boardingStatus: [
-          { key: "Yes", label: "Yes" },
-          { key: "No", label: "No" },
-        ],
+        boardingStatus: boardingStatusList,
       },
       {
-        gender: [
-          { label: "Male", key: "Male" },
-          { label: "Female", key: "Female" },
-        ],
+        gender: genderList,
       },
       {
-        studentType: [
-          { label: "New", key: "New" },
-          { label: "Existing", key: "Existing" },
-          { label: "Hostel", key: "Hostel" },
-        ],
+        studentType: studentTypeList,
       },
+      { admissionYear: admissionYears },
+      { house: houseList },
+      { class: classList },
+      { section: sectionList },
+      { campus: campusList },
     ];
     setSelectedId(data.usid);
     const result = transform(data, skipKeys, nonEditableFields, dropdownData);
@@ -227,50 +247,57 @@ const StudentManagement = () => {
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
-
-      <table className="table table-bordered table-striped">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Grade</th>
-            <th>Section</th>
-            <th>House</th>
-            <th>Gender</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {paginatedStudents.length > 0 ? (
-            paginatedStudents.map((student) => (
-              <tr key={student.usid}>
-                <td>{student.usid}</td>
-                <td>{student.studentName}</td>
-                <td>{student.class}</td>
-                <td>{student.section}</td>
-                <td>{student.house}</td>
-                <td>{student.gender}</td>
-                <td>
-                  <div className="d-flex gap-2">
-                    <button
-                      className="btn btn-primary btn-sm"
-                      onClick={() => onEditStudentClick(student)}
-                    >
-                      <i className="bi bi-pencil"></i>
-                    </button>
-                  </div>
+      <div className="w-100 overflow-x-auto">
+        <table className="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>USID</th>
+              <th>Name</th>
+              <th>Grade</th>
+              <th>Section</th>
+              <th>House</th>
+              <th>Gender</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {paginatedStudents.length > 0 ? (
+              paginatedStudents.map((student) => (
+                <tr key={student.usid}>
+                  <td>{student.usid}</td>
+                  <td>{student.studentName}</td>
+                  <td>{student.class}</td>
+                  <td>{student.section}</td>
+                  <td>{student.house}</td>
+                  <td>{student.gender}</td>
+                  <td>
+                    <div className="d-flex gap-2">
+                      <button
+                        className="btn btn-primary btn-sm"
+                        onClick={() => onEditStudentClick(student)}
+                      >
+                        <i className="bi bi-pencil"></i>
+                      </button>
+                      <button
+                        className="btn btn-danger btn-sm"
+                        onClick={() => onDeleteClick(student.id)}
+                      >
+                        <i className="bi bi-trash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="7" className="text-center">
+                  No students found.
                 </td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="7" className="text-center">
-                No students found.
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            )}
+          </tbody>
+        </table>
+      </div>
 
       {/* ✅ Pagination Controls */}
       <div className="d-flex justify-content-between align-items-center mt-3">
@@ -300,6 +327,12 @@ const StudentManagement = () => {
           header={"Edit Student"}
         />
       )}
+      <ConfirmModal
+        show={showConfirm}
+        onClose={() => setShowConfirm(false)}
+        onConfirm={deleteConfirmClick}
+        message="Are you sure you want to delete this student?"
+      />
     </div>
   );
 };

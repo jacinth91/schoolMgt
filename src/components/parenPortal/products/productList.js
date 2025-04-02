@@ -14,6 +14,8 @@ const ProductListing = () => {
   const [search, setSearch] = useState("");
   const [selectedBundle, setSelectedBundle] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState({}); // Track selected student for each bundle
+
   const dispatch = useDispatch();
 
   const getBundles = async () => {
@@ -26,12 +28,10 @@ const ProductListing = () => {
     try {
       const bundleResponses = await Promise.all(
         user.students.map((id, index) => {
-          let type = "";
-          if (user?.studentData[index].boardingStatus === "Yes") {
-            type = "Hostel";
-          } else {
-            type = user?.studentData[index]?.studentType;
-          }
+          let type =
+            user?.studentData[index].boardingStatus === "Yes"
+              ? "Hostel"
+              : user?.studentData[index]?.studentType;
           return fetchLinkedBundles(id, type);
         })
       );
@@ -50,32 +50,41 @@ const ProductListing = () => {
   }, [user.students?.length]);
 
   const handleSortChange = (event) => {
-    const order = event.target.value;
-    setSortOrder(order);
-
+    setSortOrder(event.target.value);
     let sortedBundles = [...bundles];
 
-    if (order === "price-low-high") {
+    if (event.target.value === "price-low-high") {
       sortedBundles.sort((a, b) => a.bundle_total - b.bundle_total);
-    } else if (order === "price-high-low") {
+    } else if (event.target.value === "price-high-low") {
       sortedBundles.sort((a, b) => b.bundle_total - a.bundle_total);
     }
 
     setBundles(sortedBundles);
   };
 
+  const handleStudentChange = (bundleId, studentId) => {
+    setSelectedStudent((prev) => ({ ...prev, [bundleId]: studentId }));
+  };
+
   const addToCartClick = async (bundleId, quantity) => {
+    const studentId = selectedStudent[bundleId];
+    if (!studentId) {
+      toast.error("Please select a student before adding to cart.", {
+        position: "top-right",
+      });
+      return;
+    }
+
     setLoading(true);
-    const body = { bundleId: bundleId, quantity: quantity, parentId: user.id };
+    const body = { bundleId, quantity, parentId: user.id, studentId };
+
     try {
-      await dispatch(addToCart(body)); // Ensure this returns a Promise
+      await dispatch(addToCart(body));
       toast.success("Product added to cart successfully!", {
         position: "top-right",
       });
     } catch (error) {
-      toast.error("Failed to add product to cart.", {
-        position: "top-right",
-      });
+      toast.error("Failed to add product to cart.", { position: "top-right" });
     } finally {
       setLoading(false);
       setSelectedBundle(null);
@@ -149,6 +158,31 @@ const ProductListing = () => {
                       ₹{bundle.bundle_total}
                     </p>
 
+                    {/* Student Selection (Dropdown) */}
+                    {user.studentData.length > 0 && (
+                      <div className="student-selection mb-3">
+                        <select
+                          className="form-select mt-2"
+                          value={selectedStudent[bundle.bundle_id] || ""}
+                          onChange={(e) =>
+                            handleStudentChange(
+                              bundle.bundle_id,
+                              e.target.value
+                            )
+                          }
+                        >
+                          <option value="" disabled>
+                            Select Student
+                          </option>
+                          {user.studentData.map((student) => (
+                            <option key={student.id} value={student.id}>
+                              {student.studentName}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    )}
+
                     <button
                       className="btn btn-outline-primary mt-auto"
                       onClick={() => addToCartClick(bundle.bundle_id, 1)}
@@ -166,12 +200,14 @@ const ProductListing = () => {
           </div>
         )}
       </div>
+
       {selectedBundle && (
         <QuickViewModal
           bundle={selectedBundle}
           onClose={() => setSelectedBundle(null)}
           onAddToCart={addToCartClick}
           showAction={true}
+          user={user}
         />
       )}
     </div>

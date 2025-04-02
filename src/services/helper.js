@@ -17,6 +17,9 @@ export const formatKey = (label) => {
 };
 
 export const formatLabel = (key) => {
+  if (key.toLowerCase() === "usid") {
+    return "USID";
+  }
   return key
     .replace(/([A-Z])/g, " $1") // Convert camelCase to words
     .replace(/[_-]/g, " ") // Replace underscores/hyphens with space

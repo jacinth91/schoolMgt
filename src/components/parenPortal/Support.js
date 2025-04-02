@@ -114,7 +114,7 @@ const SupportForm = () => {
           />
         </div>
         <div className="mb-3">
-          <label className="form-label">Student Enrollment ID</label>
+          <label className="form-label">Student USID</label>
           <input
             type="text"
             className="form-control"

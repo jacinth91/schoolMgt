@@ -58,7 +58,7 @@ const ChildrenDetails = () => {
         </div>
         <div className="col-md-12 ">
           <span className="float-sm-start">
-            Enrollment ID: <strong>{selectedChild.usid}</strong>
+            USID: <strong>{selectedChild.usid}</strong>
           </span>
         </div>
       </div>

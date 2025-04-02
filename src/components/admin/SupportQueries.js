@@ -88,7 +88,7 @@ const SupportQueries = () => {
         <thead>
           <tr>
             <th>ID</th>
-            <th>User</th>
+            <th>Student Name</th>
             <th>Query Type</th>
             <th>Status</th>
             <th>Attachment</th>
@@ -101,7 +101,7 @@ const SupportQueries = () => {
             displayedQueries.map((query) => (
               <tr key={query.id}>
                 <td>{query.id}</td>
-                <td>{query.parent_name}</td>
+                <td>{query.student_name}</td>
                 <td className="text-capitalize">{query.query_type}</td>
                 <td className="text-capitalize">{query.status}</td>
                 <td>
@@ -163,6 +163,9 @@ const SupportQueries = () => {
               </p>
               <p>
                 <strong>User:</strong> {selectedQuery.parent_name}
+              </p>
+              <p>
+                <strong>Student Name:</strong> {selectedQuery.student_name}
               </p>
               <p>
                 <strong>Query Type:</strong> {selectedQuery.query_type}

@@ -28,7 +28,7 @@ const Dashboard = () => {
       }
       setLoading(false);
     } else {
-      toast.error("Enter Enrollment No.", { position: "top-right" });
+      toast.error("Enter valid USID.", { position: "top-right" });
     }
   };
 
@@ -57,12 +57,12 @@ const Dashboard = () => {
               <div className="col-md-12">
                 <div className="mt-4">
                   <div className="search-child-box w-50 mx-auto">
-                    <p className="mb-2">Enrollment No. / Admission Number:</p>
+                    <p className="mb-2">Student USID:</p>
                     <div className="row">
                       <div className="col-md-9">
                         <input
                           type="text"
-                          placeholder="Student enrollment no."
+                          placeholder="Student USID."
                           value={stuId}
                           onChange={(e) => setStuId(e.target.value)}
                         />
@@ -80,7 +80,7 @@ const Dashboard = () => {
 
                     {showDetail && (
                       <div className="mt-2">
-                        <strong>Enrollment ID: </strong> {student?.usid}
+                        <strong>USID: </strong> {student?.usid}
                         <div>
                           <strong>Student Name: </strong>
                           {student?.studentName}

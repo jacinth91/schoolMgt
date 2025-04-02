@@ -58,8 +58,9 @@ const SupportList = ({ refreshTrigger }) => {
         <thead>
           <tr>
             <th>User</th>
+            <th>Student Name</th>
             <th>Query Type</th>
-            <th>Student USID</th>
+            <th>USID</th>
             <th>Status</th>
             <th>Attachment</th>
             <th>Description</th>
@@ -70,6 +71,7 @@ const SupportList = ({ refreshTrigger }) => {
             displayedQueries.map((query) => (
               <tr key={query.id}>
                 <td>{query.parent_name}</td>
+                <td>{query.student_name}</td>
                 <td className="text-capitalize">{query.query_type}</td>
                 <td>{query.student_usid}</td>
                 <td className="text-capitalize">{query.status}</td>

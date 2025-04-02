@@ -51,7 +51,7 @@ const CartPage = () => {
     }
   }, [cartData?.items]);
 
-  const handleQuantityChange = (bundleId, quantity) => {
+  const handleQuantityChange = (bundleId, quantity, student) => {
     dispatch(loadingCartChange(true));
     if (quantity < 1) {
       handleRemove(bundleId);
@@ -60,6 +60,7 @@ const CartPage = () => {
         bundleId: bundleId,
         quantity: quantity,
         parentId: user.id,
+        studentId: student.id,
       };
       dispatch(addToCart(body))
         .then(() => {
@@ -123,6 +124,10 @@ const CartPage = () => {
                         {item.bundle?.name}
                       </h5>
                       <p className="text-muted">₹{item.price}</p>
+                      <p className="small mb-2">
+                        <strong>Student:</strong>{" "}
+                        {item.student.studentName || "Existing"}
+                      </p>
                       <p className="small mb-1">
                         <strong>Classes:</strong>{" "}
                         {item.bundle.applicableClasses || "N/A"}
@@ -141,7 +146,8 @@ const CartPage = () => {
                           onClick={() =>
                             handleQuantityChange(
                               item.bundleId,
-                              item.quantity - 1
+                              item.quantity - 1,
+                              item.student
                             )
                           }
                         >
@@ -153,7 +159,8 @@ const CartPage = () => {
                           onClick={() =>
                             handleQuantityChange(
                               item.bundleId,
-                              item.quantity + 1
+                              item.quantity + 1,
+                              item.student
                             )
                           }
                         >

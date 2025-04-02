@@ -43,10 +43,15 @@ export const fetchAllProducts = async () => {
 };
 
 export const addToCart =
-  ({ bundleId, quantity, parentId }) =>
+  ({ bundleId, quantity, parentId, studentId }) =>
   async (dispatch) => {
     try {
-      const res = await post("/cart/bundles", { bundleId, quantity, parentId });
+      const res = await post("/cart/bundles", {
+        bundleId,
+        quantity,
+        parentId,
+        studentId,
+      });
       dispatch({
         type: PRODUCT_ADDED_CART,
         payload: res.data,

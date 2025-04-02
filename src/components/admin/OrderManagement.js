@@ -11,6 +11,9 @@ const OrderManagement = () => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [newStatus, setNewStatus] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
   const itemsPerPage = 10;
 
   useEffect(() => {
@@ -29,14 +32,30 @@ const OrderManagement = () => {
   }, []);
 
   const filteredOrders = useMemo(() => {
-    return orders.filter(
-      (order) =>
-        order?.parent?.parentName
-          ?.toLowerCase()
-          .includes(searchTerm.toLowerCase()) ||
-        order?.id?.toString().includes(searchTerm)
-    );
-  }, [orders, searchTerm]);
+    return orders
+      .filter(
+        (order) =>
+          order?.parent?.parentName
+            ?.toLowerCase()
+            .includes(searchTerm.toLowerCase()) ||
+          order?.id?.toString().includes(searchTerm)
+      )
+      .filter((order) => {
+        if (startDate && endDate) {
+          const orderDate = new Date(order.createdAt);
+          const start = new Date(startDate);
+          const end = new Date(endDate);
+          return orderDate >= start && orderDate <= end;
+        }
+        return true;
+      })
+      .filter((order) => {
+        if (statusFilter) {
+          return order.status.toLowerCase() === statusFilter.toLowerCase();
+        }
+        return true;
+      });
+  }, [orders, searchTerm, startDate, endDate, statusFilter]);
 
   const totalPages = Math.ceil(filteredOrders.length / itemsPerPage);
   const paginatedOrders = filteredOrders.slice(
@@ -70,58 +89,156 @@ const OrderManagement = () => {
     }
   };
 
+  // Export to CSV function
+  const exportToCSV = () => {
+    const headers = [
+      "ID",
+      "Parent Name",
+      "Contact Number",
+      "Total Price",
+      "Status",
+      "Order Date",
+      "Student",
+      "Class",
+      "Section",
+      "Item Name",
+      "Item Quantity",
+      "Item Price",
+    ];
+
+    const rows = filteredOrders.flatMap((order) => {
+      // Iterate through the items of each order and flatten the data
+      return order.items.map((item) => [
+        order.id,
+        order.parent?.parentName,
+        order.parent?.phoneNumber,
+        order.totalPrice,
+        order.status,
+        new Date(order.createdAt).toLocaleDateString(),
+        item.student?.studentName,
+        item.student?.class,
+        item.student?.section,
+        item.bundle?.name,
+        item.quantity,
+        item.bundle?.totalPrice,
+      ]);
+    });
+
+    let csvContent = "data:text/csv;charset=utf-8," + headers.join(",") + "\n";
+    rows.forEach((row) => {
+      csvContent += row.join(",") + "\n";
+    });
+
+    // Create a downloadable link
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "filtered_orders.csv");
+    document.body.appendChild(link);
+    link.click();
+  };
+
   return loading ? (
     <FullPageSpinner loading={loading} />
   ) : (
     <div className="container py-4">
       <h2>Order Management</h2>
-      <input
-        type="text"
-        className="form-control mb-3"
-        placeholder="Search by Parent Name or Order ID..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
+      <div className="row">
+        <div className="col-md-4 mt-4">
+          <input
+            type="text"
+            className="form-control mb-3"
+            placeholder="Search by Parent Name or Order ID..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+        {/* Date Filter */}
+        <div className="col-md-6">
+          <label>Filter by Date:</label>
+          <div className="d-flex">
+            <input
+              type="date"
+              className="form-control me-2"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+            />
+            <span>to</span>
+            <input
+              type="date"
+              className="form-control ms-2"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+            />
+          </div>
+        </div>
 
-      <table className="table table-bordered table-striped">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Parent Name</th>
-            <th>Contact Number</th>
-            <th>Total Price</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {paginatedOrders.length > 0 ? (
-            paginatedOrders.map((order) => (
-              <tr key={order.id}>
-                <td>{order.id}</td>
-                <td>{order.parent?.parentName}</td>
-                <td>{order.parent?.phoneNumber}</td>
-                <td>{order.totalPrice}</td>
-                <td className="text-capitalize">{order.status}</td>
-                <td>
-                  <button
-                    className="btn btn-primary btn-sm"
-                    onClick={() => onView(order)}
-                  >
-                    <em className="bi bi-eye" />
-                  </button>
+        {/* Status Filter */}
+        <div className="mb-3 col-md-2">
+          <label>Filter by Status:</label>
+          <Form.Select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+          >
+            <option value="">All</option>
+            <option value="pending">Pending</option>
+            <option value="processing">Processing</option>
+            <option value="shipped">Shipped</option>
+            <option value="delivered">Delivered</option>
+            <option value="cancelled">Cancelled</option>
+          </Form.Select>
+        </div>
+      </div>
+
+      {/* Export Button */}
+      <div className="mb-3 float-end">
+        <Button variant="success" onClick={exportToCSV}>
+          Export to CSV
+        </Button>
+      </div>
+      <div className="w-100 overflow-scroll">
+        <table className="table table-bordered table-striped mt-3">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Parent Name</th>
+              <th>Contact Number</th>
+              <th>Total Price</th>
+              <th>Status</th>
+              <th>Order Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {paginatedOrders.length > 0 ? (
+              paginatedOrders.map((order) => (
+                <tr key={order.id}>
+                  <td>{order.id}</td>
+                  <td>{order.parent?.parentName}</td>
+                  <td>{order.parent?.phoneNumber}</td>
+                  <td>{order.totalPrice}</td>
+                  <td className="text-capitalize">{order.status}</td>
+                  <td>{new Date(order.createdAt).toLocaleDateString()}</td>
+                  <td>
+                    <button
+                      className="btn btn-primary btn-sm"
+                      onClick={() => onView(order)}
+                    >
+                      <em className="bi bi-eye" />
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="6" className="text-center">
+                  No orders found.
                 </td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="6" className="text-center">
-                No orders found.
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            )}
+          </tbody>
+        </table>
+      </div>
 
       <div className="d-flex justify-content-between align-items-center mt-3">
         <button
@@ -175,10 +292,36 @@ const OrderManagement = () => {
               <p>
                 <strong>Campus:</strong> {selectedOrder.parent.campus}
               </p>
-              <p>
-                <strong>Students:</strong>{" "}
-                {selectedOrder.parent.students.join(", ")}
-              </p>
+              <hr />
+
+              {/* order items*/}
+              <h5>Order Items</h5>
+              <div className="w-100 overflow-scroll">
+                <table className="table table-bordered table-striped">
+                  <thead>
+                    <tr>
+                      <th>Student</th>
+                      <th>Class</th>
+                      <th>Section</th>
+                      <th>Item</th>
+                      <th>Quantity</th>
+                      <th>Price</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {selectedOrder.items?.map((item, index) => (
+                      <tr key={index}>
+                        <td>{item.student?.studentName ?? "--"}</td>
+                        <td>{item.student?.class ?? "--"}</td>
+                        <td>{item.student?.section ?? "--"}</td>
+                        <td>{item.bundle?.name ?? "--"}</td>
+                        <td>{item.quantity ?? "--"}</td>
+                        <td>{item.bundle?.totalPrice ?? "--"}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
 
               {/* Status Update */}
               <hr />

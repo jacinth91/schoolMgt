@@ -1,5 +1,5 @@
 import { toast } from "react-toastify";
-import { get, put, patch, post } from "../services/api";
+import { get, put, patch, post, del } from "../services/api";
 
 export const loadStudentDetail = async (stuId) => {
   try {
@@ -48,6 +48,17 @@ export const createStudent = async (data) => {
         position: "top-right",
       }
     );
+    return res.data;
+  } catch (error) {
+    toast.error(error.message, { position: "top-right" });
+    return error;
+  }
+};
+
+export const deleteStudent = async (id) => {
+  try {
+    const res = await del(`/students/${id}`);
+    toast.success("Student deleted successfully!", { position: "top-right" });
     return res.data;
   } catch (error) {
     toast.error(error.message, { position: "top-right" });
