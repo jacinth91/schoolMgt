@@ -50,7 +50,7 @@ const AdminLogin = ({ userType }) => {
             <form onSubmit={handleLoginSubmit} className="w-75 float-end">
               <>
                 <img src={logo} alt="logo" width={250} />
-                <div className="mt-4">
+                <div className="my-4">
                   <h2 className="fs-4">{userType} Login</h2>
                   <p className="auth-subtitle">
                     Enter your credentials to continue
