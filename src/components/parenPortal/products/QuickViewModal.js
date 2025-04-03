@@ -3,7 +3,6 @@ import { toast } from "react-toastify";
 
 const QuickViewModal = ({ bundle, onClose, onAddToCart, showAction, user }) => {
   const [quantity, setQuantity] = useState(1);
-  const [selectedStudent, setSelectedStudent] = useState("");
 
   useEffect(() => {
     document.body.classList.add("modal-open");
@@ -15,13 +14,7 @@ const QuickViewModal = ({ bundle, onClose, onAddToCart, showAction, user }) => {
   if (!bundle) return null;
 
   const handleAddToCart = () => {
-    if (!selectedStudent) {
-      toast.error("Please select a student before adding to cart.", {
-        position: "top-right",
-      });
-      return;
-    }
-    onAddToCart(bundle.bundle_id, quantity, selectedStudent);
+    onAddToCart(bundle.bundle_id, quantity, bundle.student.id);
   };
 
   return (
@@ -98,39 +91,6 @@ const QuickViewModal = ({ bundle, onClose, onAddToCart, showAction, user }) => {
           <div className="modal-footer">
             {showAction && (
               <>
-                {/* Student Selection Dropdown */}
-                {user.studentData.length > 0 && (
-                  <div className="d-flex align-items-center">
-                    <label className="me-2" htmlFor="studentSelect">
-                      Student:
-                    </label>
-                    <select
-                      id="studentSelect"
-                      className="form-select me-3"
-                      style={{ width: "200px" }}
-                      value={selectedStudent}
-                      onChange={(e) => setSelectedStudent(e.target.value)}
-                    >
-                      <option value="" disabled>
-                        Select Student
-                      </option>
-                      {user.studentData
-                        .filter(
-                          (student) =>
-                            (bundle.gender === "Boys" &&
-                              student.gender === "Male") ||
-                            (bundle.gender === "Girls" &&
-                              student.gender === "Female")
-                        )
-                        .map((student) => (
-                          <option key={student.id} value={student.id}>
-                            {student.studentName}
-                          </option>
-                        ))}
-                    </select>
-                  </div>
-                )}
-
                 {/* Quantity Selection Dropdown */}
                 <div className="d-flex align-items-center">
                   <label className="me-2" htmlFor="quantitySelect">

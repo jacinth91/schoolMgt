@@ -14,7 +14,6 @@ const ProductListing = () => {
   const [search, setSearch] = useState("");
   const [selectedBundle, setSelectedBundle] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [selectedStudent, setSelectedStudent] = useState({}); // Track selected student for each bundle
 
   const dispatch = useDispatch();
 
@@ -35,7 +34,11 @@ const ProductListing = () => {
           return fetchLinkedBundles(id, type);
         })
       );
-      setBundles(bundleResponses.flat());
+      const updatedBundles = bundleResponses.flat().map((bundle, index) => ({
+        ...bundle,
+        student: user.studentData[index % user.studentData.length], // Assign student
+      }));
+      setBundles(updatedBundles);
     } catch (error) {
       setBundles([]);
     } finally {
@@ -61,25 +64,7 @@ const ProductListing = () => {
     setBundles(sortedBundles);
   };
 
-  const handleStudentChange = (uniqueKey, studentId) => {
-    setSelectedStudent((prev) => ({ ...prev, [uniqueKey]: studentId }));
-  };
-
-  const addToCartClick = async (bundleId, quantity, id) => {
-    let studentId;
-    if (selectedBundle) {
-      studentId = id;
-    } else {
-      studentId = selectedStudent[`${bundleId}-${id}`];
-    }
-
-    if (!studentId) {
-      toast.error("Please select a student before adding to cart.", {
-        position: "top-right",
-      });
-      return;
-    }
-
+  const addToCartClick = async (bundleId, quantity, studentId) => {
     setLoading(true);
     const body = { bundleId, quantity, parentId: user.id, studentId };
 
@@ -95,6 +80,7 @@ const ProductListing = () => {
       setSelectedBundle(null);
     }
   };
+
   const filteredBundles = bundles.filter((bundle) =>
     bundle.bundle_name?.toLowerCase().includes(search?.toLowerCase())
   );
@@ -154,6 +140,8 @@ const ProductListing = () => {
                   <div className="card-body text-center d-flex flex-column">
                     <h5 className="card-title fw-bold">{bundle.bundle_name}</h5>
                     <div className="bundle-details">
+                      <strong>Student Name:</strong>{" "}
+                      <span>{bundle.student?.studentName}</span>
                       <strong>Gender:</strong> <span>{bundle.gender}</span>
                       <strong>Class:</strong> <span>{bundle.class_name}</span>
                       <strong>Recommended For:</strong>{" "}
@@ -163,45 +151,11 @@ const ProductListing = () => {
                       ₹{bundle.bundle_total}
                     </p>
 
-                    {/* Student Selection (Dropdown) */}
-                    {user.studentData.length > 0 && (
-                      <div className="student-selection mb-3">
-                        <select
-                          className="form-select mt-2"
-                          value={
-                            selectedStudent[`${bundle.bundle_id}-${index}`] ||
-                            ""
-                          }
-                          onChange={(e) =>
-                            handleStudentChange(
-                              `${bundle.bundle_id}-${index}`,
-                              e.target.value
-                            )
-                          }
-                        >
-                          <option value="" disabled>
-                            Select Student
-                          </option>
-                          {user.studentData
-                            .filter(
-                              (student) =>
-                                (bundle.gender === "Boys" &&
-                                  student.gender === "Male") ||
-                                (bundle.gender === "Girls" &&
-                                  student.gender === "Female")
-                            )
-                            .map((student) => (
-                              <option key={student.id} value={student.id}>
-                                {student.studentName}
-                              </option>
-                            ))}
-                        </select>
-                      </div>
-                    )}
-
                     <button
                       className="btn btn-outline-primary mt-auto"
-                      onClick={() => addToCartClick(bundle.bundle_id, 1, index)}
+                      onClick={() =>
+                        addToCartClick(bundle.bundle_id, 1, bundle.student.id)
+                      }
                     >
                       Add to Cart
                     </button>
