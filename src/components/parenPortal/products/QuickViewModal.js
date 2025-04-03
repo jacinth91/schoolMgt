@@ -48,6 +48,11 @@ const QuickViewModal = ({ bundle, onClose, onAddToCart, showAction, user }) => {
               alt={bundle.bundle_name}
               style={{ maxHeight: "400px", width: "100%" }}
             />
+            {showAction && (
+              <p>
+                <strong>Student Name:</strong> {bundle.student?.studentName}
+              </p>
+            )}
             <p>
               <strong>Gender:</strong> {bundle.gender}
             </p>
