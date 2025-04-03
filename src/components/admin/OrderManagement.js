@@ -300,7 +300,8 @@ const OrderManagement = () => {
                 <table className="table table-bordered table-striped">
                   <thead>
                     <tr>
-                      <th>Student</th>
+                      <th>USID</th>
+                      <th>Student Name</th>
                       <th>Class</th>
                       <th>Section</th>
                       <th>Item</th>
@@ -311,6 +312,7 @@ const OrderManagement = () => {
                   <tbody>
                     {selectedOrder.items?.map((item, index) => (
                       <tr key={index}>
+                        <td>{item.student?.usid ?? "--"}</td>
                         <td>{item.student?.studentName ?? "--"}</td>
                         <td>{item.student?.class ?? "--"}</td>
                         <td>{item.student?.section ?? "--"}</td>

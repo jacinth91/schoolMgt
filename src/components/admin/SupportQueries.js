@@ -83,52 +83,59 @@ const SupportQueries = () => {
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
-
-      <table className="table table-bordered table-striped">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Student Name</th>
-            <th>Query Type</th>
-            <th>Status</th>
-            <th>Attachment</th>
-            <th>Description</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {displayedQueries.length > 0 ? (
-            displayedQueries.map((query) => (
-              <tr key={query.id}>
-                <td>{query.id}</td>
-                <td>{query.student_name}</td>
-                <td className="text-capitalize">{query.query_type}</td>
-                <td className="text-capitalize">{query.status}</td>
-                <td>
-                  {query.details?.file_path && (
-                    <img src={query.details?.file_path} width={70} />
-                  )}
-                </td>
-                <td>{query.details?.description}</td>
-                <td>
-                  <button
-                    className="btn btn-primary btn-sm"
-                    onClick={() => onView(query)}
-                  >
-                    <em className="bi bi-eye" />
-                  </button>
+      <div className="w-100 overflow-x-auto">
+        <table className="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>USID</th>
+              <th>Student Name</th>
+              <th>Class</th>
+              <th>Section</th>
+              <th>Query Type</th>
+              <th>Status</th>
+              <th>Attachment</th>
+              <th>Description</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {displayedQueries.length > 0 ? (
+              displayedQueries.map((query) => (
+                <tr key={query.id}>
+                  <td>{query.id}</td>
+                  <td>{query.student_usid}</td>
+                  <td>{query.student_name}</td>
+                  <td>{query.student_class}</td>
+                  <td>{query.student_section}</td>
+                  <td className="text-capitalize">{query.query_type}</td>
+                  <td className="text-capitalize">{query.status}</td>
+                  <td>
+                    {query.details?.file_path && (
+                      <img src={query.details?.file_path} width={70} />
+                    )}
+                  </td>
+                  <td>{query.details?.description}</td>
+                  <td>
+                    <button
+                      className="btn btn-primary btn-sm"
+                      onClick={() => onView(query)}
+                    >
+                      <em className="bi bi-eye" />
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="7" className="text-center">
+                  No queries found.
                 </td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="7" className="text-center">
-                No queries found.
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            )}
+          </tbody>
+        </table>
+      </div>
 
       <div className="d-flex justify-content-between align-items-center mt-3">
         <button
@@ -165,7 +172,16 @@ const SupportQueries = () => {
                 <strong>User:</strong> {selectedQuery.parent_name}
               </p>
               <p>
+                <strong>USID:</strong> {selectedQuery.student_usid}
+              </p>
+              <p>
                 <strong>Student Name:</strong> {selectedQuery.student_name}
+              </p>
+              <p>
+                <strong>Class:</strong> {selectedQuery.student_class}
+              </p>
+              <p>
+                <strong>Section:</strong> {selectedQuery.student_section}
               </p>
               <p>
                 <strong>Query Type:</strong> {selectedQuery.query_type}

@@ -53,45 +53,50 @@ const SupportList = ({ refreshTrigger }) => {
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
-
-      <table className="table table-bordered table-striped">
-        <thead>
-          <tr>
-            <th>User</th>
-            <th>Student Name</th>
-            <th>Query Type</th>
-            <th>USID</th>
-            <th>Status</th>
-            <th>Attachment</th>
-            <th>Description</th>
-          </tr>
-        </thead>
-        <tbody>
-          {displayedQueries.length > 0 ? (
-            displayedQueries.map((query) => (
-              <tr key={query.id}>
-                <td>{query.parent_name}</td>
-                <td>{query.student_name}</td>
-                <td className="text-capitalize">{query.query_type}</td>
-                <td>{query.student_usid}</td>
-                <td className="text-capitalize">{query.status}</td>
-                <td>
-                  {query?.details?.file_path && (
-                    <img src={query?.details?.file_path} width={70} />
-                  )}
-                </td>
-                <td>{query?.details?.description}</td>
-              </tr>
-            ))
-          ) : (
+      <div className="w-100 overflow-x-auto">
+        <table className="table table-bordered table-striped">
+          <thead>
             <tr>
-              <td colSpan="5" className="text-center">
-                No queries found.
-              </td>
+              <th>User</th>
+              <th>USID</th>
+              <th>Student Name</th>
+              <th>Class</th>
+              <th>Section</th>
+              <th>Query Type</th>
+              <th>Status</th>
+              <th>Attachment</th>
+              <th>Description</th>
             </tr>
-          )}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {displayedQueries.length > 0 ? (
+              displayedQueries.map((query) => (
+                <tr key={query.id}>
+                  <td>{query.parent_name}</td>
+                  <td>{query.student_usid}</td>
+                  <td>{query.student_name}</td>
+                  <td>{query.student_class}</td>
+                  <td>{query.student_section}</td>
+                  <td className="text-capitalize">{query.query_type}</td>
+                  <td className="text-capitalize">{query.status}</td>
+                  <td>
+                    {query?.details?.file_path && (
+                      <img src={query?.details?.file_path} width={70} />
+                    )}
+                  </td>
+                  <td>{query?.details?.description}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="5" className="text-center">
+                  No queries found.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
 
       <div className="d-flex justify-content-between align-items-center mt-3">
         <button
