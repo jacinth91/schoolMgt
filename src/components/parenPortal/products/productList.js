@@ -147,11 +147,9 @@ const ProductListing = () => {
                   <div className="card-body text-center d-flex flex-column">
                     <h5 className="card-title fw-bold">{bundle.bundle_name}</h5>
                     <div className="bundle-details">
-                      <strong>Designed For:</strong>{" "}
-                      <span>{bundle.gender}</span>
+                      <strong>Gender:</strong> <span>{bundle.gender}</span>
+                      <strong>Class:</strong> <span>{bundle.class_name}</span>
                       <strong>Recommended For:</strong>{" "}
-                      <span>{bundle.class_name}</span>
-                      <strong>Suitable For Classes:</strong>{" "}
                       <span>{bundle.applicable_classes}</span>
                     </div>
                     <p className="fw-bold text-primary fs-5">
@@ -174,11 +172,19 @@ const ProductListing = () => {
                           <option value="" disabled>
                             Select Student
                           </option>
-                          {user.studentData.map((student) => (
-                            <option key={student.id} value={student.id}>
-                              {student.studentName}
-                            </option>
-                          ))}
+                          {user.studentData
+                            .filter(
+                              (student) =>
+                                (bundle.gender === "Boys" &&
+                                  student.gender === "Male") ||
+                                (bundle.gender === "Girls" &&
+                                  student.gender === "Female")
+                            )
+                            .map((student) => (
+                              <option key={student.id} value={student.id}>
+                                {student.studentName}
+                              </option>
+                            ))}
                         </select>
                       </div>
                     )}

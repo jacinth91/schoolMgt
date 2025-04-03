@@ -125,11 +125,15 @@ const CartPage = () => {
                       </h5>
                       <p className="text-muted">₹{item.price}</p>
                       <p className="small mb-2">
-                        <strong>Student:</strong>{" "}
+                        <strong>Student Name:</strong>{" "}
                         {item.student.studentName || "Existing"}
                       </p>
+                      <p className="small mb-2">
+                        <strong>Class:</strong>{" "}
+                        {item.student.class || "Existing"}
+                      </p>
                       <p className="small mb-1">
-                        <strong>Classes:</strong>{" "}
+                        <strong>Recommended For:</strong>{" "}
                         {item.bundle.applicableClasses || "N/A"}
                       </p>
                       <p className="small mb-1">

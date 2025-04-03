@@ -102,11 +102,14 @@ const PlaceOrder = () => {
                       </h5>
                       <p className="text-muted">₹{item.price || 0}</p>
                       <p className="small mb-1">
-                        <strong>Student:</strong>{" "}
+                        <strong>Student Name:</strong>{" "}
                         {item.student.studentName || "--"}
                       </p>
                       <p className="small mb-1">
-                        <strong>Classes:</strong>{" "}
+                        <strong>Class:</strong> {item.student.class || "--"}
+                      </p>
+                      <p className="small mb-1">
+                        <strong>Recommended For:</strong>{" "}
                         {item.bundle.applicableClasses || "N/A"}
                       </p>
                       <p className="small mb-1">

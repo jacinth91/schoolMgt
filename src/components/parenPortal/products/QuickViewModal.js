@@ -56,15 +56,15 @@ const QuickViewModal = ({ bundle, onClose, onAddToCart, showAction, user }) => {
               style={{ maxHeight: "400px", width: "100%" }}
             />
             <p>
-              <strong>Designed For:</strong> {bundle.gender}
+              <strong>Gender:</strong> {bundle.gender}
             </p>
             {showAction && (
               <p>
-                <strong>Recommended For:</strong> {bundle.class_name}
+                <strong>Class:</strong> {bundle.class_name}
               </p>
             )}
             <p>
-              <strong>Suitable For Classes:</strong> {bundle.applicable_classes}
+              <strong>Recommended For:</strong> {bundle.applicable_classes}
             </p>
             <p>
               <strong>Bundle Price:</strong> ₹{bundle.bundle_total}
@@ -114,11 +114,19 @@ const QuickViewModal = ({ bundle, onClose, onAddToCart, showAction, user }) => {
                       <option value="" disabled>
                         Select Student
                       </option>
-                      {user.studentData.map((student) => (
-                        <option key={student.id} value={student.id}>
-                          {student.studentName}
-                        </option>
-                      ))}
+                      {user.studentData
+                        .filter(
+                          (student) =>
+                            (bundle.gender === "Boys" &&
+                              student.gender === "Male") ||
+                            (bundle.gender === "Girls" &&
+                              student.gender === "Female")
+                        )
+                        .map((student) => (
+                          <option key={student.id} value={student.id}>
+                            {student.studentName}
+                          </option>
+                        ))}
                     </select>
                   </div>
                 )}
