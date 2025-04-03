@@ -82,12 +82,21 @@ const AdminManagement = ({ vendor }) => {
         },
       ];
     }
-    const result = transform(
+    let result = transform(
       admin,
       ["id", "password", "createdAt", "updatedAt", "imageUrl"],
       [],
       dropdownData
     );
+    result = [
+      ...result,
+      {
+        label: "Password",
+        value: "",
+        editable: true,
+        options: null,
+      },
+    ];
     setSelectedRow(result);
     setShowPopup(true);
   };

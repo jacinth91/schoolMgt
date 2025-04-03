@@ -47,7 +47,7 @@ const ProfilePage = () => {
   const openDialog = () => {
     if (!user || typeof user !== "object") return [];
 
-    const nonEditableFields = ["role", "campus", "password"];
+    const nonEditableFields = ["role", "campus"];
     const skipKeys = [
       "id",
       "students",
@@ -61,7 +61,16 @@ const ProfilePage = () => {
       "imageUrl",
     ];
 
-    const result = transform(user, skipKeys, nonEditableFields);
+    let result = transform(user, skipKeys, nonEditableFields);
+    result = [
+      ...result,
+      {
+        label: "Password",
+        value: "",
+        editable: true,
+        options: null,
+      },
+    ];
     setFormData(result);
     setShowPopup(true);
   };
