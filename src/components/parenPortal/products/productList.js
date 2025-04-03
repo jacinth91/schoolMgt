@@ -58,7 +58,6 @@ const ProductListing = () => {
     } else if (event.target.value === "price-high-low") {
       sortedBundles.sort((a, b) => b.bundle_total - a.bundle_total);
     }
-
     setBundles(sortedBundles);
   };
 
@@ -96,7 +95,6 @@ const ProductListing = () => {
       setSelectedBundle(null);
     }
   };
-
   const filteredBundles = bundles.filter((bundle) =>
     bundle.bundle_name?.toLowerCase().includes(search?.toLowerCase())
   );
@@ -132,7 +130,10 @@ const ProductListing = () => {
         {filteredBundles.length > 0 ? (
           <div className="row g-4">
             {filteredBundles.map((bundle, index) => (
-              <div key={bundle.bundle_id} className="col-12 col-sm-6 col-md-6">
+              <div
+                key={`${bundle.bundle_id}-${index}`}
+                className="col-12 col-sm-6 col-md-6"
+              >
                 <div className="card product-card shadow-sm border-0 h-100">
                   <div className="position-relative">
                     <img
