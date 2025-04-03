@@ -62,12 +62,18 @@ const ProductListing = () => {
     setBundles(sortedBundles);
   };
 
-  const handleStudentChange = (bundleId, studentId) => {
-    setSelectedStudent((prev) => ({ ...prev, [bundleId]: studentId }));
+  const handleStudentChange = (uniqueKey, studentId) => {
+    setSelectedStudent((prev) => ({ ...prev, [uniqueKey]: studentId }));
   };
 
-  const addToCartClick = async (bundleId, quantity) => {
-    const studentId = selectedStudent[bundleId];
+  const addToCartClick = async (bundleId, quantity, id) => {
+    let studentId;
+    if (selectedBundle) {
+      studentId = id;
+    } else {
+      studentId = selectedStudent[`${bundleId}-${id}`];
+    }
+
     if (!studentId) {
       toast.error("Please select a student before adding to cart.", {
         position: "top-right",
@@ -125,7 +131,7 @@ const ProductListing = () => {
       <div className="row g-4">
         {filteredBundles.length > 0 ? (
           <div className="row g-4">
-            {filteredBundles.map((bundle) => (
+            {filteredBundles.map((bundle, index) => (
               <div key={bundle.bundle_id} className="col-12 col-sm-6 col-md-6">
                 <div className="card product-card shadow-sm border-0 h-100">
                   <div className="position-relative">
@@ -161,10 +167,13 @@ const ProductListing = () => {
                       <div className="student-selection mb-3">
                         <select
                           className="form-select mt-2"
-                          value={selectedStudent[bundle.bundle_id] || ""}
+                          value={
+                            selectedStudent[`${bundle.bundle_id}-${index}`] ||
+                            ""
+                          }
                           onChange={(e) =>
                             handleStudentChange(
-                              bundle.bundle_id,
+                              `${bundle.bundle_id}-${index}`,
                               e.target.value
                             )
                           }
@@ -191,7 +200,7 @@ const ProductListing = () => {
 
                     <button
                       className="btn btn-outline-primary mt-auto"
-                      onClick={() => addToCartClick(bundle.bundle_id, 1)}
+                      onClick={() => addToCartClick(bundle.bundle_id, 1, index)}
                     >
                       Add to Cart
                     </button>

@@ -126,11 +126,10 @@ const CartPage = () => {
                       <p className="text-muted">₹{item.price}</p>
                       <p className="small mb-2">
                         <strong>Student Name:</strong>{" "}
-                        {item.student.studentName || "Existing"}
+                        {item.student?.studentName || "--"}
                       </p>
                       <p className="small mb-2">
-                        <strong>Class:</strong>{" "}
-                        {item.student.class || "Existing"}
+                        <strong>Class:</strong> {item.student?.class || "--"}
                       </p>
                       <p className="small mb-1">
                         <strong>Recommended For:</strong>{" "}
