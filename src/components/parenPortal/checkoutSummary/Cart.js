@@ -91,7 +91,7 @@ const CartPage = () => {
       toast.warning("Your cart is empty!", { position: "top-right" });
       return;
     }
-    navigate("/payment");
+    navigate("/checkout");
   };
 
   return (

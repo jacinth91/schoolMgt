@@ -48,5 +48,30 @@
       integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
       crossorigin="anonymous"
     ></script>
+    <script>
+      (function (g, q, s, d, k) {
+        var loader = function () {
+          var gq,
+            id = "gqerp-jssdk";
+          if (q.getElementById(id)) {
+            return;
+          }
+          gq = q.createElement(s);
+          gq.async = true;
+          gq.type = "text/javascript";
+          gq.src = d;
+          var sc = q.getElementsByTagName("script")[0];
+          sc.parentNode.insertBefore(gq, sc);
+        };
+        g.addEventListener
+          ? g.addEventListener("load", loader, false)
+          : g.attachEvent("onload", loader);
+      })(
+        window,
+        document,
+        "script",
+        "https://erp-sdk-stage.graydev.tech/v1.1/gqerp-sdk.min.js?v=latest"
+      );
+    </script>
   </body>
 </html>

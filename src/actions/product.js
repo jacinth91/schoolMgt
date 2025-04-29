@@ -109,19 +109,89 @@ export const orderPlaced =
   async (dispatch) => {
     try {
       const res = await post("/orders/cart", { parentId, paymentMethod });
+
+      // If API returns error inside the response (but HTTP 200 OK)
+      if (res.data?.error) {
+        throw new Error(res.data.error.message || "Unknown error");
+      }
+
+      dispatch({
+        type: CART_LOADING_CHANGE,
+        payload: false,
+      });
+
+      return Promise.resolve(res.data);
+    } catch (error) {
+      dispatch({
+        type: ORDER_PLACEMENT_FAIL,
+        payload: error.message || "Something went wrong",
+      });
+      return Promise.reject(error);
+    }
+  };
+
+export const paymentConfig = async (orderId) => {
+  try {
+    const res = await get(`/payment/config/${orderId}`);
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const paymentSuccess =
+  ({ order_id, bank_reference_id, transaction_timestamp, application_code }) =>
+  async (dispatch) => {
+    try {
+      const res = await post("/payment/success", {
+        order_code: order_id,
+        bank_reference_id,
+        transaction_timestamp,
+        application_code,
+      });
       dispatch({
         type: ORDER_PLACED_SUCCESSFULLY,
-        payload: res.data,
+        payload: res,
       });
       return Promise.resolve(res.data);
     } catch (error) {
       dispatch({
         type: ORDER_PLACEMENT_FAIL,
-        payload: error,
+        payload: error.message || "Something went wrong",
       });
       return Promise.reject(error);
     }
   };
+
+export const paymentError = async ({
+  order_id,
+  bank_reference_id,
+  transaction_timestamp,
+  application_code,
+  error,
+}) => {
+  try {
+    const res = await post("/payment/error", {
+      error,
+      application_code,
+      bank_reference_id,
+      order_code: order_id,
+      transaction_timestamp,
+    });
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const paymentClosed = async ({ order_code, event }) => {
+  try {
+    const res = await post("/payment/closed", { order_code, event });
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};
 
 export const fetchAllOrders = async () => {
   try {

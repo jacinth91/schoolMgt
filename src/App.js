@@ -92,11 +92,11 @@ const App = () => {
               <Route exact path="/products" element={<ProductListing />} />
               <Route path="/children" element={<ChildrenDetails />} />
               <Route path="/order/history" element={<OrderHistory />} />
-              <Route path="/thankyou" element={<ThankYouPage />} />
+              <Route path="/thankyou/:orderId" element={<ThankYouPage />} />
               <Route path="/support" element={<Support />} />
 
               <Route path="/cart" element={<CheckoutSummary />} />
-              <Route path="/payment" element={<CheckoutSummary />} />
+              {/* <Route path="/payment" element={<CheckoutSummary />} /> */}
               <Route path="/checkout" element={<CheckoutSummary />} />
             </Route>
 

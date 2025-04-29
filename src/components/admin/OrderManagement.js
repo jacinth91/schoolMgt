@@ -38,7 +38,8 @@ const OrderManagement = () => {
           order?.parent?.parentName
             ?.toLowerCase()
             .includes(searchTerm.toLowerCase()) ||
-          order?.id?.toString().includes(searchTerm)
+          order?.id?.toString().includes(searchTerm) ||
+          order?.payments[0]?.applicationCode?.toString().includes(searchTerm)
       )
       .filter((order) => {
         if (startDate && endDate) {
@@ -93,6 +94,7 @@ const OrderManagement = () => {
   const exportToCSV = () => {
     const headers = [
       "ID",
+      "Application code",
       "Parent Name",
       "Contact Number",
       "Total Price",
@@ -110,6 +112,7 @@ const OrderManagement = () => {
       // Iterate through the items of each order and flatten the data
       return order.items.map((item) => [
         order.id,
+        order?.payments[0]?.applicationCode ?? "--",
         order.parent?.parentName,
         order.parent?.phoneNumber,
         order.totalPrice,
@@ -148,7 +151,7 @@ const OrderManagement = () => {
           <input
             type="text"
             className="form-control mb-3"
-            placeholder="Search by Parent Name or Order ID..."
+            placeholder="Search by Name or Order ID or Application code..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -181,11 +184,12 @@ const OrderManagement = () => {
             onChange={(e) => setStatusFilter(e.target.value)}
           >
             <option value="">All</option>
-            <option value="pending">Pending</option>
-            <option value="processing">Processing</option>
-            <option value="shipped">Shipped</option>
-            <option value="delivered">Delivered</option>
-            <option value="cancelled">Cancelled</option>
+            <option value="FAILED">Failed</option>
+            <option value="PAID">Paid</option>
+            <option value="PROCESSING">Processing</option>
+            <option value="SHIPPED">Shipped</option>
+            <option value="DELIVERED">Delivered</option>
+            <option value="CANCELLED">Cancelled</option>
           </Form.Select>
         </div>
       </div>
@@ -201,6 +205,7 @@ const OrderManagement = () => {
           <thead>
             <tr>
               <th>ID</th>
+              <th>Application Code</th>
               <th>Parent Name</th>
               <th>Contact Number</th>
               <th>Total Price</th>
@@ -214,6 +219,7 @@ const OrderManagement = () => {
               paginatedOrders.map((order) => (
                 <tr key={order.id}>
                   <td>{order.id}</td>
+                  <td>{order.payments[0]?.applicationCode ?? "--"}</td>
                   <td>{order.parent?.parentName}</td>
                   <td>{order.parent?.phoneNumber}</td>
                   <td>{order.totalPrice}</td>
@@ -325,6 +331,36 @@ const OrderManagement = () => {
                 </table>
               </div>
 
+              <hr />
+
+              <h5>Payment Info</h5>
+              <p>
+                <strong>Application Code:</strong>{" "}
+                {selectedOrder.payments[0]?.applicationCode ?? "--"}
+              </p>
+              <p>
+                <strong>Bank Reference ID:</strong>{" "}
+                {selectedOrder.payments[0]?.externalReference ?? "--"}
+              </p>
+              <p>
+                <strong>Status:</strong> {selectedOrder.payments[0]?.status}
+              </p>
+              <p>
+                <strong>Transaction Timestamp:</strong>{" "}
+                {selectedOrder.payments[0]?.raw?.transaction_timestamp
+                  ? new Date(
+                      selectedOrder.payments[0]?.raw?.transaction_timestamp
+                    ).toLocaleString("en-IN", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                      hour: "numeric",
+                      minute: "2-digit",
+                      second: "2-digit",
+                      hour12: true,
+                    })
+                  : "--"}
+              </p>
               {/* Status Update */}
               <hr />
               <h5>Update Status</h5>
@@ -332,11 +368,12 @@ const OrderManagement = () => {
                 value={newStatus}
                 onChange={(e) => setNewStatus(e.target.value)}
               >
-                <option value="pending">Pending</option>
-                <option value="processing">Processing</option>
-                <option value="shipped">Shipped</option>
-                <option value="delivered">Delivered</option>
-                <option value="cancelled">Cancelled</option>
+                <option value="FAILED">Failed</option>
+                <option value="PAID">Paid</option>
+                <option value="PROCESSING">Processing</option>
+                <option value="SHIPPED">Shipped</option>
+                <option value="DELIVERED">Delivered</option>
+                <option value="CANCELLED">Cancelled</option>
               </Form.Select>
             </div>
           )}

@@ -1,7 +1,6 @@
 import React, { lazy, Suspense } from "react";
 import CheckoutStepper from "../checkoutStepper/checkoutStepper";
 import { useLocation } from "react-router-dom";
-import PaymentMethod from "./PaymentMethod";
 import "./CheckoutSummary.css";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Link } from "react-router-dom";
@@ -11,8 +10,8 @@ import FullPageSpinner from "../../layout/FullPageSpinner";
 const Cart = lazy(() => import("./Cart"));
 const PlacedOrder = lazy(() => import("./PlacedOrder"));
 
-const stepLabel = ["🛒 SHOPPING CART", "💳 PAYMENT", "📦 ORDER CONFIRMATION"];
-const stepPaths = ["cart", "payment", "checkout"];
+const stepLabel = ["🛒 SHOPPING CART", "📦 ORDER CONFIRMATION"];
+const stepPaths = ["cart", "checkout"];
 
 const CheckoutSummary = () => {
   const location = useLocation();
@@ -28,8 +27,8 @@ const CheckoutSummary = () => {
             <Cart />
           </Suspense>
         );
-      case "payment":
-        return <PaymentMethod />;
+      // case "payment":
+      //   return <PaymentMethod />;
       case "checkout":
         return (
           <Suspense fallback={<FullPageSpinner loading={true} />}>
