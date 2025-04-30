@@ -11,11 +11,11 @@ const api = axios.create({
 
 export const request = async (endpoint, method = "GET", data = null) => {
   try {
-    // if (localStorage.token) {
-    //   api.defaults.headers["Authorization"] = localStorage.token;
-    // } else {
-    //   delete api.defaults.headers["Authorization"];
-    // }
+    if (localStorage.token) {
+      api.defaults.headers["Authorization"] = localStorage.token;
+    } else {
+      delete api.defaults.headers["Authorization"];
+    }
     const response = await api({
       url: endpoint,
       method,
