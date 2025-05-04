@@ -105,10 +105,14 @@ export const loadingCartChange = (value) => (dispatch) => {
 };
 
 export const orderPlaced =
-  ({ parentId, paymentMethod }) =>
+  ({ parentId, paymentMethod, shippingMethod }) =>
   async (dispatch) => {
     try {
-      const res = await post("/orders/cart", { parentId, paymentMethod });
+      const res = await post("/orders/cart", {
+        parentId,
+        shippingMethod,
+        paymentMethod,
+      });
 
       // If API returns error inside the response (but HTTP 200 OK)
       if (res.data?.error) {

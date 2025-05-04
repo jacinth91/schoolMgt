@@ -13,6 +13,7 @@ import {
   paymentSuccess,
 } from "../../../actions/product";
 import FullPageSpinner from "../../layout/FullPageSpinner";
+import { SHIPPING_CHARGES } from "../../../utils/constants";
 
 const PlaceOrder = () => {
   const navigate = useNavigate();
@@ -29,6 +30,7 @@ const PlaceOrder = () => {
   const [loading, setLoading] = useState(false);
   const [totalQuantity, setTotalQuantity] = useState(0);
   const [grandTotal, setGrandTotal] = useState(0);
+  const [shippingMethod, setShippingMethod] = useState("school");
 
   useEffect(() => {
     const fetchCart = async () => {
@@ -41,7 +43,7 @@ const PlaceOrder = () => {
     if (!cartData?.items?.length && !paymentDone) {
       fetchCart();
     }
-  }, [dispatch, cartData?.items?.length, paymentDone]);
+  }, [dispatch, cartData?.items?.length, paymentDone, user.id]);
 
   useEffect(() => {
     if (cartData?.items?.length) {
@@ -55,12 +57,14 @@ const PlaceOrder = () => {
       );
 
       setTotalQuantity(quantity);
-      setGrandTotal(total);
+      setGrandTotal(
+        shippingMethod === "home" ? total + SHIPPING_CHARGES : total
+      );
     } else {
       setTotalQuantity(0);
       setGrandTotal(0);
     }
-  }, [cartData?.items]);
+  }, [cartData?.items, shippingMethod]);
 
   useEffect(() => {
     const handleGqSuccess = (paymentResponse) => {
@@ -120,7 +124,13 @@ const PlaceOrder = () => {
       return;
     }
     dispatch(loadingCartChange(true));
-    dispatch(orderPlaced({ parentId: user.id, paymentMethod: method }))
+    dispatch(
+      orderPlaced({
+        parentId: user.id,
+        shippingMethod: shippingMethod,
+        paymentMethod: method,
+      })
+    )
       .then((orderInfo) => {
         if (orderInfo?.id) {
           setOrderId(orderInfo.id);
@@ -214,22 +224,65 @@ const PlaceOrder = () => {
               <span>Total Items:</span> <span>{totalQuantity}</span>
             </p>
             <p className="d-flex justify-content-between text-dark">
-              <span>Shipping Charges:</span> <span>Free</span>
+              <span>Shipping Charges:</span>{" "}
+              <span>
+                {shippingMethod === "home" ? SHIPPING_CHARGES : "Free"}
+              </span>
             </p>
             <p className="d-flex justify-content-between text-dark fw-bold">
               <span>Grand Total:</span>{" "}
               <strong>₹{grandTotal.toFixed(2)}</strong>
             </p>
-            {/* <p className="d-flex justify-content-between">
-              <span>Payment Mode:</span>
-              <strong>{PAYMENT_MODE[method] || "Credit Card"}</strong>
-            </p> */}
             <hr />
             <div className="fs-5 shipping-title">Shipping details</div>
             <p className=" mb-1">{user?.parentName}</p>
-            <p className="shipping-details">
-              {user?.address || "No address provided"}
-            </p>
+            {/* Shipping Preference Box */}
+            {cartData?.items?.length > 0 && (
+              <>
+                <div className="form-check mt-3">
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    name="shippingMethod"
+                    id="pickupFromSchool"
+                    value="school"
+                    checked={shippingMethod === "school"}
+                    onChange={(e) => setShippingMethod(e.target.value)}
+                  />
+                  <label
+                    className="form-check-label"
+                    htmlFor="pickupFromSchool"
+                  >
+                    Pick Up from School (Free)
+                  </label>
+                </div>
+                <div className="form-check mt-2">
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    name="shippingMethod"
+                    id="homeDelivery"
+                    value="home"
+                    checked={shippingMethod === "home"}
+                    onChange={(e) => setShippingMethod(e.target.value)}
+                  />
+                  <label className="form-check-label" htmlFor="homeDelivery">
+                    Home Delivery (₹{SHIPPING_CHARGES})
+                  </label>
+                </div>
+
+                {/* Show address if "Delivered at Home" is selected */}
+                {shippingMethod === "home" &&
+                  cartData.items[0]?.student?.address && (
+                    <div className="mt-3">
+                      <p className="fw-bold mb-1">📍 Delivery Address:</p>
+                      <p className="text-muted mb-0">
+                        {cartData.items[0].student.address}
+                      </p>
+                    </div>
+                  )}
+              </>
+            )}
             <hr />
 
             <button

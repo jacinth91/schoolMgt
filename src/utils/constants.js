@@ -89,3 +89,5 @@ export const campusList = [
 
 export const SUPORT_ATTACHMENT_URL =
   "https://api.cloudinary.com/v1_1/dwgfx9feh/image/upload";
+
+export const SHIPPING_CHARGES = 500;
