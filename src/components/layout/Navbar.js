@@ -51,16 +51,16 @@ const Navbar = () => {
       case ROLES.PARENT:
         return [
           { path: "/dashboard", label: "Home" },
-          { path: "/profile", label: "Profile" },
+          // { path: "/profile", label: "Profile" },
           { path: "/children", label: "My Children" },
-          { path: "/products", label: "Products" },
+          { path: "/products", label: "Buy" },
           { path: "/order/history", label: "My Orders" },
           { path: "/support", label: "Support" },
         ];
       case ROLES.ADMIN:
         return [
           { path: "/dashboard", label: "Home" },
-          { path: "/profile", label: "Profile" },
+          // { path: "/profile", label: "Profile" },
           {
             label: "User Management",
             submenu: [
@@ -81,7 +81,7 @@ const Navbar = () => {
       case ROLES.VENDOR:
         return [
           { path: "/dashboard", label: "Home" },
-          { path: "/profile", label: "Profile" },
+          // { path: "/profile", label: "Profile" },
           { path: "/vendor/manage", label: "Member Management" },
           { path: "/vendor/orders", label: "Order Management" },
         ];

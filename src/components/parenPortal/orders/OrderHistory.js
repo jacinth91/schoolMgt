@@ -79,9 +79,9 @@ const OrderHistory = () => {
         <thead className="table-light">
           <tr>
             <th>Order ID</th>
-            <th>Products Ordered</th>
-            <th>Quantity</th>
+            <th>Items</th>
             <th>Status</th>
+            <th>Quantity</th>
             <th>Total Price</th>
             <th>Purchase Date</th>
           </tr>

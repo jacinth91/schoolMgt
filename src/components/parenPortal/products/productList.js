@@ -89,7 +89,7 @@ const ProductListing = () => {
     <FullPageSpinner loading={loading} />
   ) : (
     <div className="container py-4">
-      <div className="row mb-4">
+      {/* <div className="row mb-4">
         <div className="col-md-8">
           <input
             type="text"
@@ -110,7 +110,7 @@ const ProductListing = () => {
             <option value="price-high-low">Price: High to Low</option>
           </select>
         </div>
-      </div>
+      </div> */}
 
       <div className="row g-4">
         {filteredBundles.length > 0 ? (
@@ -144,8 +144,6 @@ const ProductListing = () => {
                       <span>{bundle.student?.studentName}</span>
                       <strong>Gender:</strong> <span>{bundle.gender}</span>
                       <strong>Class:</strong> <span>{bundle.class_name}</span>
-                      <strong>Recommended For:</strong>{" "}
-                      <span>{bundle.applicable_classes}</span>
                     </div>
                     <p className="fw-bold text-primary fs-5">
                       ₹{bundle.bundle_total}

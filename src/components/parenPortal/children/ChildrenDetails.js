@@ -51,11 +51,11 @@ const ChildrenDetails = () => {
 
       {/* Child Details Table */}
       <div className="row">
-        <div className="col-md-12">
+        {/* <div className="col-md-12">
           <div className="fs-3 mb-3 text-primary text-sm-start">
             Children Details:
           </div>
-        </div>
+        </div> */}
         <div className="col-md-12 ">
           <span className="float-sm-start">
             USID: <strong>{selectedChild.usid}</strong>

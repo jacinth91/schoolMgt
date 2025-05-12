@@ -75,19 +75,17 @@ const QuickViewModal = ({ bundle, onClose, onAddToCart, showAction, user }) => {
                   <tr>
                     <th>Product</th>
                     <th>Quantity</th>
-                    <th>Unit Price</th>
-                    <th>Optional</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {bundle.products.map((item, index) => (
-                    <tr key={index}>
-                      <td>{item.product_name}</td>
-                      <td>{item.quantity}</td>
-                      <td>{item.unit_price}</td>
-                      <td>{item.optional ? "Yes" : "No"}</td>
-                    </tr>
-                  ))}
+                  {bundle.products
+                    .filter((item) => !item.optional)
+                    .map((item, index) => (
+                      <tr key={index}>
+                        <td>{item.product_name}</td>
+                        <td>{item.quantity}</td>
+                      </tr>
+                    ))}
                 </tbody>
               </table>
             </div>
@@ -97,7 +95,7 @@ const QuickViewModal = ({ bundle, onClose, onAddToCart, showAction, user }) => {
             {showAction && (
               <>
                 {/* Quantity Selection Dropdown */}
-                <div className="d-flex align-items-center">
+                {/* <div className="d-flex align-items-center">
                   <label className="me-2" htmlFor="quantitySelect">
                     Quantity:
                   </label>
@@ -114,7 +112,7 @@ const QuickViewModal = ({ bundle, onClose, onAddToCart, showAction, user }) => {
                       </option>
                     ))}
                   </select>
-                </div>
+                </div> */}
               </>
             )}
 

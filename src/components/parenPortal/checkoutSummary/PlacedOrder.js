@@ -193,10 +193,10 @@ const PlaceOrder = () => {
                       <p className="small mb-1">
                         <strong>Class:</strong> {item.student.class || "--"}
                       </p>
-                      <p className="small mb-1">
+                      {/* <p className="small mb-1">
                         <strong>Recommended For:</strong>{" "}
                         {item.bundle.applicableClasses || "N/A"}
-                      </p>
+                      </p> */}
                       <p className="small mb-1">
                         <strong>Gender:</strong>{" "}
                         {item.bundle.gender || "Unisex"}
@@ -226,7 +226,7 @@ const PlaceOrder = () => {
             <p className="d-flex justify-content-between text-dark">
               <span>Shipping Charges:</span>{" "}
               <span>
-                {shippingMethod === "home" ? SHIPPING_CHARGES : "Free"}
+                {shippingMethod === "home" ? SHIPPING_CHARGES : "No Charges"}
               </span>
             </p>
             <p className="d-flex justify-content-between text-dark fw-bold">
@@ -253,7 +253,7 @@ const PlaceOrder = () => {
                     className="form-check-label"
                     htmlFor="pickupFromSchool"
                   >
-                    Pick Up from School (Free)
+                    Pick Up from School (No Charges)
                   </label>
                 </div>
                 <div className="form-check mt-2">

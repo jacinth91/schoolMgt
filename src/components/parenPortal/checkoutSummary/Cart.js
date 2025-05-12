@@ -131,17 +131,17 @@ const CartPage = () => {
                       <p className="small mb-2">
                         <strong>Class:</strong> {item.student?.class || "--"}
                       </p>
-                      <p className="small mb-1">
+                      {/* <p className="small mb-1">
                         <strong>Recommended For:</strong>{" "}
                         {item.bundle.applicableClasses || "N/A"}
-                      </p>
+                      </p> */}
                       <p className="small mb-1">
                         <strong>Gender:</strong>{" "}
                         {item.bundle.gender || "Unisex"}
                       </p>
                       <p className="small mb-2">
                         <strong>Type:</strong>{" "}
-                        {item.bundle.studentType || "Existing"}
+                        {item.bundle.studentType || "Existing"} Student
                       </p>
                       <div className="d-flex align-items-center gap-2">
                         <button
